@@ -1,0 +1,152 @@
+#content{
+    height: 100vh;
+    background: url("/image/bg.jpg") no-repeat center center;
+}
+
+.bichoPedia {
+    display: table;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+  border-radius: 5px;
+    overflow: hidden;
+}
+
+.bichoPedia #logo {
+    position: absolute;
+    height: 100px;
+    width: auto;
+    float: left;
+    top: 30px;
+}
+
+.bichoPedia #title {
+    padding-left: 200px;
+}
+
+.bichoPedia .mainButton{
+    position: absolute;
+    width: auto;
+    right: 20px;
+    top: 40px;
+    color: #900;
+    font-weight: bold;
+    font-size: 150%;
+    text-transform: uppercase;
+}
+
+.bichoPedia .boxes {
+    overflow: scroll;
+    width: 100%;
+    position: absolute;
+    top:135px;
+    height: 100%;
+}
+
+.bichoPedia .boxes .center-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.especieFullBoxModal {
+}
+
+.especieFullBox {
+  overflow: hidden;
+  text-align: center;
+}
+.especieFullBox .especieNombre {
+  color: #C60019;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 50px;
+  -webkit-text-stroke: 1px black;
+}
+.especieFullBox dl {
+   float:left;
+   width: 255px;
+}
+.especieFullBox dt, .especieForm dt {
+   float:left;
+   clear:left;
+   text-align:right;
+   width:115px;
+   color:#C60019;
+}
+.especieFullBox dd, .especieForm dd {
+   float:left;
+   margin-left: 5px;
+   color:#999
+}
+.especieFullBox img {
+  width: 100%;
+}
+
+.especieFullBox .personajeForm {
+    padding: 10px;
+}
+
+.especieFullBox .personajeForm input, .especieFullBox .personajeForm select{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.especieFullBox .crearBicho {
+  clear:both;
+}
+
+.especieForm {
+  overflow: hidden;
+  margin: 10px;
+}
+.especieForm dl {
+   width: 500px;
+}
+.submitEspecie {
+  clear:both;
+  float: right;
+  margin-top: 10px;
+}
+
+.bichoPedia .especieBox {
+  text-align: center;
+  margin: 5px;
+  background-color: rgba(255, 255, 255, 0.5);;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.bichoPedia .especieBox:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.bichoPedia .especieBox img {
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+.fade.in{
+    opacity: 1!important;
+}
+
+.modal.fade .modal-dialog{
+    transform: translate(0,0%)!important;
+}
+
+.modal-backdrop.fade.in{
+    /*background-color: transparent!important;*/
+    opacity: 0.5!important;
+}
+
+.image_form{
+    width: 100%;
+}
+
+.col{
+    float: left;
+    padding-right: 0px!important;
+    padding-left: 0px!important;
+}
