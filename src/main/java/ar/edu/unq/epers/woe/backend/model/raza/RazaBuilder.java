@@ -1,6 +1,7 @@
 package ar.edu.unq.epers.woe.backend.model.raza;
 
-import jersey.repackaged.com.google.common.collect.Sets;
+
+import com.google.common.collect.Sets;
 
 public class RazaBuilder {
 
