@@ -5,7 +5,7 @@ USE epers_woe;
 
 CREATE TABLE raza (
   id int NOT NULL AUTO_INCREMENT,
-  idRaza int not null UNIQUE,
+  idRaza int not null UNIQUE AUTO_INCREMENT,
   nombre VARCHAR(255) NOT NULL UNIQUE,
   clases VARCHAR(255) NOT NULL,
   peso int NOT NULL,
