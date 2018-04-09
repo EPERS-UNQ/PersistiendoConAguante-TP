@@ -1,10 +1,8 @@
 package ar.edu.unq.epers.woe.backend.razadao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
+import java.sql.*;
+import java.util.Set;
+import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 
 public class RazaDao {
@@ -17,7 +15,49 @@ public class RazaDao {
 			throw new RuntimeException("No se puede encontrar la clase del driver", e);
 		}
 	}
-	
+
+	//implementación del método deleteAll
+	public void deleteAll() {
+		this.executeWithConnection(conn -> {
+			PreparedStatement ps = conn.prepareStatement("TRUNCATE raza;");
+			ps.execute();
+			ps.close();
+			return null;
+		});
+	}
+
+	//implementación del método crearRaza
+	public void crearRaza(Raza raza) {
+		raza.setId(this.nextId());
+		this.guardar(raza);
+	}
+
+	//retorna un String con la lista de nombres de clases separados por ","
+	public String clasesAStringDelimitado(Set<Clase> clases) {
+		String res = "";
+		for (Clase clase : clases) {
+			res = res + "," + clase.name();
+		}
+		return res.substring(1);
+	}
+
+	//retorna el siguiente Id disponible para una raza
+	public Integer nextId() {
+		Connection conn = this.openConnection("jdbc:mysql://localhost:3306/epers_woe?user=root&password=root&useSSL=false");
+		Integer n = null;
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT MAX(idRaza) FROM raza;");
+			ResultSet resultSet = ps.executeQuery();
+			while (resultSet.next()) {
+				n = resultSet.getInt("MAX(idRAza)");
+			}
+			ps.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return n + 1;
+	}
+
 	//inserta los datos de una raza en la db
 	public void guardar(Raza raza) {
 		this.executeWithConnection(conn -> {
@@ -25,7 +65,7 @@ public class RazaDao {
 					"INSERT INTO raza (idRaza, nombre, clases, peso, alt, energiaI, urlFoto, cantP ) VALUES (?,?,?,?,?,?,?,?)");
 			ps.setInt(1, raza.getId());
 			ps.setString(2, raza.getNombre());
-			ps.setString(3, raza.getClases().toString());
+			ps.setString(3, clasesAStringDelimitado(raza.getClases()));
 			ps.setInt(4, new Integer(raza.getPeso()));
 			ps.setInt(5, new Integer(raza.getAltura()));
 			ps.setInt(6, new Integer(raza.getEnergiaInicial()));
@@ -84,5 +124,4 @@ public class RazaDao {
 			throw new RuntimeException("Error al cerrar la conexion", e);
 		}
 	}
-
 }
