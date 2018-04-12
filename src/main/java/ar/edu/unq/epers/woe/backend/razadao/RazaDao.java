@@ -1,11 +1,113 @@
 package ar.edu.unq.epers.woe.backend.razadao;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
+import ar.edu.unq.epers.woe.backend.service.raza.RazaNoExistente;
 
 public class RazaDao {
+
+	//implementación del método getAllRaza
+	public List<Raza> getAllRaza() {
+		List<Raza> res = new ArrayList<Raza>();
+		Connection conn = this.openConnection("jdbc:mysql://localhost:3306/epers_woe?user=root&password=root&useSSL=false");
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM raza order by nombre;");
+			ResultSet resultSet = ps.executeQuery();
+			while (resultSet.next()) {
+				Raza raza = new Raza();
+				raza.setId(resultSet.getInt("idRaza"));
+				raza.setNombre(resultSet.getString("nombre"));
+				raza.setAltura(resultSet.getInt("alt"));
+				raza.setClases(this.stringDelimitadoAClases(resultSet.getString("clases")));
+				raza.setEnergiaIncial(resultSet.getInt("energiaI"));
+				raza.setPeso(resultSet.getInt("peso"));
+				raza.setUrlFoto(resultSet.getString("urlFoto"));
+				raza.setCantidadPersonajes(resultSet.getInt("cantP"));
+				res.add(raza);
+			}
+			ps.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			this.closeConnection(conn);
+		}
+		return res;
+	}
+
+	//implementación del método crearSetDatosIniciales
+	public void crearSetDatosIniciales() {
+		Raza raza1 = new Raza();
+		Set<Clase> clases1 = new HashSet<Clase>();
+		clases1.add(Clase.SACERDOTE);
+		clases1.add(Clase.MAGO);
+
+		raza1.setNombre("xRaza1");
+		raza1.setAltura(55);
+		raza1.setClases(clases1);
+		raza1.setEnergiaIncial(10);
+		raza1.setPeso(50);
+		raza1.setUrlFoto("url_dest1");
+		raza1.setCantidadPersonajes(0);
+
+		Raza raza2 = new Raza();
+		Set<Clase> clases2 = new HashSet<Clase>();
+		clases2.add(Clase.BRUJO);
+
+		raza2.setNombre("yRaza2");
+		raza2.setAltura(182);
+		raza2.setClases(clases1);
+		raza2.setEnergiaIncial(158);
+		raza2.setPeso(90);
+		raza2.setUrlFoto("url_dest2");
+		raza2.setCantidadPersonajes(2);
+
+		this.crearRaza(raza1);
+		this.crearRaza(raza2);
+
+	}
+
+	//implementación del método getRaza
+	public Raza getRaza(Integer id) {
+		Connection conn = this.openConnection("jdbc:mysql://localhost:3306/epers_woe?user=root&password=root&useSSL=false");
+		Raza raza = new Raza();
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM raza where idRaza = ?;");
+			ps.setInt(1, id);
+			ResultSet resultSet = ps.executeQuery();
+			while (resultSet.next()) {
+				raza.setId(id);
+				raza.setNombre(resultSet.getString("nombre"));
+				raza.setAltura(resultSet.getInt("alt"));
+				raza.setClases(this.stringDelimitadoAClases(resultSet.getString("clases")));
+				raza.setEnergiaIncial(resultSet.getInt("energiaI"));
+				raza.setPeso(resultSet.getInt("peso"));
+				raza.setUrlFoto(resultSet.getString("urlFoto"));
+				raza.setCantidadPersonajes(resultSet.getInt("cantP"));
+			}
+			ps.close();
+		} catch (SQLException e) {
+			throw new RazaNoExistente(id);
+			//e.printStackTrace();
+		} finally {
+			this.closeConnection(conn);
+		}
+		return raza;
+	}
+
+	//recibe un string con nombres de clases separados por ',' y retorna un conjunto de Clase con un miembro por cada una
+	public Set<Clase> stringDelimitadoAClases(String clases) {
+		String[] rec = clases.split(",");
+		Set<Clase> res = new java.util.HashSet<Clase>();
+		for (String clase : rec) {
+			res.add(Clase.valueOf(clase));
+		}
+		return res;
+	}
 
 	//registra el driver que se va a usar al instanciar la clase
 	public RazaDao() {
@@ -35,10 +137,13 @@ public class RazaDao {
 	//retorna un String con la lista de nombres de clases separados por ","
 	public String clasesAStringDelimitado(Set<Clase> clases) {
 		String res = "";
-		for (Clase clase : clases) {
-			res = res + "," + clase.name();
+		if (!clases.isEmpty()) {
+			for (Clase clase : clases) {
+				res = res + "," + clase.name();
+			}
+			res = res.substring(1);
 		}
-		return res.substring(1);
+		return res;
 	}
 
 	//retorna el siguiente Id disponible para una raza
