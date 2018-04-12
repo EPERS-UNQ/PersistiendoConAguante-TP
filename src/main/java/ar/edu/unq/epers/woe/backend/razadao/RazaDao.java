@@ -11,9 +11,8 @@ import ar.edu.unq.epers.woe.backend.service.raza.RazaNoExistente;
 
 public class RazaDao {
 
-	//implementación del método getAllRaza
-	public List<Raza> getAllRaza() {
-		List<Raza> res = new ArrayList<Raza>();
+	//trae todas las razas de la db ordenadas alfabéticamente y las agrega a la lista
+	public void agregarRazasOrdenadas(List<Raza> res) {
 		Connection conn = this.openConnection("jdbc:mysql://localhost:3306/epers_woe?user=root&password=root&useSSL=false");
 		try {
 			PreparedStatement ps = conn.prepareStatement("SELECT * FROM raza order by nombre;");
@@ -36,7 +35,6 @@ public class RazaDao {
 		} finally {
 			this.closeConnection(conn);
 		}
-		return res;
 	}
 
 	//implementación del método crearSetDatosIniciales
@@ -66,15 +64,14 @@ public class RazaDao {
 		raza2.setUrlFoto("url_dest2");
 		raza2.setCantidadPersonajes(2);
 
-		this.crearRaza(raza1);
-		this.crearRaza(raza2);
+		raza1.crearRaza(raza1);
+		raza2.crearRaza(raza2);
 
 	}
 
-	//implementación del método getRaza
-	public Raza getRaza(Integer id) {
+	//recupera de la db los atributos de la raza con el id recibido como parámetro y los setea a la raza recibida como parámetro
+	public void recuperar_raza(Integer id, Raza raza) {
 		Connection conn = this.openConnection("jdbc:mysql://localhost:3306/epers_woe?user=root&password=root&useSSL=false");
-		Raza raza = new Raza();
 		try {
 			PreparedStatement ps = conn.prepareStatement("SELECT * FROM raza where idRaza = ?;");
 			ps.setInt(1, id);
@@ -96,7 +93,6 @@ public class RazaDao {
 		} finally {
 			this.closeConnection(conn);
 		}
-		return raza;
 	}
 
 	//recibe un string con nombres de clases separados por ',' y retorna un conjunto de Clase con un miembro por cada una
@@ -126,12 +122,6 @@ public class RazaDao {
 			ps.close();
 			return null;
 		});
-	}
-
-	//implementación del método crearRaza
-	public void crearRaza(Raza raza) {
-		raza.setId(this.nextId());
-		this.guardar(raza);
 	}
 
 	//retorna un String con la lista de nombres de clases separados por ","
@@ -228,5 +218,20 @@ public class RazaDao {
 		} catch (SQLException e) {
 			throw new RuntimeException("Error al cerrar la conexion", e);
 		}
+	}
+
+	//incrementa en 1 el valor de la columna cantP de la raza con el id recibido como parámetro
+	public void incrementarPjs(Integer razaId) {
+		Raza raza = new Raza();
+		this.recuperar_raza(razaId, raza);
+		Integer cantActual = raza.getCantidadPersonajes() + 1;
+		this.executeWithConnection(conn -> {
+			PreparedStatement ps = conn.prepareStatement("UPDATE raza set cantP = ? where idRaza = ?;");
+			ps.setInt(1, cantActual);
+			ps.setInt(2, razaId);
+			ps.execute();
+			ps.close();
+			return null;
+		});
 	}
 }
