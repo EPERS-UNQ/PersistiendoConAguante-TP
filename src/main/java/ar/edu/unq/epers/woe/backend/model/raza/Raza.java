@@ -27,6 +27,7 @@ public class Raza implements RazaService {
 	private RazaDao razadao;
 
 	public Raza(){
+	
 	}
 
 	//implementación del método crearPersonaje
