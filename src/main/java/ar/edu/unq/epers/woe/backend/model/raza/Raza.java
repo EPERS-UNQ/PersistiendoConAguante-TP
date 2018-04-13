@@ -1,8 +1,12 @@
 package ar.edu.unq.epers.woe.backend.model.raza;
 
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
+import ar.edu.unq.epers.woe.backend.razadao.RazaDao;
 import ar.edu.unq.epers.woe.backend.service.raza.ClaseInvalida;
+import ar.edu.unq.epers.woe.backend.service.raza.RazaService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -10,7 +14,7 @@ import java.util.Set;
  * 
  * @author Charly Backend
  */
-public class Raza {
+public class Raza implements RazaService {
 
 	private Integer id;
 	private String nombre;
@@ -20,8 +24,40 @@ public class Raza {
 	private int energiaInicial;
 	private String urlFoto;
 	private int cantidadPersonajes;
+	private RazaDao razadao;
 
 	public Raza(){
+	}
+
+	//implementación del método crearPersonaje
+	public Personaje crearPersonaje(Integer razaId, String nombrePersonaje, Clase clase) {
+		this.razadao = new RazaDao();
+		this.razadao.incrementarPjs(razaId);
+		Personaje pj = new Personaje(this.getRaza(razaId), nombrePersonaje, clase);
+		return pj;
+	}
+
+	//implementación del método getRaza
+	public Raza getRaza(Integer id) {
+		Raza raza = new Raza();
+		this.razadao = new RazaDao();
+		this.razadao.recuperar_raza(id, raza);
+		return raza;
+	}
+
+	//implementación del método crearRaza
+	public void crearRaza(Raza raza) {
+		this.razadao = new RazaDao();
+		raza.setId(this.razadao.nextId());
+		this.razadao.guardar(raza);
+	}
+
+	//implementación del método getAllRazas
+	public List<Raza> getAllRazas() {
+		this.razadao = new RazaDao();
+		List<Raza> res = new ArrayList<Raza>();
+		this.razadao.agregarRazasOrdenadas(res);
+		return res;
 	}
 	
 	public Raza(String nombre) {

@@ -1,27 +1,171 @@
 package ar.edu.unq.epers.woe.backend.razadao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
+import ar.edu.unq.epers.woe.backend.service.raza.RazaNoExistente;
 
 public class RazaDao {
-	
+
+	//trae todas las razas de la db ordenadas alfabéticamente y las agrega a la lista
+	public void agregarRazasOrdenadas(List<Raza> res) {
+		Connection conn = this.openConnection("jdbc:mysql://localhost:3306/epers_woe?user=root&password=root&useSSL=false");
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM raza order by nombre;");
+			ResultSet resultSet = ps.executeQuery();
+			while (resultSet.next()) {
+				Raza raza = new Raza();
+				raza.setId(resultSet.getInt("idRaza"));
+				raza.setNombre(resultSet.getString("nombre"));
+				raza.setAltura(resultSet.getInt("alt"));
+				raza.setClases(this.stringDelimitadoAClases(resultSet.getString("clases")));
+				raza.setEnergiaIncial(resultSet.getInt("energiaI"));
+				raza.setPeso(resultSet.getInt("peso"));
+				raza.setUrlFoto(resultSet.getString("urlFoto"));
+				raza.setCantidadPersonajes(resultSet.getInt("cantP"));
+				res.add(raza);
+			}
+			ps.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			this.closeConnection(conn);
+		}
+	}
+
+	//implementación del método crearSetDatosIniciales
+	public void crearSetDatosIniciales() {
+		Raza raza1 = new Raza();
+		Set<Clase> clases1 = new HashSet<Clase>();
+		clases1.add(Clase.SACERDOTE);
+		clases1.add(Clase.MAGO);
+
+		raza1.setNombre("xRaza1");
+		raza1.setAltura(55);
+		raza1.setClases(clases1);
+		raza1.setEnergiaIncial(10);
+		raza1.setPeso(50);
+		raza1.setUrlFoto("url_dest1");
+		raza1.setCantidadPersonajes(0);
+
+		Raza raza2 = new Raza();
+		Set<Clase> clases2 = new HashSet<Clase>();
+		clases2.add(Clase.BRUJO);
+
+		raza2.setNombre("yRaza2");
+		raza2.setAltura(182);
+		raza2.setClases(clases1);
+		raza2.setEnergiaIncial(158);
+		raza2.setPeso(90);
+		raza2.setUrlFoto("url_dest2");
+		raza2.setCantidadPersonajes(2);
+
+		raza1.crearRaza(raza1);
+		raza2.crearRaza(raza2);
+
+	}
+
+	//recupera de la db los atributos de la raza con el id recibido como parámetro y los setea a la raza recibida como parámetro
+	public void recuperar_raza(Integer id, Raza raza) {
+		Connection conn = this.openConnection("jdbc:mysql://localhost:3306/epers_woe?user=root&password=root&useSSL=false");
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM raza where idRaza = ?;");
+			ps.setInt(1, id);
+			ResultSet resultSet = ps.executeQuery();
+			while (resultSet.next()) {
+				raza.setId(id);
+				raza.setNombre(resultSet.getString("nombre"));
+				raza.setAltura(resultSet.getInt("alt"));
+				raza.setClases(this.stringDelimitadoAClases(resultSet.getString("clases")));
+				raza.setEnergiaIncial(resultSet.getInt("energiaI"));
+				raza.setPeso(resultSet.getInt("peso"));
+				raza.setUrlFoto(resultSet.getString("urlFoto"));
+				raza.setCantidadPersonajes(resultSet.getInt("cantP"));
+			}
+			ps.close();
+		} catch (SQLException e) {
+			throw new RazaNoExistente(id);
+			//e.printStackTrace();
+		} finally {
+			this.closeConnection(conn);
+		}
+	}
+
+	//recibe un string con nombres de clases separados por ',' y retorna un conjunto de Clase con un miembro por cada una
+	public Set<Clase> stringDelimitadoAClases(String clases) {
+		String[] rec = clases.split(",");
+		Set<Clase> res = new java.util.HashSet<Clase>();
+		for (String clase : rec) {
+			res.add(Clase.valueOf(clase));
+		}
+		return res;
+	}
+
+	//registra el driver que se va a usar al instanciar la clase
+	public RazaDao() {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException("No se puede encontrar la clase del driver", e);
+		}
+	}
+
+	//implementación del método deleteAll
+	public void deleteAll() {
+		this.executeWithConnection(conn -> {
+			PreparedStatement ps = conn.prepareStatement("TRUNCATE raza;");
+			ps.execute();
+			ps.close();
+			return null;
+		});
+	}
+
+	//retorna un String con la lista de nombres de clases separados por ","
+	public String clasesAStringDelimitado(Set<Clase> clases) {
+		String res = "";
+		if (!clases.isEmpty()) {
+			for (Clase clase : clases) {
+				res = res + "," + clase.name();
+			}
+			res = res.substring(1);
+		}
+		return res;
+	}
+
+	//retorna el siguiente Id disponible para una raza
+	public Integer nextId() {
+		Connection conn = this.openConnection("jdbc:mysql://localhost:3306/epers_woe?user=root&password=root&useSSL=false");
+		Integer n = null;
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT MAX(idRaza) FROM raza;");
+			ResultSet resultSet = ps.executeQuery();
+			while (resultSet.next()) {
+				n = resultSet.getInt("MAX(idRAza)");
+			}
+			ps.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return n + 1;
+	}
+
 	//inserta los datos de una raza en la db
 	public void guardar(Raza raza) {
 		this.executeWithConnection(conn -> {
 			PreparedStatement ps = conn.prepareStatement(
 					"INSERT INTO raza (idRaza, nombre, clases, peso, alt, energiaI, urlFoto, cantP ) VALUES (?,?,?,?,?,?,?,?)");
-			ps.setString(1, raza.getId().toString());
-			ps.setString(1, raza.getNombre());
-			ps.setString(1, raza.getClases().toString());
-			ps.setString(1, new Integer(raza.getPeso()).toString() );
-			ps.setString(1, new Integer(raza.getAltura()).toString() );
-			ps.setString(1, new Integer(raza.getEnergiaInicial()).toString() );
-			ps.setString(1, raza.getUrlFoto());
-			ps.setString(1, new Integer(raza.getCantidadPersonajes()).toString() );
+			ps.setInt(1, raza.getId());
+			ps.setString(2, raza.getNombre());
+			ps.setString(3, clasesAStringDelimitado(raza.getClases()));
+			ps.setInt(4, new Integer(raza.getPeso()));
+			ps.setInt(5, new Integer(raza.getAltura()));
+			ps.setInt(6, new Integer(raza.getEnergiaInicial()));
+			ps.setString(7, raza.getUrlFoto());
+			ps.setInt(8, new Integer(raza.getCantidadPersonajes()));
 
 			ps.execute();
 
@@ -34,7 +178,6 @@ public class RazaDao {
 		}
 		);
 	}
-	
 	
 	/**
 	 * Ejecuta un bloque de codigo contra una conexion.
@@ -77,4 +220,18 @@ public class RazaDao {
 		}
 	}
 
+	//incrementa en 1 el valor de la columna cantP de la raza con el id recibido como parámetro
+	public void incrementarPjs(Integer razaId) {
+		Raza raza = new Raza();
+		this.recuperar_raza(razaId, raza);
+		Integer cantActual = raza.getCantidadPersonajes() + 1;
+		this.executeWithConnection(conn -> {
+			PreparedStatement ps = conn.prepareStatement("UPDATE raza set cantP = ? where idRaza = ?;");
+			ps.setInt(1, cantActual);
+			ps.setInt(2, razaId);
+			ps.execute();
+			ps.close();
+			return null;
+		});
+	}
 }
