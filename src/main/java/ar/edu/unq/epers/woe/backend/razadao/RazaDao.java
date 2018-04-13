@@ -76,7 +76,8 @@ public class RazaDao {
 			PreparedStatement ps = conn.prepareStatement("SELECT * FROM raza where idRaza = ?;");
 			ps.setInt(1, id);
 			ResultSet resultSet = ps.executeQuery();
-			while (resultSet.next()) {
+			while (resultSet .next()) {
+
 				raza.setId(id);
 				raza.setNombre(resultSet.getString("nombre"));
 				raza.setAltura(resultSet.getInt("alt"));
@@ -85,11 +86,14 @@ public class RazaDao {
 				raza.setPeso(resultSet.getInt("peso"));
 				raza.setUrlFoto(resultSet.getString("urlFoto"));
 				raza.setCantidadPersonajes(resultSet.getInt("cantP"));
+				
 			}
-			ps.close();
+			if( !(resultSet.first()) ) {
+				throw new RazaNoExistente(id);
+			}
+			ps.close();	
 		} catch (SQLException e) {
-			throw new RazaNoExistente(id);
-			//e.printStackTrace();
+			e.printStackTrace();
 		} finally {
 			this.closeConnection(conn);
 		}
