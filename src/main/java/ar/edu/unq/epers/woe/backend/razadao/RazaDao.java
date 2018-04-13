@@ -1,15 +1,16 @@
 package ar.edu.unq.epers.woe.backend.razadao;
 
 import java.sql.*;
-import java.util.ArrayList;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
+import ar.edu.unq.epers.woe.backend.service.data.DataService;
 import ar.edu.unq.epers.woe.backend.service.raza.RazaNoExistente;
 
-public class RazaDao {
+public class RazaDao implements DataService {
 
 	//trae todas las razas de la db ordenadas alfabéticamente y las agrega a la lista
 	public void agregarRazasOrdenadas(List<Raza> res) {
@@ -115,7 +116,8 @@ public class RazaDao {
 	}
 
 	//implementación del método deleteAll
-	public void deleteAll() {
+	@Override
+	public void eliminarDatos() {
 		this.executeWithConnection(conn -> {
 			PreparedStatement ps = conn.prepareStatement("TRUNCATE raza;");
 			ps.execute();
@@ -234,4 +236,6 @@ public class RazaDao {
 			return null;
 		});
 	}
+
+
 }
