@@ -55,6 +55,6 @@ public class RazaDAOTest {
 
     @After
     public void tearDown() {
-        this.razaDAO.deleteAll();
+        this.razaDAO.eliminarDatos();
     }
 }
