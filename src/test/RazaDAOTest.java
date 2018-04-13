@@ -4,9 +4,13 @@ import static org.junit.Assert.assertTrue;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import ar.edu.unq.epers.woe.backend.razadao.RazaDao;
+import ar.edu.unq.epers.woe.backend.service.raza.RazaNoExistente;
 
 import java.util.List;
 
@@ -15,6 +19,9 @@ public class RazaDAOTest {
 
     private RazaDao razaDAO = new RazaDao();
     private Raza raza;
+    
+	@Rule
+	public final ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void crearModelo() {
@@ -52,6 +59,14 @@ public class RazaDAOTest {
         this.raza.crearPersonaje(this.raza.getId(), "Seiya", Clase.CABALLERO);
         assertEquals(this.raza.getRaza(this.raza.getId()).getCantidadPersonajes(), cantPrevia + 1);
     }
+    
+    @Test 
+    public void test_al_recuperar_raza_con_id_invalido_ocurre_excepcion() { 	
+		int idInvalido = 123456;
+		thrown.expect(RazaNoExistente.class);
+		this.razaDAO.recuperar_raza(idInvalido, this.raza);
+    }
+
 
     @After
     public void tearDown() {
