@@ -12,9 +12,19 @@ import ar.edu.unq.epers.woe.backend.service.raza.RazaNoExistente;
 
 public class RazaDao implements DataService {
 
+	private String connURL = "jdbc:mysql://localhost:3306/epers_woe?user=root&password=root&useSSL=false";
+
+	private String getConnURL() {
+		return connURL;
+	}
+
+	public void setConnURL(String connURL) {
+		this.connURL = connURL;
+	}
+
 	//trae todas las razas de la db ordenadas alfabéticamente y las agrega a la lista
 	public void agregarRazasOrdenadas(List<Raza> res) {
-		Connection conn = this.openConnection("jdbc:mysql://localhost:3306/epers_woe?user=root&password=root&useSSL=false");
+		Connection conn = this.openConnection(this.getConnURL());
 		try {
 			PreparedStatement ps = conn.prepareStatement("SELECT * FROM raza order by nombre;");
 			ResultSet resultSet = ps.executeQuery();
@@ -72,7 +82,7 @@ public class RazaDao implements DataService {
 
 	//recupera de la db los atributos de la raza con el id recibido como parámetro y los setea a la raza recibida como parámetro
 	public void recuperar_raza(Integer id, Raza raza) {
-		Connection conn = this.openConnection("jdbc:mysql://localhost:3306/epers_woe?user=root&password=root&useSSL=false");
+		Connection conn = this.openConnection(this.getConnURL());
 		try {
 			PreparedStatement ps = conn.prepareStatement("SELECT * FROM raza where idRaza = ?;");
 			ps.setInt(1, id);
@@ -144,7 +154,7 @@ public class RazaDao implements DataService {
 
 	//retorna el siguiente Id disponible para una raza
 	public Integer nextId() {
-		Connection conn = this.openConnection("jdbc:mysql://localhost:3306/epers_woe?user=root&password=root&useSSL=false");
+		Connection conn = this.openConnection(this.getConnURL());
 		Integer n = null;
 		try {
 			PreparedStatement ps = conn.prepareStatement("SELECT MAX(idRaza) FROM raza;");
@@ -167,11 +177,11 @@ public class RazaDao implements DataService {
 			ps.setInt(1, raza.getId());
 			ps.setString(2, raza.getNombre());
 			ps.setString(3, clasesAStringDelimitado(raza.getClases()));
-			ps.setInt(4, new Integer(raza.getPeso()));
-			ps.setInt(5, new Integer(raza.getAltura()));
-			ps.setInt(6, new Integer(raza.getEnergiaInicial()));
+			ps.setInt(4, raza.getPeso());
+			ps.setInt(5, raza.getAltura());
+			ps.setInt(6, raza.getEnergiaInicial());
 			ps.setString(7, raza.getUrlFoto());
-			ps.setInt(8, new Integer(raza.getCantidadPersonajes()));
+			ps.setInt(8, raza.getCantidadPersonajes());
 
 			ps.execute();
 
@@ -189,7 +199,7 @@ public class RazaDao implements DataService {
 	 * Ejecuta un bloque de codigo contra una conexion.
 	 */
 	private <T> T executeWithConnection(ConnectionBlock<T> bloque) {
-		Connection connection = this.openConnection("jdbc:mysql://localhost:3306/epers_woe?user=root&password=root");
+		Connection connection = this.openConnection(this.getConnURL());
 		try {
 			return bloque.executeWith(connection);
 		} catch (SQLException e) {
@@ -207,7 +217,7 @@ public class RazaDao implements DataService {
 	private Connection openConnection(String url) {
 		try {
 			//La url de conexion no deberia estar harcodeada aca
-			return DriverManager.getConnection("jdbc:mysql://localhost:3306/epers_woe?user=root&password=root&useSSL=false");
+			return DriverManager.getConnection(url);
 
 		} catch (SQLException e) {
 			throw new RuntimeException("No se puede establecer una conexion", e);
