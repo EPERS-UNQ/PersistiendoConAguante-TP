@@ -54,6 +54,13 @@ public class RazaDAOTest {
     }
 
     @Test
+    public void al_recuperar_la_lista_de_razas_la_cantidad_coincide_con_las_almacenadas() {
+        List<Raza> razas = this.raza.getAllRazas();
+        assertTrue(!razas.isEmpty());
+        assertEquals(2, razas.size());
+    }
+
+    @Test
     public void al_crear_pj_se_incrementan_pjs_de_la_raza() {
         Integer cantPrevia = this.raza.getCantidadPersonajes();
         this.raza.crearPersonaje(this.raza.getId(), "Seiya", Clase.CABALLERO);
