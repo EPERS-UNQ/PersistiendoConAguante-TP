@@ -27,12 +27,15 @@ public class Raza implements RazaService {
 	private RazaDao razadao;
 
 	public Raza(){
-	
+		this.razadao = new RazaDao();
+	}
+
+	public Raza(String nombre) {
+		this.nombre = nombre;
 	}
 
 	//implementación del método crearPersonaje
 	public Personaje crearPersonaje(Integer razaId, String nombrePersonaje, Clase clase) {
-		this.razadao = new RazaDao();
 		this.razadao.incrementarPjs(razaId);
 		Personaje pj = new Personaje(this.getRaza(razaId), nombrePersonaje, clase);
 		return pj;
@@ -41,28 +44,21 @@ public class Raza implements RazaService {
 	//implementación del método getRaza
 	public Raza getRaza(Integer id) {
 		Raza raza = new Raza();
-		this.razadao = new RazaDao();
 		this.razadao.recuperar_raza(id, raza);
 		return raza;
 	}
 
 	//implementación del método crearRaza
 	public void crearRaza(Raza raza) {
-		this.razadao = new RazaDao();
 		raza.setId(this.razadao.nextId());
 		this.razadao.guardar(raza);
 	}
 
 	//implementación del método getAllRazas
 	public List<Raza> getAllRazas() {
-		this.razadao = new RazaDao();
 		List<Raza> res = new ArrayList<Raza>();
 		this.razadao.agregarRazasOrdenadas(res);
 		return res;
-	}
-	
-	public Raza(String nombre) {
-		this.nombre = nombre;
 	}
 
 	public Personaje crearPersonaje(String nombrePersonaje, Clase clase){
