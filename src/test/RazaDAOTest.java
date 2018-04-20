@@ -65,7 +65,7 @@ public class RazaDAOTest {
     @Test
     public void al_crear_pj_se_incrementan_pjs_de_la_raza() {
         Integer cantPrevia = this.raza.getCantidadPersonajes();
-        this.raza.crearPersonaje(this.raza.getId(), "Seiya", Clase.CABALLERO);
+        this.raza.crearPersonaje(this.raza.getId(), "Seiya", Clase.SACERDOTE);
         assertEquals(this.raza.getRaza(this.raza.getId()).getCantidadPersonajes(), cantPrevia + 1);
     }
     
