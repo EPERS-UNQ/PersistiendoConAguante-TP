@@ -1,4 +1,5 @@
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
@@ -10,6 +11,7 @@ import org.junit.rules.ExpectedException;
 
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import ar.edu.unq.epers.woe.backend.razadao.RazaDao;
+import ar.edu.unq.epers.woe.backend.service.raza.ClaseInvalida;
 import ar.edu.unq.epers.woe.backend.service.raza.RazaNoExistente;
 
 import java.util.List;
@@ -72,6 +74,15 @@ public class RazaDAOTest {
 		int idInvalido = 123456;
 		thrown.expect(RazaNoExistente.class);
 		this.razaDAO.recuperar_raza(idInvalido, this.raza);
+    }
+    
+    @Test
+    public void al_crearPersonaje_con_clase_que_no_corresponde_ocurre_excepcion() {
+    	Clase claseNoIncluidaEnRaza = Clase.PALADIN;
+    	assertFalse( this.raza.getClases().contains(claseNoIncluidaEnRaza) );
+    	
+    	thrown.expect(ClaseInvalida.class);
+		this.raza.crearPersonaje(this.raza.getId(), "Seiya", claseNoIncluidaEnRaza);
     }
 
 
