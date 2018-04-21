@@ -12,7 +12,7 @@ public class Item {
 	private String ubicacion;
 	private String tipo;
 	private Set<Clase> clases;
-	//private Set<Requerimiento> requerimientos;
+	//private Set<Requisito> requerimiento;
 	private int costoDeCompra;
 	private int costoDeVenta;
 	//private Set<Atributo> atributos; 
