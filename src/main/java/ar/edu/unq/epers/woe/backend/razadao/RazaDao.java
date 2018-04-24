@@ -9,11 +9,11 @@ import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import ar.edu.unq.epers.woe.backend.service.data.DataService;
 import ar.edu.unq.epers.woe.backend.service.raza.RazaNoExistente;
+import ar.edu.unq.epers.woe.backend.service.raza.ServiciosRaza;
 
-public class RazaDao implements DataService {
+public class RazaDao {
 
 	private String connURL = "jdbc:mysql://localhost:3306/epers_woe?user=root&password=root&useSSL=false";
-
 	private String getConnURL() {
 		return connURL;
 	}
@@ -48,40 +48,8 @@ public class RazaDao implements DataService {
 		}
 	}
 
-	//implementación del método crearSetDatosIniciales
-	public void crearSetDatosIniciales() {
-		Raza raza1 = new Raza();
-		Set<Clase> clases1 = new HashSet<Clase>();
-		clases1.add(Clase.SACERDOTE);
-		clases1.add(Clase.MAGO);
-
-		raza1.setNombre("xRaza1");
-		raza1.setAltura(55);
-		raza1.setClases(clases1);
-		raza1.setEnergiaIncial(10);
-		raza1.setPeso(50);
-		raza1.setUrlFoto("url_dest1");
-		raza1.setCantidadPersonajes(0);
-
-		Raza raza2 = new Raza();
-		Set<Clase> clases2 = new HashSet<Clase>();
-		clases2.add(Clase.BRUJO);
-
-		raza2.setNombre("yRaza2");
-		raza2.setAltura(182);
-		raza2.setClases(clases1);
-		raza2.setEnergiaIncial(158);
-		raza2.setPeso(90);
-		raza2.setUrlFoto("url_dest2");
-		raza2.setCantidadPersonajes(2);
-
-		raza1.crearRaza(raza1);
-		raza2.crearRaza(raza2);
-
-	}
-
 	//recupera de la db los atributos de la raza con el id recibido como parámetro y los setea a la raza recibida como parámetro
-	public void recuperar_raza(Integer id, Raza raza) {
+	public void recuperarRaza(Integer id, Raza raza) {
 		Connection conn = this.openConnection(this.getConnURL());
 		try {
 			PreparedStatement ps = conn.prepareStatement("SELECT * FROM raza where idRaza = ?;");
@@ -129,17 +97,6 @@ public class RazaDao implements DataService {
 		}
 	}
 
-	//implementación del método deleteAll
-	@Override
-	public void eliminarDatos() {
-		this.executeWithConnection(conn -> {
-			PreparedStatement ps = conn.prepareStatement("TRUNCATE raza;");
-			ps.execute();
-			ps.close();
-			return null;
-		});
-	}
-
 	//retorna un String con la lista de nombres de clases separados por ","
 	public String clasesAStringDelimitado(Set<Clase> clases) {
 		String res = "";
@@ -152,36 +109,19 @@ public class RazaDao implements DataService {
 		return res;
 	}
 
-	//retorna el siguiente Id disponible para una raza
-	public Integer nextId() {
-		Connection conn = this.openConnection(this.getConnURL());
-		Integer n = null;
-		try {
-			PreparedStatement ps = conn.prepareStatement("SELECT MAX(idRaza) FROM raza;");
-			ResultSet resultSet = ps.executeQuery();
-			while (resultSet.next()) {
-				n = resultSet.getInt("MAX(idRAza)");
-			}
-			ps.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return n + 1;
-	}
-
 	//inserta los datos de una raza en la db
 	public void guardar(Raza raza) {
 		this.executeWithConnection(conn -> {
 			PreparedStatement ps = conn.prepareStatement(
-					"INSERT INTO raza (idRaza, nombre, clases, peso, alt, energiaI, urlFoto, cantP ) VALUES (?,?,?,?,?,?,?,?)");
-			ps.setInt(1, raza.getId());
-			ps.setString(2, raza.getNombre());
-			ps.setString(3, clasesAStringDelimitado(raza.getClases()));
-			ps.setInt(4, raza.getPeso());
-			ps.setInt(5, raza.getAltura());
-			ps.setInt(6, raza.getEnergiaInicial());
-			ps.setString(7, raza.getUrlFoto());
-			ps.setInt(8, raza.getCantidadPersonajes());
+					"INSERT INTO raza (nombre, clases, peso, alt, energiaI, urlFoto, cantP ) VALUES (?,?,?,?,?,?,?)");
+			//ps.setInt(1, raza.getId());
+			ps.setString(1, raza.getNombre());
+			ps.setString(2, clasesAStringDelimitado(raza.getClases()));
+			ps.setInt(3, raza.getPeso());
+			ps.setInt(4, raza.getAltura());
+			ps.setInt(5, raza.getEnergiaInicial());
+			ps.setString(6, raza.getUrlFoto());
+			ps.setInt(7, raza.getCantidadPersonajes());
 
 			ps.execute();
 
@@ -239,12 +179,21 @@ public class RazaDao implements DataService {
 	//incrementa en 1 el valor de la columna cantP de la raza con el id recibido como parámetro
 	public void incrementarPjs(Integer razaId) {
 		Raza raza = new Raza();
-		this.recuperar_raza(razaId, raza);
+		this.recuperarRaza(razaId, raza);
 		Integer cantActual = raza.getCantidadPersonajes() + 1;
 		this.executeWithConnection(conn -> {
 			PreparedStatement ps = conn.prepareStatement("UPDATE raza set cantP = ? where idRaza = ?;");
 			ps.setInt(1, cantActual);
 			ps.setInt(2, razaId);
+			ps.execute();
+			ps.close();
+			return null;
+		});
+	}
+
+	public void executeQuery(String query) {
+		this.executeWithConnection(conn -> {
+			PreparedStatement ps = conn.prepareStatement(query);
 			ps.execute();
 			ps.close();
 			return null;
