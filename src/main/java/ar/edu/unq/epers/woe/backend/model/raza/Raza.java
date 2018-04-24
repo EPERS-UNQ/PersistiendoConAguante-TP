@@ -36,8 +36,8 @@ public class Raza implements RazaService {
 
 	//implementación del método crearPersonaje
 	public Personaje crearPersonaje(Integer razaId, String nombrePersonaje, Clase clase) {
+		Personaje pj = this.getRaza(razaId).crearPersonaje(nombrePersonaje, clase);
 		this.razadao.incrementarPjs(razaId);
-		Personaje pj = new Personaje(this.getRaza(razaId), nombrePersonaje, clase);
 		return pj;
 	}
 
