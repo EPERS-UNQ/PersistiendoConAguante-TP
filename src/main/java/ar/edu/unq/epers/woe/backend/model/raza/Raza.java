@@ -14,7 +14,7 @@ import java.util.Set;
  * 
  * @author Charly Backend
  */
-public class Raza implements RazaService {
+public class Raza {
 
 	private Integer id;
 	private String nombre;
@@ -24,41 +24,15 @@ public class Raza implements RazaService {
 	private int energiaInicial;
 	private String urlFoto;
 	private int cantidadPersonajes;
-	private RazaDao razadao;
 
-	public Raza(){
-		this.razadao = new RazaDao();
-	}
+
+	public Raza() {}
 
 	public Raza(String nombre) {
 		this.nombre = nombre;
 	}
 
-	//implementación del método crearPersonaje
-	public Personaje crearPersonaje(Integer razaId, String nombrePersonaje, Clase clase) {
-		Personaje pj = this.getRaza(razaId).crearPersonaje(nombrePersonaje, clase);
-		this.razadao.incrementarPjs(razaId);
-		return pj;
-	}
 
-	//implementación del método getRaza
-	public Raza getRaza(Integer id) {
-		Raza raza = new Raza();
-		this.razadao.recuperarRaza(id, raza);
-		return raza;
-	}
-
-	//implementación del método crearRaza
-	public void crearRaza(Raza raza) {
-		this.razadao.guardar(raza);
-	}
-
-	//implementación del método getAllRazas
-	public List<Raza> getAllRazas() {
-		List<Raza> res = new ArrayList<Raza>();
-		this.razadao.agregarRazasOrdenadas(res);
-		return res;
-	}
 
 	public Personaje crearPersonaje(String nombrePersonaje, Clase clase){
 		this.validarClase(clase);

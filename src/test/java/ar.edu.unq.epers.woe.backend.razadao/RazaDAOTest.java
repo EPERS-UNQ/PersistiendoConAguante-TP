@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
+import ar.edu.unq.epers.woe.backend.service.data.ServiciosDB;
+import ar.edu.unq.epers.woe.backend.service.raza.ServiciosRaza;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -21,14 +23,16 @@ public class RazaDAOTest {
 
     private RazaDao razaDAO = new RazaDao();
     private Raza raza;
+    private ServiciosRaza razaServ = new ServiciosRaza();
+    private ServiciosDB dbServ = new ServiciosDB();
     
 	@Rule
 	public final ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void crearModelo() {
-        this.razaDAO.crearSetDatosIniciales();
-        this.raza = new Raza().getRaza(1);
+        this.dbServ.crearSetDatosIniciales();
+        this.raza = this.razaServ.getRaza(1);
     }
 
     @Test
@@ -39,7 +43,7 @@ public class RazaDAOTest {
 
     @Test
     public void alRecuperarUnaRazaSeCreaUnaInstanciaConAtributosCorrectos() {
-        Raza raza = this.raza.getRaza(1);
+        Raza raza = this.razaServ.getRaza(1);
         assertEquals(raza.getId(), new Integer(1));
         assertEquals(raza.getNombre(), this.raza.getNombre());
         assertEquals(raza.getClases(), this.raza.getClases());
@@ -51,14 +55,14 @@ public class RazaDAOTest {
 
     @Test
     public void alRecuperarLaListaDeRazasEstanOrdenadasAlfabeticamente() {
-        List<Raza> razas = this.raza.getAllRazas();
+        List<Raza> razas = this.razaServ.getAllRazas();
         assertEquals(razas.get(0).getNombre(), "xRaza1");
         assertEquals(razas.get(1).getNombre(), "yRaza2");
     }
 
     @Test
     public void alRecuperarLaListaDeRazasLaCantidadCoincideConLasAlmacenadas() {
-        List<Raza> razas = this.raza.getAllRazas();
+        List<Raza> razas = this.razaServ.getAllRazas();
         assertTrue(!razas.isEmpty());
         assertEquals(2, razas.size());
     }
@@ -66,8 +70,8 @@ public class RazaDAOTest {
     @Test
     public void alCrearPjSeIncrementanPjsDeLaRaza() {
         Integer cantPrevia = this.raza.getCantidadPersonajes();
-        this.raza.crearPersonaje(this.raza.getId(), "Seiya", Clase.SACERDOTE);
-        assertEquals(this.raza.getRaza(this.raza.getId()).getCantidadPersonajes(), cantPrevia + 1);
+        this.razaServ.crearPersonaje(this.raza.getId(), "Seiya", Clase.SACERDOTE);
+        assertEquals(this.razaServ.getRaza(this.raza.getId()).getCantidadPersonajes(), cantPrevia + 1);
     }
     
     @Test 
@@ -83,12 +87,12 @@ public class RazaDAOTest {
     	assertFalse( this.raza.getClases().contains(claseNoIncluidaEnRaza) );
     	
     	thrown.expect(ClaseInvalida.class);
-		this.raza.crearPersonaje(this.raza.getId(), "Seiya", claseNoIncluidaEnRaza);
+        this.razaServ.crearPersonaje(this.raza.getId(), "Seiya", claseNoIncluidaEnRaza);
     }
 
 
     @After
     public void tearDown() {
-        this.razaDAO.eliminarDatos();
+        this.dbServ.eliminarDatos();
     }
 }

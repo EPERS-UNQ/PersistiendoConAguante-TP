@@ -9,11 +9,11 @@ import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import ar.edu.unq.epers.woe.backend.service.data.DataService;
 import ar.edu.unq.epers.woe.backend.service.raza.RazaNoExistente;
+import ar.edu.unq.epers.woe.backend.service.raza.ServiciosRaza;
 
-public class RazaDao implements DataService {
+public class RazaDao {
 
 	private String connURL = "jdbc:mysql://localhost:3306/epers_woe?user=root&password=root&useSSL=false";
-
 	private String getConnURL() {
 		return connURL;
 	}
@@ -46,38 +46,6 @@ public class RazaDao implements DataService {
 		} finally {
 			this.closeConnection(conn);
 		}
-	}
-
-	//implementación del método crearSetDatosIniciales
-	public void crearSetDatosIniciales() {
-		Raza raza1 = new Raza();
-		Set<Clase> clases1 = new HashSet<Clase>();
-		clases1.add(Clase.SACERDOTE);
-		clases1.add(Clase.MAGO);
-
-		raza1.setNombre("xRaza1");
-		raza1.setAltura(55);
-		raza1.setClases(clases1);
-		raza1.setEnergiaIncial(10);
-		raza1.setPeso(50);
-		raza1.setUrlFoto("url_dest1");
-		raza1.setCantidadPersonajes(0);
-
-		Raza raza2 = new Raza();
-		Set<Clase> clases2 = new HashSet<Clase>();
-		clases2.add(Clase.BRUJO);
-
-		raza2.setNombre("yRaza2");
-		raza2.setAltura(182);
-		raza2.setClases(clases1);
-		raza2.setEnergiaIncial(158);
-		raza2.setPeso(90);
-		raza2.setUrlFoto("url_dest2");
-		raza2.setCantidadPersonajes(2);
-
-		raza1.crearRaza(raza1);
-		raza2.crearRaza(raza2);
-
 	}
 
 	//recupera de la db los atributos de la raza con el id recibido como parámetro y los setea a la raza recibida como parámetro
@@ -127,17 +95,6 @@ public class RazaDao implements DataService {
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException("No se puede encontrar la clase del driver", e);
 		}
-	}
-
-	//implementación del método deleteAll
-	@Override
-	public void eliminarDatos() {
-		this.executeWithConnection(conn -> {
-			PreparedStatement ps = conn.prepareStatement("TRUNCATE raza;");
-			ps.execute();
-			ps.close();
-			return null;
-		});
 	}
 
 	//retorna un String con la lista de nombres de clases separados por ","
@@ -228,6 +185,15 @@ public class RazaDao implements DataService {
 			PreparedStatement ps = conn.prepareStatement("UPDATE raza set cantP = ? where idRaza = ?;");
 			ps.setInt(1, cantActual);
 			ps.setInt(2, razaId);
+			ps.execute();
+			ps.close();
+			return null;
+		});
+	}
+
+	public void executeQuery(String query) {
+		this.executeWithConnection(conn -> {
+			PreparedStatement ps = conn.prepareStatement(query);
 			ps.execute();
 			ps.close();
 			return null;
