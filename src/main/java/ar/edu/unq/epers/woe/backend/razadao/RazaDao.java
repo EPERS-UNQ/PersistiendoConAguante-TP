@@ -81,7 +81,7 @@ public class RazaDao implements DataService {
 	}
 
 	//recupera de la db los atributos de la raza con el id recibido como parámetro y los setea a la raza recibida como parámetro
-	public void recuperar_raza(Integer id, Raza raza) {
+	public void recuperarRaza(Integer id, Raza raza) {
 		Connection conn = this.openConnection(this.getConnURL());
 		try {
 			PreparedStatement ps = conn.prepareStatement("SELECT * FROM raza where idRaza = ?;");
@@ -222,7 +222,7 @@ public class RazaDao implements DataService {
 	//incrementa en 1 el valor de la columna cantP de la raza con el id recibido como parámetro
 	public void incrementarPjs(Integer razaId) {
 		Raza raza = new Raza();
-		this.recuperar_raza(razaId, raza);
+		this.recuperarRaza(razaId, raza);
 		Integer cantActual = raza.getCantidadPersonajes() + 1;
 		this.executeWithConnection(conn -> {
 			PreparedStatement ps = conn.prepareStatement("UPDATE raza set cantP = ? where idRaza = ?;");

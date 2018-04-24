@@ -44,7 +44,7 @@ public class Raza implements RazaService {
 	//implementación del método getRaza
 	public Raza getRaza(Integer id) {
 		Raza raza = new Raza();
-		this.razadao.recuperar_raza(id, raza);
+		this.razadao.recuperarRaza(id, raza);
 		return raza;
 	}
 

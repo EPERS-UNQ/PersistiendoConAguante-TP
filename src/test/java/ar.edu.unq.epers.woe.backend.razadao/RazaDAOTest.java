@@ -3,18 +3,16 @@ package ar.edu.unq.epers.woe.backend.razadao;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
-import ar.edu.unq.epers.woe.backend.razadao.RazaDao;
 import ar.edu.unq.epers.woe.backend.service.raza.ClaseInvalida;
 import ar.edu.unq.epers.woe.backend.service.raza.RazaNoExistente;
+
 
 import java.util.List;
 
@@ -34,13 +32,13 @@ public class RazaDAOTest {
     }
 
     @Test
-    public void luego_de_guardar_raza_se_obtiene_primerId_disponible() {
+    public void luegoDeGuardarRazaSeObtienePrimerIdDisponible() {
         Integer nextId = this.raza.getId() + 1;
         assertEquals(nextId, new Integer(2));
     }
 
     @Test
-    public void al_recuperar_una_raza_se_crea_una_instancia_con_atributos_correctos() {
+    public void alRecuperarUnaRazaSeCreaUnaInstanciaConAtributosCorrectos() {
         Raza raza = this.raza.getRaza(1);
         assertEquals(raza.getId(), new Integer(1));
         assertEquals(raza.getNombre(), this.raza.getNombre());
@@ -52,35 +50,35 @@ public class RazaDAOTest {
     }
 
     @Test
-    public void al_recuperar_la_lista_de_razas_estan_ordenadas_alfabeticamente() {
+    public void alRecuperarLaListaDeRazasEstanOrdenadasAlfabeticamente() {
         List<Raza> razas = this.raza.getAllRazas();
         assertEquals(razas.get(0).getNombre(), "xRaza1");
         assertEquals(razas.get(1).getNombre(), "yRaza2");
     }
 
     @Test
-    public void al_recuperar_la_lista_de_razas_la_cantidad_coincide_con_las_almacenadas() {
+    public void alRecuperarLaListaDeRazasLaCantidadCoincideConLasAlmacenadas() {
         List<Raza> razas = this.raza.getAllRazas();
         assertTrue(!razas.isEmpty());
         assertEquals(2, razas.size());
     }
 
     @Test
-    public void al_crear_pj_se_incrementan_pjs_de_la_raza() {
+    public void alCrearPjSeIncrementanPjsDeLaRaza() {
         Integer cantPrevia = this.raza.getCantidadPersonajes();
         this.raza.crearPersonaje(this.raza.getId(), "Seiya", Clase.SACERDOTE);
         assertEquals(this.raza.getRaza(this.raza.getId()).getCantidadPersonajes(), cantPrevia + 1);
     }
     
     @Test 
-    public void test_al_recuperar_raza_con_id_invalido_ocurre_excepcion() { 	
+    public void testAlRecuperarRazaConIdInvalidoOcurreExcepcion() {
 		int idInvalido = 123456;
 		thrown.expect(RazaNoExistente.class);
-		this.razaDAO.recuperar_raza(idInvalido, this.raza);
+		this.razaDAO.recuperarRaza(idInvalido, this.raza);
     }
     
     @Test
-    public void al_crearPersonaje_con_clase_que_no_corresponde_ocurre_excepcion() {
+    public void alCrearPersonajeConClaseQueNoCorrespondeOcurreExcepcion() {
     	Clase claseNoIncluidaEnRaza = Clase.PALADIN;
     	assertFalse( this.raza.getClases().contains(claseNoIncluidaEnRaza) );
     	
