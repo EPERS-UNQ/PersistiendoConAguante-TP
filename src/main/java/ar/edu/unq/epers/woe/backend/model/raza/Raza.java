@@ -50,7 +50,6 @@ public class Raza implements RazaService {
 
 	//implementación del método crearRaza
 	public void crearRaza(Raza raza) {
-		raza.setId(this.razadao.nextId());
 		this.razadao.guardar(raza);
 	}
 

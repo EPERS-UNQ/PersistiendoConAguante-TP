@@ -152,36 +152,19 @@ public class RazaDao implements DataService {
 		return res;
 	}
 
-	//retorna el siguiente Id disponible para una raza
-	public Integer nextId() {
-		Connection conn = this.openConnection(this.getConnURL());
-		Integer n = null;
-		try {
-			PreparedStatement ps = conn.prepareStatement("SELECT MAX(idRaza) FROM raza;");
-			ResultSet resultSet = ps.executeQuery();
-			while (resultSet.next()) {
-				n = resultSet.getInt("MAX(idRAza)");
-			}
-			ps.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return n + 1;
-	}
-
 	//inserta los datos de una raza en la db
 	public void guardar(Raza raza) {
 		this.executeWithConnection(conn -> {
 			PreparedStatement ps = conn.prepareStatement(
-					"INSERT INTO raza (idRaza, nombre, clases, peso, alt, energiaI, urlFoto, cantP ) VALUES (?,?,?,?,?,?,?,?)");
-			ps.setInt(1, raza.getId());
-			ps.setString(2, raza.getNombre());
-			ps.setString(3, clasesAStringDelimitado(raza.getClases()));
-			ps.setInt(4, raza.getPeso());
-			ps.setInt(5, raza.getAltura());
-			ps.setInt(6, raza.getEnergiaInicial());
-			ps.setString(7, raza.getUrlFoto());
-			ps.setInt(8, raza.getCantidadPersonajes());
+					"INSERT INTO raza (nombre, clases, peso, alt, energiaI, urlFoto, cantP ) VALUES (?,?,?,?,?,?,?)");
+			//ps.setInt(1, raza.getId());
+			ps.setString(1, raza.getNombre());
+			ps.setString(2, clasesAStringDelimitado(raza.getClases()));
+			ps.setInt(3, raza.getPeso());
+			ps.setInt(4, raza.getAltura());
+			ps.setInt(5, raza.getEnergiaInicial());
+			ps.setString(6, raza.getUrlFoto());
+			ps.setInt(7, raza.getCantidadPersonajes());
 
 			ps.execute();
 

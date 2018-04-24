@@ -35,7 +35,8 @@ public class RazaDAOTest {
 
     @Test
     public void luego_de_guardar_raza_se_obtiene_primerId_disponible() {
-        assertEquals(this.razaDAO.nextId(), new Integer(3));
+        Integer nextId = this.raza.getId() + 1;
+        assertEquals(nextId, new Integer(2));
     }
 
     @Test
