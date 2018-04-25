@@ -14,20 +14,20 @@ import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 
 public class PersonajeTest {
 
-    private RazaDao razaDAO = new RazaDao();
-    private Raza raza;
-    private ServiciosRaza razaServ = new ServiciosRaza();
-    private ServiciosDB dbServ = new ServiciosDB();
+//    private RazaDao razaDAO = new RazaDao();
+//    private Raza raza;
+//    private ServiciosRaza razaServ = new ServiciosRaza();
+//    private ServiciosDB dbServ = new ServiciosDB();
 
     @Before
     public void crearModelo() {
-        this.dbServ.crearSetDatosIniciales();
-        this.raza = this.razaServ.getRaza(1);
+//        this.dbServ.crearSetDatosIniciales();
+//        this.raza = this.razaServ.getRaza(1);
     }
 
     @Test
     public void alSubirDeNivelPJSeIncrementanAtributos() {
-        Personaje pj = this.raza.crearPersonaje("Mononoke", Clase.MAGO);
+        Personaje pj = new Personaje(new Raza("tstRaza"), "tstPJ", Clase.MAGO);
         pj.ganarExperiencia(110);
         pj.subirDeNivelSiPuede();
         assertEquals(pj.getExp(), new Integer(110));
@@ -39,6 +39,6 @@ public class PersonajeTest {
 
     @After
     public void tearDown() {
-        this.dbServ.eliminarDatos();
+//        this.dbServ.eliminarDatos();
     }
 }
