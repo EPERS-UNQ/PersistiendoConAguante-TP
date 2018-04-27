@@ -29,7 +29,6 @@ public class PersonajeTest {
     public void alSubirDeNivelPJSeIncrementanAtributos() {
         Personaje pj = new Personaje(new Raza("tstRaza"), "tstPJ", Clase.MAGO);
         pj.ganarExperiencia(110);
-        pj.subirDeNivelSiPuede();
         assertEquals(pj.getExp(), new Integer(110));
         assertEquals(pj.getNivel(), new Integer(2));
         assertEquals(pj.getAtributo(Fuerza.class).getValor(), new Float(1.02));

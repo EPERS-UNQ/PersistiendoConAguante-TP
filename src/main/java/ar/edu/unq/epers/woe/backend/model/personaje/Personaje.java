@@ -20,7 +20,7 @@ public class Personaje {
 	private Integer nivel;
 	private Integer exp;
 	private Float billetera;
-	//private Inventario inventario;
+	private Inventario inventario;
 	//private mochila Set<Item>;
 	private Set<Atributo> atributos;
 	//private lugar Lugar;
@@ -112,6 +112,7 @@ public class Personaje {
 
 	public void ganarExperiencia(Integer exp) {
 		this.setExp(this.getExp() + exp);
+		this.subirDeNivelSiPuede();
 	}
 
 	public Boolean expSuficiente() {
