@@ -10,7 +10,6 @@ public class Tienda extends Lugar {
 
 	public Tienda(String nombreLugar) {
 		super(nombreLugar);
-		// TODO Auto-generated constructor stub
 	}
 
 	public void setItems(Set<Item> listaItems) {
