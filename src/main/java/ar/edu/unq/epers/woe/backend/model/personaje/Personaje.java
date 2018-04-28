@@ -21,7 +21,16 @@ public class Personaje {
 	private Integer exp;
 	private Float billetera;
 	private Inventario inventario;
-	//private mochila Set<Item>;
+
+	public Mochila getMochila() {
+		return mochila;
+	}
+
+	public void setMochila(Mochila mochila) {
+		this.mochila = mochila;
+	}
+
+	private Mochila mochila;
 	private Set<Atributo> atributos;
 	//private lugar Lugar;
 
@@ -32,6 +41,7 @@ public class Personaje {
 		this.clase = clase;
 		this.nivel = 1;
 		this.exp = 0;
+		this.mochila = new Mochila();
 		this.billetera = 0f;
 		this.atributos = new HashSet<>();
 		this.atributos.add(new Armadura(1f));
@@ -134,10 +144,10 @@ public class Personaje {
 			this.nivel++;
 			switch(this.getClase().ordinal()) {
 				case 0:
-
+					this.getAtributo(Destreza.class).setValor(this.getAtributo(Destreza.class).getValor() * 1.02f);
 					break;
 				case 1:
-
+					this.getAtributo(Vida.class).setValor(this.getAtributo(Vida.class).getValor() * 1.06f);
 					break;
 				case 2:
 					this.getAtributo(Fuerza.class).setValor(this.getAtributo(Fuerza.class).getValor() * 1.1f);
@@ -145,13 +155,15 @@ public class Personaje {
 					this.getAtributo(Vida.class).setValor(this.getAtributo(Vida.class).getValor() * 1.08f);
 					break;
 				case 3:
-
+					this.getAtributo(Vida.class).setValor(this.getAtributo(Vida.class).getValor() * 1.02f);
 					break;
 				case 4:
-
+					this.getAtributo(Fuerza.class).setValor(this.getAtributo(Fuerza.class).getValor() * 1.04f);
+					this.getAtributo(Destreza.class).setValor(this.getAtributo(Destreza.class).getValor() * 1.01f);
 					break;
 				case 5:
-
+					this.getAtributo(Fuerza.class).setValor(this.getAtributo(Fuerza.class).getValor() * 1.02f);
+					this.getAtributo(Destreza.class).setValor(this.getAtributo(Destreza.class).getValor() * 1.09f);
 					break;
 				case 6:
 					this.getAtributo(Fuerza.class).setValor(this.getAtributo(Fuerza.class).getValor() * 1.02f);
@@ -159,13 +171,14 @@ public class Personaje {
 					this.getAtributo(Vida.class).setValor(this.getAtributo(Vida.class).getValor() * 1.05f);
 					break;
 				case 7:
-
+					this.getAtributo(Vida.class).setValor(this.getAtributo(Vida.class).getValor() * 1.05f);
 					break;
 				case 8:
-
+					this.getAtributo(Vida.class).setValor(this.getAtributo(Vida.class).getValor() * 1.02f);
+					this.getAtributo(Fuerza.class).setValor(this.getAtributo(Fuerza.class).getValor() * 1.04f);
 					break;
 				case 9:
-
+					this.getAtributo(Fuerza.class).setValor(this.getAtributo(Fuerza.class).getValor() * 1.06f);
 					break;
 			}
 		}
