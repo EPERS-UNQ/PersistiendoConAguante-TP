@@ -1,7 +1,6 @@
 package ar.edu.unq.epers.woe.backend.model.lugar;
 
 import java.util.Set;
-
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 
 public class Tienda extends Lugar {
@@ -13,7 +12,7 @@ public class Tienda extends Lugar {
 	}
 
 	public void setItems(Set<Item> listaItems) {
-		items = listaItems;
+		this.items = listaItems;
 		
 	}
 
