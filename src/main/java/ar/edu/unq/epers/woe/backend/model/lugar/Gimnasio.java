@@ -18,4 +18,10 @@ public class Gimnasio extends Lugar  {
 		return personajes;
 	}
 
+	public void ingresaPersonaje(Personaje p) {
+		// TODO deberia cambiar el lugar de ubicacion del personaje
+		personajes.add(p);
+		
+	}
+
 }
