@@ -1,5 +1,6 @@
 package ar.edu.unq.epers.woe.backend.model.personaje;
 
+import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import java.util.HashSet;
@@ -20,19 +21,9 @@ public class Personaje {
 	private Integer nivel;
 	private Integer exp;
 	private Float billetera;
-	private Inventario inventario;
-
-	public Mochila getMochila() {
-		return mochila;
-	}
-
-	public void setMochila(Mochila mochila) {
-		this.mochila = mochila;
-	}
-
 	private Mochila mochila;
 	private Set<Atributo> atributos;
-	//private lugar Lugar;
+	private Lugar lugar;
 
 
 	public Personaje(Raza raza, String nombre, Clase clase) {
@@ -53,6 +44,22 @@ public class Personaje {
 
 
 	// Getters y Setters
+	public Lugar getLugar() {
+		return lugar;
+	}
+
+	public void setLugar(Lugar lugar) {
+		this.lugar = lugar;
+	}
+
+	public Mochila getMochila() {
+		return mochila;
+	}
+
+	public void setMochila(Mochila mochila) {
+		this.mochila = mochila;
+	}
+
 	public String getNombre() {
 		return this.nombre;
 	}

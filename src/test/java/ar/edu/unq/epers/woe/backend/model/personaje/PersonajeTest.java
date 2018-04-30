@@ -1,14 +1,8 @@
 package ar.edu.unq.epers.woe.backend.model.personaje;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import ar.edu.unq.epers.woe.backend.model.item.Item;
+import ar.edu.unq.epers.woe.backend.model.lugar.Taberna;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
-import ar.edu.unq.epers.woe.backend.razadao.RazaDao;
-import ar.edu.unq.epers.woe.backend.service.data.ServiciosDB;
-import ar.edu.unq.epers.woe.backend.service.raza.ServiciosRaza;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -16,7 +10,8 @@ import org.junit.Test;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import org.junit.rules.ExpectedException;
 
-import java.util.ArrayList;
+
+import static org.junit.Assert.*;
 
 public class PersonajeTest {
 
@@ -58,8 +53,15 @@ public class PersonajeTest {
         this.pj.getMochila().agregarItem(i);
     }
 
+    @Test
+    public void alIrUnPersonajeAUnLugarYPreguntarleDondeEstaRetornaElLugar() {
+        this.pj.setLugar(new Taberna("Moe's"));
+        assertEquals(this.pj.getLugar().getClass(), Taberna.class);
+        assertSame("Moe's", this.pj.getLugar().getNombre());
+    }
+
     @After
     public void tearDown() {
-//        this.dbServ.eliminarDatos();
+
     }
 }
