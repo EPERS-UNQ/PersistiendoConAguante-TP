@@ -60,6 +60,23 @@ public class PersonajeTest {
         assertSame("Moe's", this.pj.getLugar().getNombre());
     }
 
+    @Test
+    public void alAgregarUnItemAlInventarioElItemEstaEnEsaPosicion() {
+        Item i = new Item(null, "torso", null, null, 0, 0);
+        this.pj.getInventario().setItemEnUnaUbicacion(i, this.pj);
+        assertEquals(this.pj.getInventario().getEnUbicacion("torso").getItem(), i);
+    }
+
+    @Test
+    public void alAgregarUnItemAlInventarioConOtroItemElItemEstaEnEsaPosicionYElOtroEnLaMochila() {
+        Item i = new Item("plateMail", "torso", null, null, 0, 0);
+        Item ii = new Item(null, "torso", null, null, 0, 0);
+        this.pj.getInventario().setItemEnUnaUbicacion(i, this.pj);
+        this.pj.getInventario().setItemEnUnaUbicacion(ii, this.pj);
+        assertEquals(this.pj.getInventario().getEnUbicacion("torso").getItem(), ii);
+        assertEquals(this.pj.getMochila().getItems().get(0), i);
+    }
+
     @After
     public void tearDown() {
 

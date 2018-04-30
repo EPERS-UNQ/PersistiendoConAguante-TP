@@ -1,69 +1,38 @@
 package ar.edu.unq.epers.woe.backend.model.personaje;
 
+import ar.edu.unq.epers.woe.backend.model.item.Item;
+
+import java.util.HashSet;
+import java.util.Set;
+
 public class Inventario {
 
-    private Slot cabeza;
-    private Slot torso;
-    private Slot piernas;
-    private Slot pies;
-    private Slot izquierda;
-    private Slot derecha;
+    private Set<Slot> slots;
 
     public Inventario() {
-        this.cabeza = new Slot("cabeza");
-        this.torso = new Slot("torso");
-        this.piernas = new Slot("piernas");
-        this.pies = new Slot("pies");
-        this.izquierda = new Slot("izquierda");
-        this.derecha = new Slot("derecha");
+        this.slots = new HashSet<>();
+        this.slots.add(new Slot("cabeza"));
+        this.slots.add(new Slot("torso"));
+        this.slots.add(new Slot("piernas"));
+        this.slots.add(new Slot("pies"));
+        this.slots.add(new Slot("izquierda"));
+        this.slots.add(new Slot("derecha"));
     }
 
-    public void setCabeza(Slot cabeza) {
-        this.cabeza = cabeza;
+    public void setItemEnUnaUbicacion(Item item, Personaje pj) {
+        if(this.getEnUbicacion(item.getUbicacion()).getItem() != null) {
+            pj.getMochila().agregarItem(this.getEnUbicacion(item.getUbicacion()).getItem());
+        }
+        this.getEnUbicacion(item.getUbicacion()).setItem(item);
     }
 
-    public void setTorso(Slot torso) {
-        this.torso = torso;
+    public Slot getEnUbicacion(String ubicacion) {
+        Slot res = null;
+        for(Slot s : this.slots) {
+            if(s.getUbicacion().equals(ubicacion)) {
+                res = s;
+            }
+        }
+        return res;
     }
-
-    public void setPiernas(Slot piernas) {
-        this.piernas = piernas;
-    }
-
-    public void setPies(Slot pies) {
-        this.pies = pies;
-    }
-
-    public void setIzquierda(Slot izquierda) {
-        this.izquierda = izquierda;
-    }
-
-    public void setDerecha(Slot derecha) {
-        this.derecha = derecha;
-    }
-
-    public Slot getCabeza() {
-        return cabeza;
-    }
-
-    public Slot getTorso() {
-        return torso;
-    }
-
-    public Slot getPiernas() {
-        return piernas;
-    }
-
-    public Slot getPies() {
-        return pies;
-    }
-
-    public Slot getIzquierda() {
-        return izquierda;
-    }
-
-    public Slot getDerecha() {
-        return derecha;
-    }
-
 }

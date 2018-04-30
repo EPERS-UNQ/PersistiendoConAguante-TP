@@ -21,6 +21,7 @@ public class Personaje {
 	private Integer nivel;
 	private Integer exp;
 	private Float billetera;
+	private Inventario inventario;
 	private Mochila mochila;
 	private Set<Atributo> atributos;
 	private Lugar lugar;
@@ -33,6 +34,7 @@ public class Personaje {
 		this.nivel = 1;
 		this.exp = 0;
 		this.mochila = new Mochila();
+		this.inventario = new Inventario();
 		this.billetera = 0f;
 		this.atributos = new HashSet<>();
 		this.atributos.add(new Armadura(1f));
@@ -44,6 +46,14 @@ public class Personaje {
 
 
 	// Getters y Setters
+	public Inventario getInventario() {
+		return inventario;
+	}
+
+	public void setInventario(Inventario inventario) {
+		this.inventario = inventario;
+	}
+
 	public Lugar getLugar() {
 		return lugar;
 	}
