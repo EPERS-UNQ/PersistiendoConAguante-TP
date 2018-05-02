@@ -24,6 +24,7 @@ public class Personaje {
 	private Inventario inventario;
 	private Mochila mochila;
 	private Set<Atributo> atributos;
+	private Set<String> misionesCumplidas;
 	private Lugar lugar;
 
 
@@ -37,6 +38,7 @@ public class Personaje {
 		this.inventario = new Inventario();
 		this.billetera = 0f;
 		this.atributos = new HashSet<>();
+		this.misionesCumplidas = new HashSet<>();
 		this.atributos.add(new Armadura(1f));
 		this.atributos.add(new Danho(1f));
 		this.atributos.add(new Destreza(1f));
@@ -46,6 +48,14 @@ public class Personaje {
 
 
 	// Getters y Setters
+	public Set<String> getMisionesCumplidas() {
+		return misionesCumplidas;
+	}
+
+	public void setMisionesCumplidas(Set<String> misionesCumplidas) {
+		this.misionesCumplidas = misionesCumplidas;
+	}
+
 	public Inventario getInventario() {
 		return inventario;
 	}
