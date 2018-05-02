@@ -33,7 +33,6 @@ public class Requerimiento {
     }
 
     public Boolean cumpleRequerimiento(Personaje pj) {
-        Boolean res = true;
         Boolean cumple_lvl = pj.getNivel() >= this.getNivel_req();
         Boolean cumple_atribs = cumpleAtributos(pj, this.atributos_req);
         return cumple_lvl && cumple_atribs;
