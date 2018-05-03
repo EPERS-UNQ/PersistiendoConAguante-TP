@@ -24,6 +24,7 @@ public class Personaje {
 	private Inventario inventario;
 	private Mochila mochila;
 	private Set<Atributo> atributos;
+	private Set<String> misionesAceptadas;
 	private Set<String> misionesCumplidas;
 	private Lugar lugar;
 
@@ -38,6 +39,7 @@ public class Personaje {
 		this.inventario = new Inventario();
 		this.billetera = 0f;
 		this.atributos = new HashSet<>();
+		this.misionesAceptadas = new HashSet<>();
 		this.misionesCumplidas = new HashSet<>();
 		this.atributos.add(new Armadura(1f));
 		this.atributos.add(new Danho(1f));
@@ -48,6 +50,14 @@ public class Personaje {
 
 
 	// Getters y Setters
+	public Set<String> getMisionesAceptadas() {
+		return misionesAceptadas;
+	}
+
+	public void setMisionesAceptadas(Set<String> misionesAceptadas) {
+		this.misionesAceptadas = misionesAceptadas;
+	}
+
 	public Set<String> getMisionesCumplidas() {
 		return misionesCumplidas;
 	}
@@ -171,45 +181,84 @@ public class Personaje {
 			this.nivel++;
 			switch(this.getClase().ordinal()) {
 				case 0:
-					this.getAtributo(Destreza.class).setValor(this.getAtributo(Destreza.class).getValor() * 1.02f);
+					incrementarBrujo();
 					break;
 				case 1:
-					this.getAtributo(Vida.class).setValor(this.getAtributo(Vida.class).getValor() * 1.06f);
+					incrementarDruida();
 					break;
 				case 2:
-					this.getAtributo(Fuerza.class).setValor(this.getAtributo(Fuerza.class).getValor() * 1.1f);
-					this.getAtributo(Destreza.class).setValor(this.getAtributo(Destreza.class).getValor() * 1.03f);
-					this.getAtributo(Vida.class).setValor(this.getAtributo(Vida.class).getValor() * 1.08f);
+					incrementarCaballero();
 					break;
 				case 3:
-					this.getAtributo(Vida.class).setValor(this.getAtributo(Vida.class).getValor() * 1.02f);
+					incrementarSacerdote();
 					break;
 				case 4:
-					this.getAtributo(Fuerza.class).setValor(this.getAtributo(Fuerza.class).getValor() * 1.04f);
-					this.getAtributo(Destreza.class).setValor(this.getAtributo(Destreza.class).getValor() * 1.01f);
+					incrementarGuerrero();
 					break;
 				case 5:
-					this.getAtributo(Fuerza.class).setValor(this.getAtributo(Fuerza.class).getValor() * 1.02f);
-					this.getAtributo(Destreza.class).setValor(this.getAtributo(Destreza.class).getValor() * 1.09f);
+					incrementarMonje();
 					break;
 				case 6:
-					this.getAtributo(Fuerza.class).setValor(this.getAtributo(Fuerza.class).getValor() * 1.02f);
-					this.getAtributo(Destreza.class).setValor(this.getAtributo(Destreza.class).getValor() * 1.09f);
-					this.getAtributo(Vida.class).setValor(this.getAtributo(Vida.class).getValor() * 1.05f);
+					incrementarMago();
 					break;
 				case 7:
-					this.getAtributo(Vida.class).setValor(this.getAtributo(Vida.class).getValor() * 1.05f);
+					incrementarCazador();
 					break;
 				case 8:
-					this.getAtributo(Vida.class).setValor(this.getAtributo(Vida.class).getValor() * 1.02f);
-					this.getAtributo(Fuerza.class).setValor(this.getAtributo(Fuerza.class).getValor() * 1.04f);
+					incrementarPaladin();
 					break;
 				case 9:
-					this.getAtributo(Fuerza.class).setValor(this.getAtributo(Fuerza.class).getValor() * 1.06f);
+					incrementarPicaro();
 					break;
 			}
 		}
+	}
 
+	private void incrementarPicaro() {
+		this.getAtributo(Fuerza.class).setValor(this.getAtributo(Fuerza.class).getValor() * 1.06f);
+	}
+
+	private void incrementarPaladin() {
+		this.getAtributo(Vida.class).setValor(this.getAtributo(Vida.class).getValor() * 1.02f);
+		this.getAtributo(Fuerza.class).setValor(this.getAtributo(Fuerza.class).getValor() * 1.04f);
+	}
+
+	private void incrementarCazador() {
+		this.getAtributo(Vida.class).setValor(this.getAtributo(Vida.class).getValor() * 1.05f);
+	}
+
+	private void incrementarMago() {
+		this.getAtributo(Fuerza.class).setValor(this.getAtributo(Fuerza.class).getValor() * 1.02f);
+		this.getAtributo(Destreza.class).setValor(this.getAtributo(Destreza.class).getValor() * 1.09f);
+		this.getAtributo(Vida.class).setValor(this.getAtributo(Vida.class).getValor() * 1.05f);
+	}
+
+	private void incrementarMonje() {
+		this.getAtributo(Fuerza.class).setValor(this.getAtributo(Fuerza.class).getValor() * 1.02f);
+		this.getAtributo(Destreza.class).setValor(this.getAtributo(Destreza.class).getValor() * 1.09f);
+	}
+
+	private void incrementarGuerrero() {
+		this.getAtributo(Fuerza.class).setValor(this.getAtributo(Fuerza.class).getValor() * 1.04f);
+		this.getAtributo(Destreza.class).setValor(this.getAtributo(Destreza.class).getValor() * 1.01f);
+	}
+
+	private void incrementarSacerdote() {
+		this.getAtributo(Vida.class).setValor(this.getAtributo(Vida.class).getValor() * 1.02f);
+	}
+
+	private void incrementarCaballero() {
+		this.getAtributo(Fuerza.class).setValor(this.getAtributo(Fuerza.class).getValor() * 1.1f);
+		this.getAtributo(Destreza.class).setValor(this.getAtributo(Destreza.class).getValor() * 1.03f);
+		this.getAtributo(Vida.class).setValor(this.getAtributo(Vida.class).getValor() * 1.08f);
+	}
+
+	private void incrementarDruida() {
+		this.getAtributo(Vida.class).setValor(this.getAtributo(Vida.class).getValor() * 1.06f);
+	}
+
+	private void incrementarBrujo() {
+		this.getAtributo(Destreza.class).setValor(this.getAtributo(Destreza.class).getValor() * 1.02f);
 	}
 
 }
