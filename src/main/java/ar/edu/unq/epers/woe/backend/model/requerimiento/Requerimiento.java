@@ -11,6 +11,8 @@ public class Requerimiento {
     private Set<Atributo> atributos_req = new HashSet<>();
 
 
+    public Requerimiento() {}
+
     public Requerimiento(Integer nivel_req, Set<Atributo> atributos_req) {
         this.nivel_req = nivel_req;
         this.atributos_req = atributos_req;
