@@ -12,4 +12,9 @@ public class Lugar {
 		return nombre;
 	}
 
+	public boolean esTienda() {
+		//Exception("No estas en una tienda")
+		return false;
+	}
+
 }

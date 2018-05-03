@@ -1,6 +1,8 @@
 package ar.edu.unq.epers.woe.backend.model.personaje;
 
+import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
+import ar.edu.unq.epers.woe.backend.model.lugar.Tienda;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import java.util.HashSet;
@@ -210,6 +212,33 @@ public class Personaje {
 			}
 		}
 
+	}
+
+
+	public void comprar(Item i) {
+		validarLugarTienda();
+		Tienda t = (Tienda) lugar;
+		t.comprar(this, i);
+	}
+
+	
+	private void validarLugarTienda() {
+		lugar.esTienda();
+	}
+	
+	
+	public boolean esTienda() {
+		return true;
+	}
+
+	
+	public void gastarBilletera(int costo) {
+		setBilletera(billetera-costo);
+	}
+
+	
+	public void agregarItem(Item i) {
+		getInventario().setItemEnUnaUbicacion(i, this);
 	}
 
 }

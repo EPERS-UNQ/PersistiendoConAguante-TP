@@ -2,6 +2,7 @@ package ar.edu.unq.epers.woe.backend.model.personaje;
 
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.lugar.Taberna;
+import ar.edu.unq.epers.woe.backend.model.lugar.Tienda;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import org.junit.After;
 import org.junit.Before;
@@ -12,6 +13,9 @@ import org.junit.rules.ExpectedException;
 
 
 import static org.junit.Assert.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class PersonajeTest {
 
@@ -75,6 +79,27 @@ public class PersonajeTest {
         this.pj.getInventario().setItemEnUnaUbicacion(ii, this.pj);
         assertEquals(this.pj.getInventario().getEnUbicacion("torso").getItem(), ii);
         assertEquals(this.pj.getMochila().getItems().get(0), i);
+    }
+    
+    @Test
+    public void unPersonajeIngresaAunaTiendaYCompraUnItem() {
+    	//items de la tienda
+    	Set<Item> itemsTienda = new HashSet<Item>();
+    	Item i = new Item("plateMail", "torso", null, null, 5, 1); 
+    	itemsTienda.add(i);
+    	
+    	Tienda tienda = new Tienda("tstTienda");
+    	tienda.setItems(itemsTienda);
+    	
+    	Float billeteraPrevia = 100f;
+    	pj.setBilletera(billeteraPrevia);
+    	pj.setLugar(tienda);
+    	pj.comprar(i);
+    	
+    	//pj tiene menos plata en billetera
+    	assertTrue(pj.getBilletera()< billeteraPrevia);
+    	//pj cuenta con ese item en esa ubicacion
+    	assertEquals(this.pj.getInventario().getEnUbicacion("torso").getItem(), i);
     }
 
     @After
