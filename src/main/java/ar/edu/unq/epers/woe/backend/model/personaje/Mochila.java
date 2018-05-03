@@ -26,4 +26,8 @@ public class Mochila {
     public Integer itemsEnMochila() {
         return this.items.size();
     }
+
+	public void sacarItem(Item i) {
+		items.remove(i);
+	}
 }

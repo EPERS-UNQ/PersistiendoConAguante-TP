@@ -13,7 +13,7 @@ public class Lugar {
 	}
 
 	public boolean esTienda() {
-		//Exception("No estas en una tienda")
+		//throw new RuntimeException("No estas en una tienda");
 		return false;
 	}
 

@@ -101,6 +101,24 @@ public class PersonajeTest {
     	//pj cuenta con ese item en esa ubicacion
     	assertEquals(this.pj.getInventario().getEnUbicacion("torso").getItem(), i);
     }
+    
+    @Test
+    public void unPersonajeVendeUnItemEnUnaTienda() {
+    	Tienda tienda = new Tienda("tstTienda");
+    	tienda.setItems(new HashSet<Item>());
+    	
+    	Item i = new Item("plateMail", "torso", null, null, 5, 1);
+    	pj.agregarItem(i);
+    	
+    	Float billeteraPrevia = pj.getBilletera();
+    	pj.setLugar(tienda);
+    	pj.vender(i);
+    	
+    	//pj tiene mas plata en billetera
+    	assertTrue(pj.getBilletera()>billeteraPrevia);
+    	//pj ya no cuenta con ese item en la mochila
+    	assertFalse(this.pj.getMochila().getItems().contains(i) );
+    }
 
     @After
     public void tearDown() {

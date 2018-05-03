@@ -241,4 +241,22 @@ public class Personaje {
 		getInventario().setItemEnUnaUbicacion(i, this);
 	}
 
+
+	public void vender(Item i) {
+		validarLugarTienda();
+		Tienda t = (Tienda) lugar;
+		t.vender(this, i);
+	}
+
+
+	public void agregarABilletera(int suma) {
+		setBilletera(billetera+suma);
+	}
+
+
+	public void sacarItem(Item i) {
+		//Por ahora: sacar item de la mochila, no del inventario
+		mochila.sacarItem(i);
+	}
+
 }

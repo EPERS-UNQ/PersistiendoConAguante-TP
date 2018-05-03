@@ -28,4 +28,9 @@ public class Tienda extends Lugar {
 		}
 	}
 
+	public void vender(Personaje pj, Item i) {
+		pj.agregarABilletera(i.getCostoDeVenta());
+		pj.sacarItem(i);
+	}
+
 }
