@@ -308,4 +308,9 @@ public class Personaje {
 		mochila.sacarItem(i);
 	}
 
+
+	public Boolean tieneElItem(Item item) {
+		return this.mochila.tieneElItem(item);		
+	}
+
 }
