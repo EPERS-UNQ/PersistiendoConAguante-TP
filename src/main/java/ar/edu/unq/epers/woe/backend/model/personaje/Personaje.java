@@ -273,21 +273,9 @@ public class Personaje implements Luchador{
 
 
 	public void comprar(Item i) {
-		validarLugarTienda();
 		Tienda t = (Tienda) lugar;
 		t.comprar(this, i);
 	}
-
-	
-	private void validarLugarTienda() {
-		lugar.esTienda();
-	}
-	
-	
-	public boolean esTienda() {
-		return true;
-	}
-
 	
 	public void gastarBilletera(int costo) {
 		setBilletera(billetera-costo);
@@ -300,7 +288,6 @@ public class Personaje implements Luchador{
 
 
 	public void vender(Item i) {
-		validarLugarTienda();
 		Tienda t = (Tienda) lugar;
 		t.vender(this, i);
 	}
