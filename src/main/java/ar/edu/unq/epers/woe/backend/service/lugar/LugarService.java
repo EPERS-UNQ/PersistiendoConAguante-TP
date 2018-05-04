@@ -14,6 +14,9 @@ public class LugarService {
      * Validar que el personaje se encuentre en una Taberna
      */
 	public List<Mision> listarMisiones(Personaje personaje){
+		if(personaje.getLugar().esTaberna()) {
+			// devolver las misiones que puede hacer
+		}
 		return null;
 		
 	}
@@ -22,9 +25,12 @@ public class LugarService {
 	 * El personaje acepta la mision. 
 	 * Validar que el personaje se encuentre en una Taberna y que la mision este disponible.
 	 */
-    public List<Mision>aceptarMision(Personaje personaje, Mision mision){
-		return null;
-    	
+    public void aceptarMision(Personaje personaje, Mision mision){
+		if((personaje.getLugar().esTaberna())
+		   && (listarMisiones(personaje).contains(mision))){
+			   
+			   personaje.aceptarMision(mision);
+		}
     }
     
     /*

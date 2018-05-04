@@ -17,4 +17,9 @@ public class Lugar {
 		return false;
 	}
 
+	public boolean esTaberna() {
+		// devuelve false para todas las subclases de Lugar excepto Taberna
+		return false;
+	}
+
 }
