@@ -1,5 +1,5 @@
 //package java.ar.edu.unq.epers.woe.backend.model.lugar;
-package lugar;
+package ar.edu.unq.epers.woe.backend.model.lugar;
 
 import static org.junit.Assert.*;
 
