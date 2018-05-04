@@ -1,10 +1,11 @@
 package ar.edu.unq.epers.woe.backend.model.monstruo;
 
+import ar.edu.unq.epers.woe.backend.model.combate.Luchador;
 import ar.edu.unq.epers.woe.backend.model.personaje.Danho;
 import ar.edu.unq.epers.woe.backend.model.personaje.Vida;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 
-public class Monstruo {
+public class Monstruo implements Luchador{
 	private Vida vida;
 	private Danho daño;
 	private String tipo;
@@ -28,7 +29,23 @@ public class Monstruo {
 	}
 	public void setVida(Vida cantv2) {
 		this.vida = cantv2;
-		
+	}
+	public Vida getVida() {
+		return this.vida;	
 		
 	}
+	
+	public Danho getDanho() {
+		return this.daño;
+		}
+	
+	public String getTipo() {
+		return this.tipo;
+	}
+	
+	public Raza getRaza() {
+		return this.raza;
+	}
+	
+	
 }
