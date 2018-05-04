@@ -3,6 +3,7 @@ package ar.edu.unq.epers.woe.backend.model.personaje;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
 import ar.edu.unq.epers.woe.backend.model.lugar.Tienda;
+import ar.edu.unq.epers.woe.backend.model.mision.Mision;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import java.util.HashSet;
@@ -311,6 +312,11 @@ public class Personaje {
 
 	public Boolean tieneElItem(Item item) {
 		return this.mochila.tieneElItem(item);		
+	}
+
+
+	public void aceptarMision(Mision mision) {
+		getMisionesAceptadas().add(mision.getNombre());
 	}
 
 }
