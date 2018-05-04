@@ -2,7 +2,10 @@ package ar.edu.unq.epers.woe.backend.model.item;
 
 import java.util.Set;
 
+import ar.edu.unq.epers.woe.backend.model.personaje.Atributo;
+import ar.edu.unq.epers.woe.backend.model.personaje.Danho;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
+import ar.edu.unq.epers.woe.backend.model.requerimiento.Requerimiento;
 
 
 
@@ -12,19 +15,23 @@ public class Item {
 	private String ubicacion;
 	private String tipo;
 	private Set<Clase> clases;
-	//private Set<Requisito> requerimiento;
+	private Requerimiento requerimiento; 
 	private int costoDeCompra;
 	private int costoDeVenta;
-	//private Set<Atributo> atributos; 
+	private Set<Atributo> atributos;
 	
 	public Item(String nombre,String ubicacion,String tipo,
-			    Set<Clase> clases, int costoDeCompra, int costoDeVenta) {
+			    Set<Clase> clases,Requerimiento requerimiento,
+			    int costoDeCompra,int costoDeVenta,
+			    Set<Atributo> atributos) {
 		this.setNombre(nombre);
 		this.setUbicacion(ubicacion);
 		this.setTipo(tipo);
 		this.setClases(clases);
+		this.setRequerimiento(requerimiento);
 		this.setCostoDeCompra(costoDeCompra);
 		this.setCostoDeVenta(costoDeVenta);	
+		this.setAtributos(atributos);
 	}
 
 	public String getNombre() {
@@ -73,6 +80,26 @@ public class Item {
 
 	public void setClases(Set<Clase> clases) {
 		this.clases = clases;
+	}
+
+	public Requerimiento getRequerimiento() {
+		return requerimiento;
+	}
+
+	public void setRequerimiento(Requerimiento requerimiento) {
+		this.requerimiento = requerimiento;
+	}
+
+	public Set<Atributo> getAtributos() {
+		return atributos;
+	}
+
+	public void setAtributos(Set<Atributo> atributos) {
+		this.atributos = atributos;
+	}
+
+	public Danho getDanho() {
+		return new Danho(0f);
 	}
 	
 

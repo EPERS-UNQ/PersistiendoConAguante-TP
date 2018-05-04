@@ -316,21 +316,27 @@ public class Personaje implements Luchador{
 		mochila.sacarItem(i);
 	}
 
-
-	/*@Override
+	@Override
 	public void atacar(Luchador l2) {
 		l2.recibirAtaque(this.getDanhoTotal());
 		
 	}
 
 	public Danho getDanhoArma() {
-		this.getInventario().getEnUbicacion("Derecha").getItem()
+		return new Danho(this.getDanhoManoDerecha().getValor() + this.getDanhoManoIzquierda().getValor());
+	}
+
+    public Danho getDanhoManoIzquierda() {
+    	return this.getInventario().getEnUbicacion("Izquierda").getItem().getDanho();
+    }
+	public Danho getDanhoManoDerecha() {
+		return this.getInventario().getEnUbicacion("Derecha").getItem().getDanho();
 	}
 	public Danho getDanhoTotal() {
-		this.getDanhoArma().getValor()  * 
+		return new Danho(this.getDanhoArma().getValor()  * 
 		(this.getAtributo(Fuerza.class).getValor() + 
 		  (this.getAtributo(Destreza.class).getValor() / 100)
-		    / 100);
+		    / 100));
 	}
 
 
@@ -338,6 +344,11 @@ public class Personaje implements Luchador{
 	public void recibirAtaque(Danho danhoTotal) {
 		// TODO Auto-generated method stub
 		
-	}*/
+	}
+
+	public Boolean tieneElItem(Item item) {
+		return this.mochila.tieneElItem(item);		
+	}
+
 
 }

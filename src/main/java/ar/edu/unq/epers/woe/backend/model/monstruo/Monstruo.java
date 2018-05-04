@@ -46,6 +46,16 @@ public class Monstruo implements Luchador{
 	public Raza getRaza() {
 		return this.raza;
 	}
+	@Override
+	public void atacar(Luchador l2) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void recibirAtaque(Danho danhoTotal) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 }
