@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+//package java.ar.edu.unq.epers.woe.backend.model.lugar;
+>>>>>>> 7b47bcba74101c77e09865fe72d367188b71ea31
 package ar.edu.unq.epers.woe.backend.model.lugar;
 
 import static org.junit.Assert.*;
