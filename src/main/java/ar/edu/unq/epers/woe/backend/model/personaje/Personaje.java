@@ -329,12 +329,30 @@ public class Personaje implements Luchador{
 
 	@Override
 	public void recibirAtaque(Danho danhoTotal) {
-		// TODO Auto-generated method stub
+		this.calcularDañoRecividoConDefensa(danhoTotal);
 		
 	}
 
+	private Danho calcularDañoRecividoConDefensa(Danho danhoTotal) {
+		return danhoTotal - this.defensa();
+		
+	}
+
+
+	private Danho defensa() {
+		
+		//return 
+	}
+
+
 	public Boolean tieneElItem(Item item) {
 		return this.mochila.tieneElItem(item);		
+	}
+
+
+	@Override
+	public void setVida(Vida vl1) {
+		this.getAtributo(Vida.class).setValor(vl1.getValor());;
 	}
 
 

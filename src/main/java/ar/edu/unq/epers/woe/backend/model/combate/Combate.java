@@ -20,6 +20,9 @@ public class Combate {
 				Ataque at2 = new Ataque (l2,l1);
 				resultadoC.getDetalle().add(at2);
 			}
+			l1.setVida(vl1);
+			l2.setVida(vl2);
+			return resultadoC;
 		}
 		
 	}
