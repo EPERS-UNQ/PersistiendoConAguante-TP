@@ -1,5 +1,6 @@
 package ar.edu.unq.epers.woe.backend.model.personaje;
 
+import ar.edu.unq.epers.woe.backend.model.combate.Luchador;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
 import ar.edu.unq.epers.woe.backend.model.lugar.Tienda;
@@ -16,7 +17,7 @@ import java.util.Set;
  *
  * @author Charly Backend
  */
-public class Personaje {
+public class Personaje implements Luchador{
 
 	private String nombre; //único
 	private Raza raza;
@@ -124,6 +125,13 @@ public class Personaje {
 	public Set<Atributo> getAtributos() {
 		return atributos;
 	}
+	public Vida getVida() {
+		return (Vida) this.getAtributo(Vida.class);
+	}
+	
+	public Danho getDanho() {
+		return (Danho) this.getAtributo(Danho.class);
+	}
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
@@ -217,6 +225,18 @@ public class Personaje {
 		}
 	}
 
+	public void incrementarAtributos(Set<Atributo> atributos) {
+		for(Atributo a : atributos) {
+			this.getAtributo(a.getClass()).setValor(this.getAtributo(a.getClass()).getValor() + a.getValor());
+		}
+	}
+
+	public void decrementarAtributos(Set<Atributo> atributos) {
+		for(Atributo a : atributos) {
+			this.getAtributo(a.getClass()).setValor(this.getAtributo(a.getClass()).getValor() - a.getValor());
+		}
+	}
+
 	private void incrementarPicaro() {
 		this.getAtributo(Fuerza.class).setValor(this.getAtributo(Fuerza.class).getValor() * 1.06f);
 	}
@@ -266,21 +286,9 @@ public class Personaje {
 
 
 	public void comprar(Item i) {
-		validarLugarTienda();
 		Tienda t = (Tienda) lugar;
 		t.comprar(this, i);
 	}
-
-	
-	private void validarLugarTienda() {
-		lugar.esTienda();
-	}
-	
-	
-	public boolean esTienda() {
-		return true;
-	}
-
 	
 	public void gastarBilletera(int costo) {
 		setBilletera(billetera-costo);
@@ -293,7 +301,6 @@ public class Personaje {
 
 
 	public void vender(Item i) {
-		validarLugarTienda();
 		Tienda t = (Tienda) lugar;
 		t.vender(this, i);
 	}
@@ -309,14 +316,42 @@ public class Personaje {
 		mochila.sacarItem(i);
 	}
 
+	@Override
+	public void atacar(Luchador l2) {
+		l2.recibirAtaque(this.getDanhoTotal());
+		
+	}
+
+	public Danho getDanhoArma() {
+		return new Danho(this.getDanhoManoDerecha().getValor() + this.getDanhoManoIzquierda().getValor());
+	}
+
+    public Danho getDanhoManoIzquierda() {
+    	return this.getInventario().getEnUbicacion("Izquierda").getItem().getDanho();
+    }
+	public Danho getDanhoManoDerecha() {
+		return this.getInventario().getEnUbicacion("Derecha").getItem().getDanho();
+	}
+	public Danho getDanhoTotal() {
+		return new Danho(this.getDanhoArma().getValor()  * 
+		(this.getAtributo(Fuerza.class).getValor() + 
+		  (this.getAtributo(Destreza.class).getValor() / 100)
+		    / 100));
+	}
+
+
+	@Override
+	public void recibirAtaque(Danho danhoTotal) {
+		// TODO Auto-generated method stub
+		
+	}
 
 	public Boolean tieneElItem(Item item) {
 		return this.mochila.tieneElItem(item);		
 	}
-
-
+  
 	public void aceptarMision(Mision mision) {
 		getMisionesAceptadas().add(mision.getNombre());
-	}
-
+  }
+  
 }
