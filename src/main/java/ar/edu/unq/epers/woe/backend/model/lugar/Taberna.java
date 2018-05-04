@@ -5,5 +5,10 @@ public class Taberna extends Lugar {
 	public Taberna(String nombreLugar) {
 		super(nombreLugar);
 	}
+	
+	@Override
+	public boolean esTaberna() {
+		return true;
+	}
 
 }
