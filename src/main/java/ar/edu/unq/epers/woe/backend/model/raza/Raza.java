@@ -9,15 +9,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 /**
  * Representa una {@link Raza} de un personaje.
  * 
  * @author Charly Backend
  */
+@Entity
 public class Raza {
 
+	@Id @GeneratedValue
 	private Integer id;
 	private String nombre;
+	
+	@Enumerated
 	private Set<Clase> clases;
 	private int peso;
 	private int altura;

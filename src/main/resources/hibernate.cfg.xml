@@ -21,8 +21,7 @@
 		
 		<property name="hibernate.hbm2ddl.auto">create-drop</property>
 
-		<mapping class="ar.edu.unq.unidad3.wop.modelo.Personaje" />
-		<mapping class="ar.edu.unq.unidad3.wop.modelo.Item" />
+		<mapping class= "ar.edu.unq.epers.woe.backend.model.raza.Raza" />
 	
 	</session-factory>
 </hibernate-configuration>
