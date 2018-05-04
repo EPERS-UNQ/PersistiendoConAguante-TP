@@ -42,14 +42,14 @@ public class PersonajeTest {
 
     @Test
     public void alAgregarUnItemALaMochilaSeIncrementaElSize() {
-        Item i = new Item(null, null, null, null, 0, 0);
+        Item i = new Item(null, null, null, null, null, 0, 0, null);
         this.pj.getMochila().agregarItem(i);
         assertEquals(this.pj.getMochila().itemsEnMochila(), new Integer(1));
     }
 
     @Test
     public void alAgregarUnItemConLaMochilaLlenaSeDisparaExcepcion() {
-        Item i = new Item(null, null, null, null, 0, 0);
+        Item i = new Item(null, null, null, null, null, 0, 0, null);
         for(Integer ct = 0; ct <= 9; ct++) {
             this.pj.getMochila().agregarItem(i);
         }
@@ -66,15 +66,15 @@ public class PersonajeTest {
 
     @Test
     public void alAgregarUnItemAlInventarioElItemEstaEnEsaPosicion() {
-        Item i = new Item(null, "torso", null, null, 0, 0);
+        Item i = new Item(null, "torso", null, null, null, 0, 0, null);
         this.pj.getInventario().setItemEnUnaUbicacion(i, this.pj);
         assertEquals(this.pj.getInventario().getEnUbicacion("torso").getItem(), i);
     }
 
     @Test
     public void alAgregarUnItemAlInventarioConOtroItemElItemEstaEnEsaPosicionYElOtroEnLaMochila() {
-        Item i = new Item("plateMail", "torso", null, null, 0, 0);
-        Item ii = new Item(null, "torso", null, null, 0, 0);
+        Item i = new Item("plateMail", "torso", null, null, null, 0, 0, null);
+        Item ii = new Item(null, "torso", null, null, null, 0, 0, null);
         this.pj.getInventario().setItemEnUnaUbicacion(i, this.pj);
         this.pj.getInventario().setItemEnUnaUbicacion(ii, this.pj);
         assertEquals(this.pj.getInventario().getEnUbicacion("torso").getItem(), ii);
@@ -85,7 +85,7 @@ public class PersonajeTest {
     public void unPersonajeIngresaAunaTiendaYCompraUnItem() {
     	//items de la tienda
     	Set<Item> itemsTienda = new HashSet<Item>();
-    	Item i = new Item("plateMail", "torso", null, null, 5, 1); 
+    	Item i = new Item("plateMail", "torso", null, null, null, 5, 1, null); 
     	itemsTienda.add(i);
     	
     	Tienda tienda = new Tienda("tstTienda");
@@ -107,7 +107,7 @@ public class PersonajeTest {
     	Tienda tienda = new Tienda("tstTienda");
     	tienda.setItems(new HashSet<Item>());
     	
-    	Item i = new Item("plateMail", "torso", null, null, 5, 1);
+    	Item i = new Item("plateMail", "torso", null, null, null, 5, 1, null);
     	pj.agregarItem(i);
     	
     	Float billeteraPrevia = pj.getBilletera();
