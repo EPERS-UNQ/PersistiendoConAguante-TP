@@ -20,6 +20,7 @@ import java.util.Set;
 public class PersonajeTest {
 
     private Personaje pj;
+    private HashSet<Atributo> atts = new HashSet<>();
 
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
@@ -27,6 +28,7 @@ public class PersonajeTest {
     @Before
     public void crearModelo() {
         pj = new Personaje(new Raza("tstRaza"), "tstPJ0", Clase.MAGO);
+        atts.add(new Vida(5f));
     }
 
     @Test
@@ -42,14 +44,14 @@ public class PersonajeTest {
 
     @Test
     public void alAgregarUnItemALaMochilaSeIncrementaElSize() {
-        Item i = new Item(null, null, null, null, null, 0, 0, null);
+        Item i = new Item(null, null, null, null, null, 0, 0, this.atts);
         this.pj.getMochila().agregarItem(i);
         assertEquals(this.pj.getMochila().itemsEnMochila(), new Integer(1));
     }
 
     @Test
     public void alAgregarUnItemConLaMochilaLlenaSeDisparaExcepcion() {
-        Item i = new Item(null, null, null, null, null, 0, 0, null);
+        Item i = new Item(null, null, null, null, null, 0, 0, this.atts);
         for(Integer ct = 0; ct <= 9; ct++) {
             this.pj.getMochila().agregarItem(i);
         }
@@ -66,15 +68,15 @@ public class PersonajeTest {
 
     @Test
     public void alAgregarUnItemAlInventarioElItemEstaEnEsaPosicion() {
-        Item i = new Item(null, "torso", null, null, null, 0, 0, null);
+        Item i = new Item(null, "torso", null, null, null, 0, 0, this.atts);
         this.pj.getInventario().setItemEnUnaUbicacion(i, this.pj);
         assertEquals(this.pj.getInventario().getEnUbicacion("torso").getItem(), i);
     }
 
     @Test
     public void alAgregarUnItemAlInventarioConOtroItemElItemEstaEnEsaPosicionYElOtroEnLaMochila() {
-        Item i = new Item("plateMail", "torso", null, null, null, 0, 0, null);
-        Item ii = new Item(null, "torso", null, null, null, 0, 0, null);
+        Item i = new Item("plateMail", "torso", null, null, null, 0, 0, this.atts);
+        Item ii = new Item(null, "torso", null, null, null, 0, 0, this.atts);
         this.pj.getInventario().setItemEnUnaUbicacion(i, this.pj);
         this.pj.getInventario().setItemEnUnaUbicacion(ii, this.pj);
         assertEquals(this.pj.getInventario().getEnUbicacion("torso").getItem(), ii);
@@ -85,7 +87,7 @@ public class PersonajeTest {
     public void unPersonajeIngresaAunaTiendaYCompraUnItem() {
     	//items de la tienda
     	Set<Item> itemsTienda = new HashSet<Item>();
-    	Item i = new Item("plateMail", "torso", null, null, null, 5, 1, null); 
+    	Item i = new Item("plateMail", "torso", null, null, null, 5, 1, this.atts);
     	itemsTienda.add(i);
     	
     	Tienda tienda = new Tienda("tstTienda");
@@ -107,7 +109,7 @@ public class PersonajeTest {
     	Tienda tienda = new Tienda("tstTienda");
     	tienda.setItems(new HashSet<Item>());
     	
-    	Item i = new Item("plateMail", "torso", null, null, null, 5, 1, null);
+    	Item i = new Item("plateMail", "torso", null, null, null, 5, 1, this.atts);
     	pj.agregarItem(i);
     	
     	Float billeteraPrevia = pj.getBilletera();
