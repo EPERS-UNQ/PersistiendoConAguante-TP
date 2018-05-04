@@ -85,7 +85,7 @@ public class PersonajeTest {
     public void unPersonajeIngresaAunaTiendaYCompraUnItem() {
     	//items de la tienda
     	Set<Item> itemsTienda = new HashSet<Item>();
-    	Item i = new Item("plateMail", "torso", null, null, 5, 1); 
+    	Item i = new Item("plateMail", "torso", null, null, null, 5, 1, null); 
     	itemsTienda.add(i);
     	
     	Tienda tienda = new Tienda("tstTienda");
@@ -107,7 +107,7 @@ public class PersonajeTest {
     	Tienda tienda = new Tienda("tstTienda");
     	tienda.setItems(new HashSet<Item>());
     	
-    	Item i = new Item("plateMail", "torso", null, null, 5, 1);
+    	Item i = new Item("plateMail", "torso", null, null, null, 5, 1, null);
     	pj.agregarItem(i);
     	
     	Float billeteraPrevia = pj.getBilletera();
