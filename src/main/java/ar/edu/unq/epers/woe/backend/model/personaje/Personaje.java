@@ -1,6 +1,8 @@
 package ar.edu.unq.epers.woe.backend.model.personaje;
 
+import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
+import ar.edu.unq.epers.woe.backend.model.lugar.Tienda;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import java.util.HashSet;
@@ -259,6 +261,51 @@ public class Personaje {
 
 	private void incrementarBrujo() {
 		this.getAtributo(Destreza.class).setValor(this.getAtributo(Destreza.class).getValor() * 1.02f);
+	}
+
+
+	public void comprar(Item i) {
+		validarLugarTienda();
+		Tienda t = (Tienda) lugar;
+		t.comprar(this, i);
+	}
+
+	
+	private void validarLugarTienda() {
+		lugar.esTienda();
+	}
+	
+	
+	public boolean esTienda() {
+		return true;
+	}
+
+	
+	public void gastarBilletera(int costo) {
+		setBilletera(billetera-costo);
+	}
+
+	
+	public void agregarItem(Item i) {
+		getInventario().setItemEnUnaUbicacion(i, this);
+	}
+
+
+	public void vender(Item i) {
+		validarLugarTienda();
+		Tienda t = (Tienda) lugar;
+		t.vender(this, i);
+	}
+
+
+	public void agregarABilletera(int suma) {
+		setBilletera(billetera+suma);
+	}
+
+
+	public void sacarItem(Item i) {
+		//Por ahora: sacar item de la mochila, no del inventario
+		mochila.sacarItem(i);
 	}
 
 }
