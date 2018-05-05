@@ -216,6 +216,18 @@ public class Personaje {
 		}
 	}
 
+	public void incrementarAtributos(Set<Atributo> atributos) {
+		for(Atributo a : atributos) {
+			this.getAtributo(a.getClass()).setValor(this.getAtributo(a.getClass()).getValor() + a.getValor());
+		}
+	}
+
+	public void decrementarAtributos(Set<Atributo> atributos) {
+		for(Atributo a : atributos) {
+			this.getAtributo(a.getClass()).setValor(this.getAtributo(a.getClass()).getValor() - a.getValor());
+		}
+	}
+
 	private void incrementarPicaro() {
 		this.getAtributo(Fuerza.class).setValor(this.getAtributo(Fuerza.class).getValor() * 1.06f);
 	}

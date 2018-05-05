@@ -22,8 +22,10 @@ public class Inventario {
     public void setItemEnUnaUbicacion(Item item, Personaje pj) {
         if(this.getEnUbicacion(item.getUbicacion()).getItem() != null) {
             pj.getMochila().agregarItem(this.getEnUbicacion(item.getUbicacion()).getItem());
+            pj.decrementarAtributos(this.getEnUbicacion(item.getUbicacion()).getItem().getAtributos());
         }
         this.getEnUbicacion(item.getUbicacion()).setItem(item);
+        pj.incrementarAtributos(item.getAtributos());
     }
 
     public Slot getEnUbicacion(String ubicacion) {
