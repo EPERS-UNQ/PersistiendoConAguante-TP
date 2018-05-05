@@ -27,9 +27,11 @@ public class PersonajeServiceTest {
 	
 	@Test
 	public void unServicePersonajePuedeEquiparDeUnItemAUnPersonaje() {
+		HashSet<Atributo> atts = new HashSet<>();
+		atts.add(new Vida(5f));
 		Personaje personaje = new Personaje(null, null, null);
 		
-		Item item = new Item("item", "torso", null, null, null, 0, 0, null) ;
+		Item item = new Item("item", "torso", null, null, null, 0, 0, atts) ;
 		serviceP.equipar(personaje, item  );
 		
 		assertEquals(personaje.getInventario().getEnUbicacion("torso").getItem(), item);
