@@ -1,7 +1,8 @@
 package ar.edu.unq.epers.woe.backend.model.raza;
 
-public enum Clase {
 
+public enum Clase {
+	
 	BRUJO,
 	DRUIDA,
 	CABALLERO,
@@ -11,6 +12,6 @@ public enum Clase {
 	MAGO,
 	CAZADOR,
 	PALADIN,
-	PICARO
+	PICARO;
 
 }
