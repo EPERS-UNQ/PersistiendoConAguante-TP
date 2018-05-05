@@ -3,6 +3,7 @@ package ar.edu.unq.epers.woe.backend.model.item;
 import java.util.Set;
 
 import ar.edu.unq.epers.woe.backend.model.personaje.Atributo;
+import ar.edu.unq.epers.woe.backend.model.personaje.Danho;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.requerimiento.Requerimiento;
 
@@ -95,6 +96,10 @@ public class Item {
 
 	public void setAtributos(Set<Atributo> atributos) {
 		this.atributos = atributos;
+	}
+
+	public Danho getDanho() {
+		return new Danho(0f);
 	}
 	
 

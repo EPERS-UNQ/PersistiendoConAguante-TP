@@ -1,5 +1,6 @@
 package ar.edu.unq.epers.woe.backend.model.personaje;
 
+import ar.edu.unq.epers.woe.backend.model.combate.Luchador;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
 import ar.edu.unq.epers.woe.backend.model.lugar.Tienda;
@@ -15,7 +16,7 @@ import java.util.Set;
  *
  * @author Charly Backend
  */
-public class Personaje {
+public class Personaje implements Luchador{
 
 	private String nombre; //único
 	private Raza raza;
@@ -122,6 +123,13 @@ public class Personaje {
 
 	public Set<Atributo> getAtributos() {
 		return atributos;
+	}
+	public Vida getVida() {
+		return (Vida) this.getAtributo(Vida.class);
+	}
+	
+	public Danho getDanho() {
+		return (Danho) this.getAtributo(Danho.class);
 	}
 
 	public void setNombre(String nombre) {
@@ -307,9 +315,39 @@ public class Personaje {
 		mochila.sacarItem(i);
 	}
 
+	@Override
+	public void atacar(Luchador l2) {
+		l2.recibirAtaque(this.getDanhoTotal());
+		
+	}
+
+	public Danho getDanhoArma() {
+		return new Danho(this.getDanhoManoDerecha().getValor() + this.getDanhoManoIzquierda().getValor());
+	}
+
+    public Danho getDanhoManoIzquierda() {
+    	return this.getInventario().getEnUbicacion("Izquierda").getItem().getDanho();
+    }
+	public Danho getDanhoManoDerecha() {
+		return this.getInventario().getEnUbicacion("Derecha").getItem().getDanho();
+	}
+	public Danho getDanhoTotal() {
+		return new Danho(this.getDanhoArma().getValor()  * 
+		(this.getAtributo(Fuerza.class).getValor() + 
+		  (this.getAtributo(Destreza.class).getValor() / 100)
+		    / 100));
+	}
+
+
+	@Override
+	public void recibirAtaque(Danho danhoTotal) {
+		// TODO Auto-generated method stub
+		
+	}
 
 	public Boolean tieneElItem(Item item) {
 		return this.mochila.tieneElItem(item);		
 	}
+
 
 }
