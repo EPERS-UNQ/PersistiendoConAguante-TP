@@ -12,4 +12,6 @@ public interface Luchador {
 	public void atacar(Luchador l2);
 
 	public void recibirAtaque(Danho danhoTotal);
+
+	public void setVida(Vida vl1);
 }

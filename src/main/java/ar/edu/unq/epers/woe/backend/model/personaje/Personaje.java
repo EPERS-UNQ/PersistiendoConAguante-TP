@@ -4,6 +4,7 @@ import ar.edu.unq.epers.woe.backend.model.combate.Luchador;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
 import ar.edu.unq.epers.woe.backend.model.lugar.Tienda;
+import ar.edu.unq.epers.woe.backend.model.mision.Mision;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import java.util.HashSet;
@@ -341,13 +342,35 @@ public class Personaje implements Luchador{
 
 	@Override
 	public void recibirAtaque(Danho danhoTotal) {
-		// TODO Auto-generated method stub
+		this.calcularDañoRecividoConDefensa(danhoTotal);
 		
 	}
+
+	private Danho calcularDañoRecividoConDefensa(Danho danhoTotal) {
+		return danhoTotal - this.defensa();
+		
+	}
+
+
+	private Danho defensa() {
+		
+		//return 
+	}
+
 
 	public Boolean tieneElItem(Item item) {
 		return this.mochila.tieneElItem(item);		
 	}
 
+	@Override
+	public void setVida(Vida vl1) {
+		this.getAtributo(Vida.class).setValor(vl1.getValor());;
+	}
 
+
+  
+	public void aceptarMision(Mision mision) {
+		getMisionesAceptadas().add(mision.getNombre());
+  }
+  
 }
