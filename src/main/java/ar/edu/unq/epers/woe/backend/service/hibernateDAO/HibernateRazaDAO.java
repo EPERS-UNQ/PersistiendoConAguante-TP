@@ -4,6 +4,10 @@ import org.hibernate.Session;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 
 public class HibernateRazaDAO {
+	
+	public HibernateRazaDAO() {
+		
+	}
 
 	public void guardar(Raza r) {
 		Runner.runInSession(() -> {
