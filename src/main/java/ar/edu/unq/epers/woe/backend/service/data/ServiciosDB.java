@@ -3,6 +3,7 @@ package ar.edu.unq.epers.woe.backend.service.data;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import ar.edu.unq.epers.woe.backend.razadao.RazaDao;
+import ar.edu.unq.epers.woe.backend.service.hibernateDAO.SessionFactoryProvider;
 import ar.edu.unq.epers.woe.backend.service.raza.ServiciosRaza;
 
 import java.sql.PreparedStatement;
@@ -46,8 +47,9 @@ public class ServiciosDB implements DataService {
 
     //implementación del método deleteAll
     public void eliminarDatos() {
-        RazaDao razadao = new RazaDao();
-        razadao.executeQuery("TRUNCATE raza;");
+//        RazaDao razadao = new RazaDao();
+//        razadao.executeQuery("TRUNCATE raza;");
+    	SessionFactoryProvider.destroy(); //???
     }
 
 }

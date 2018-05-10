@@ -4,15 +4,16 @@ import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import ar.edu.unq.epers.woe.backend.razadao.RazaDao;
+import ar.edu.unq.epers.woe.backend.service.hibernateDAO.HibernateRazaDAO;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ServiciosRaza implements RazaService {
 
-    private RazaDao razadao;
+    private HibernateRazaDAO razadao;
 
-    public ServiciosRaza() { this.razadao = new RazaDao(); }
+    public ServiciosRaza() { this.razadao = new HibernateRazaDAO(); }
 
     //implementación del método crearPersonaje
     public Personaje crearPersonaje(Integer razaId, String nombrePersonaje, Clase clase) {
@@ -23,9 +24,7 @@ public class ServiciosRaza implements RazaService {
 
     //implementación del método getRaza
     public Raza getRaza(Integer id) {
-        Raza raza = new Raza();
-        this.razadao.recuperarRaza(id, raza);
-        return raza;
+        return this.razadao.recuperar(id);
     }
 
     //implementación del método crearRaza
@@ -35,9 +34,8 @@ public class ServiciosRaza implements RazaService {
 
     //implementación del método getAllRazas
     public List<Raza> getAllRazas() {
-        List<Raza> res = new ArrayList<Raza>();
-        this.razadao.agregarRazasOrdenadas(res);
-        return res;
+//        List<Raza> res = new ArrayList<Raza>();
+        return (List<Raza>) this.razadao.agregarRazasOrdenadas();
     }
 
 
