@@ -5,6 +5,7 @@ import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import ar.edu.unq.epers.woe.backend.razadao.RazaDao;
 import ar.edu.unq.epers.woe.backend.service.hibernateDAO.HibernateRazaDAO;
+import ar.edu.unq.epers.woe.backend.service.hibernateDAO.Runner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,19 +18,29 @@ public class ServiciosRaza implements RazaService {
 
     //implementación del método crearPersonaje
     public Personaje crearPersonaje(Integer razaId, String nombrePersonaje, Clase clase) {
-        Personaje pj = this.getRaza(razaId).crearPersonaje(nombrePersonaje, clase);
-        this.razadao.incrementarPjs(razaId);
+        Raza razaR = this.getRaza(razaId) ;
+		Personaje pj = razaR.crearPersonaje(nombrePersonaje, clase);
+		Runner.runInSession(() -> {
+        	this.razadao.incrementarPjs(razaId, razaR.getCantidadPersonajes());
+        	return null;
+		});
         return pj;
     }
 
     //implementación del método getRaza
     public Raza getRaza(Integer id) {
-        return this.razadao.recuperar(id);
+    	return Runner.runInSession(() -> {
+    		return this.razadao.recuperar(id);
+    	});
+//        
     }
 
     //implementación del método crearRaza
     public void crearRaza(Raza raza) {
-        this.razadao.guardar(raza);
+    	Runner.runInSession(() -> {
+    		this.razadao.guardar(raza);
+    		return null;
+    	});
     }
 
     //implementación del método getAllRazas

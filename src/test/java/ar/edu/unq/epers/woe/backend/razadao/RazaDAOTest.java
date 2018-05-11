@@ -79,7 +79,7 @@ public class RazaDAOTest {
     public void testAlRecuperarRazaConIdInvalidoOcurreExcepcion() {
 		int idInvalido = 123456;
 		thrown.expect(RazaNoExistente.class);
-		this.razaDAO.recuperar(idInvalido);
+		this.razaServ.getRaza(idInvalido);
     }
     
     @Test
