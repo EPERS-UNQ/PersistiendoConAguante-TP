@@ -22,6 +22,16 @@
 		<property name="hibernate.hbm2ddl.auto">create-drop</property>
 
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.raza.Raza" />
+		<mapping class= "ar.edu.unq.epers.woe.backend.model.lugar.Tienda" />
+		<mapping class= "ar.edu.unq.epers.woe.backend.model.lugar.Lugar" />
+		<mapping class= "ar.edu.unq.epers.woe.backend.model.item.Item" />
+		<mapping class= "ar.edu.unq.epers.woe.backend.model.requerimiento.Requerimiento" />
+		<mapping class= "ar.edu.unq.epers.woe.backend.model.personaje.Armadura" />
+		<mapping class= "ar.edu.unq.epers.woe.backend.model.personaje.Atributo" />
+		<mapping class= "ar.edu.unq.epers.woe.backend.model.personaje.Danho" />
+		<mapping class= "ar.edu.unq.epers.woe.backend.model.personaje.Destreza" />
+		<mapping class= "ar.edu.unq.epers.woe.backend.model.personaje.Fuerza" />
+		<mapping class= "ar.edu.unq.epers.woe.backend.model.personaje.Vida" />
 	
 	</session-factory>
 </hibernate-configuration>

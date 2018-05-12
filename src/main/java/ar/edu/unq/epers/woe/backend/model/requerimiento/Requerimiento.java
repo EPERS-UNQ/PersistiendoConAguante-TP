@@ -3,11 +3,17 @@ package ar.edu.unq.epers.woe.backend.model.requerimiento;
 import ar.edu.unq.epers.woe.backend.model.personaje.Atributo;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
 
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@Entity
 public class Requerimiento {
+
+    @Id @GeneratedValue
+    private int id;
     private Integer nivel_req = 0;
+    @OneToMany(mappedBy="requerimiento", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Atributo> atributos_req = new HashSet<>();
 
 

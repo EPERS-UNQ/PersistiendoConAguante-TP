@@ -1,24 +1,37 @@
 package ar.edu.unq.epers.woe.backend.model.item;
 
 import java.util.Set;
-
+import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
 import ar.edu.unq.epers.woe.backend.model.personaje.Atributo;
 import ar.edu.unq.epers.woe.backend.model.personaje.Danho;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.requerimiento.Requerimiento;
 
+import javax.persistence.*;
 
 
+@Entity
 public class Item {
-	
+
+	@Id @GeneratedValue
+	private int id;
+	@ManyToOne
+	private Lugar lugar;
 	private String nombre;
 	private String ubicacion;
 	private String tipo;
+	@ElementCollection(fetch = FetchType.EAGER)
+	@Enumerated(EnumType.STRING)
 	private Set<Clase> clases;
+	@OneToOne(fetch = FetchType.EAGER)
+	@MapsId
 	private Requerimiento requerimiento; 
 	private int costoDeCompra;
 	private int costoDeVenta;
+	@OneToMany(mappedBy="item", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Atributo> atributos;
+
+	public Item() {}
 	
 	public Item(String nombre,String ubicacion,String tipo,
 			    Set<Clase> clases,Requerimiento requerimiento,
