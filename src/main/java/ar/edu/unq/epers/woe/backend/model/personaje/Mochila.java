@@ -32,22 +32,13 @@ public class Mochila {
 	}
 
 	public Boolean tieneElItem(Item item) {
-		Boolean res = true;
+		Boolean res = false;
         for(Item i : this.items ) {
-            if( (i.getNombre() == item.getNombre())
-               && (i.getUbicacion() == item.getUbicacion())
-               && (i.getTipo() == item.getTipo())
-               && (i.getClases() == item.getClases())
-            // && (i.getRequerimiento() == item.getRequerimiento())
-               && (i.getCostoDeCompra() == item.getCostoDeCompra())
-               && (i.getCostoDeVenta() == item.getCostoDeVenta())
-            // && (i.getAtributos() == item.getAtributos())
-            ){
-                res = false;
+            if( i == item ) {
+                res = true;
                 break;
             }
         }
         return res;
-		
 	}
 }

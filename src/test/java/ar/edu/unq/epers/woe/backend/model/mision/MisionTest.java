@@ -2,8 +2,10 @@ package ar.edu.unq.epers.woe.backend.model.mision;
 
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.lugar.Taberna;
+import ar.edu.unq.epers.woe.backend.model.personaje.Atributo;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
+import ar.edu.unq.epers.woe.backend.model.requerimiento.Requerimiento;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,11 +19,16 @@ public class MisionTest {
 
     private Personaje pj;
     private Mision mision;
+    private Item i;
 
     @Before
     public void crearModelo() {
         pj = new Personaje(new Raza("tstRaza"), "tstPJ0", Clase.MAGO);
         mision = new Mision();
+        Set<Clase> cls = new HashSet<>();
+        Set<Atributo> ats = new HashSet<>();
+        i = new Item("plateMail", "torso", "espada", cls, new Requerimiento(),
+                5, 1, ats);
     }
 
     @Test
@@ -52,6 +59,15 @@ public class MisionTest {
         assertTrue(m.puedeAceptarMision(this.pj));
         assertTrue(m.misionAceptadaPor(this.pj));
         assertTrue(m.misionDisponiblePara(this.pj));
+        assertTrue(m.puedeCompletarMision(this.pj));
+    }
+
+    @Test
+    public void personajeQTieneItemPuedeCumplirMisionDeObtenerEseItem() {
+        Mision m = new ObtenerItem("tstOI", new Recompensa(new ArrayList<Item>(), 10, 0f),
+                this.i);
+        this.pj.aceptarMision(m);
+        this.pj.getMochila().agregarItem(this.i);
         assertTrue(m.puedeCompletarMision(this.pj));
     }
 
