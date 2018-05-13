@@ -32,7 +32,6 @@ public class ServiciosRaza implements RazaService {
     	return Runner.runInSession(() -> {
     		return this.razadao.recuperar(id);
     	});
-//        
     }
 
     //implementación del método crearRaza
@@ -45,8 +44,9 @@ public class ServiciosRaza implements RazaService {
 
     //implementación del método getAllRazas
     public List<Raza> getAllRazas() {
-//        List<Raza> res = new ArrayList<Raza>();
-        return (List<Raza>) this.razadao.agregarRazasOrdenadas();
+    	return Runner.runInSession(() -> {
+    		return this.razadao.agregarRazasOrdenadas();
+    	});
     }
 
 

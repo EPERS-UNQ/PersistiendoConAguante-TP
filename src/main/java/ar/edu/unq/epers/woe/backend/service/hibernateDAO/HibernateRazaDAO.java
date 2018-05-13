@@ -32,15 +32,13 @@ public class HibernateRazaDAO {
 	
 	public List<Raza> agregarRazasOrdenadas(){
 		List<Raza>list;
-		Session session = SessionFactoryProvider.getInstance().createSession();
+		Session session = Runner.getCurrentSession();
 		
 		String hql = "from Raza r "
 				+ "order by r.nombre asc";
 		
 		Query<Raza> query = session.createQuery(hql,  Raza.class);
-		list = query.getResultList();
-
-		return list;
+		return query.getResultList();
 	}
 
 	public void incrementarPjs(Integer razaId, Integer n) {
