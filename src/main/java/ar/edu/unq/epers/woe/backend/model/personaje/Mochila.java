@@ -3,10 +3,22 @@ import ar.edu.unq.epers.woe.backend.model.item.Item;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class Mochila {
 
+	@Id @GeneratedValue
+	int idM;
+	@ElementCollection (fetch = FetchType.EAGER)
     private List<Item> items = new ArrayList<Item>();
 
+    public Mochila() {};
+    
     public List<Item> getItems() {
         return items;
     }

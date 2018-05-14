@@ -12,8 +12,10 @@ import java.util.Set;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 
@@ -35,7 +37,8 @@ public class Personaje {
 	private Integer exp;
 	private Float billetera;
 	@Transient private Inventario inventario;
-	@Transient private Mochila mochila;
+	@OneToOne(fetch = FetchType.EAGER) 
+	private Mochila mochila;
 	@Transient private Set<Atributo> atributos;
 	@ElementCollection private Set<String> misionesAceptadas;
 	@ElementCollection private Set<String> misionesCumplidas;
@@ -43,6 +46,8 @@ public class Personaje {
 	private Lugar lugar;
 
 
+	public Personaje() {}
+	
 	public Personaje(Raza raza, String nombre, Clase clase) {
 		this.raza = raza;
 		this.nombre = nombre;
