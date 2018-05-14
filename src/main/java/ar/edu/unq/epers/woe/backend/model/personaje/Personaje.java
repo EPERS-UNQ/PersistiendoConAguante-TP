@@ -10,6 +10,12 @@ import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+
 
 /**
  * Un {@link Personaje} existente en el sistema, el mismo tiene un nombre
@@ -17,19 +23,23 @@ import java.util.Set;
  *
  * @author Charly Backend
  */
+@Entity
 public class Personaje {
 
+	@Id
 	private String nombre; //único
+	@ManyToOne
 	private Raza raza;
-	private Clase clase;
+	@Transient private Clase clase;
 	private Integer nivel;
 	private Integer exp;
 	private Float billetera;
-	private Inventario inventario;
-	private Mochila mochila;
-	private Set<Atributo> atributos;
-	private Set<String> misionesAceptadas;
-	private Set<String> misionesCumplidas;
+	@Transient private Inventario inventario;
+	@Transient private Mochila mochila;
+	@Transient private Set<Atributo> atributos;
+	@ElementCollection private Set<String> misionesAceptadas;
+	@ElementCollection private Set<String> misionesCumplidas;
+	@ManyToOne
 	private Lugar lugar;
 
 
