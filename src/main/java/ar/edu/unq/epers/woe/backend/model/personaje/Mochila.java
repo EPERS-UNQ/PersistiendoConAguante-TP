@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Mochila {
@@ -16,6 +17,7 @@ public class Mochila {
 	int idM;
 	@ElementCollection (fetch = FetchType.EAGER)
     private List<Item> items = new ArrayList<Item>();
+	@OneToOne Personaje personaje;
 
     public Mochila() {};
     

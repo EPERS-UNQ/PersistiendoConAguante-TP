@@ -1,10 +1,8 @@
 package ar.edu.unq.epers.woe.backend.hibernateDAO;
 
 import static org.junit.Assert.*;
-import java.io.Serializable;
-import java.util.Set;
+import java.util.HashSet;
 
-import org.hibernate.Session;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +10,6 @@ import org.junit.Test;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.personaje.Atributo;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
-import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import ar.edu.unq.epers.woe.backend.model.requerimiento.Requerimiento;
 import ar.edu.unq.epers.woe.backend.service.hibernateDAO.HibernatePersonajeDAO;
@@ -24,17 +21,19 @@ public class HibernatePersonajeDAOTest {
 
 	HibernatePersonajeDAO persDao;
 	Personaje p;
+	Item i;
 
 	@Before
 	public void setUp(){
 		persDao = new HibernatePersonajeDAO();
 		p = new Personaje(null, "Pepito", null);
+		i = new Item("Yelmo", "cabeza", "tipo", null, new Requerimiento(), 0, 0, new HashSet<Atributo>());
 	}
 
-//	@After
-//	public void tearDown() {
-//		SessionFactoryProvider.destroy();
-//	}
+	@After
+	public void tearDown() {
+		SessionFactoryProvider.destroy();
+	}
 	
 	@Test
 	public void probemosGuardarYRecuperarAlgunosColaboradoresDeUnPersonaje() {
@@ -56,7 +55,6 @@ public class HibernatePersonajeDAOTest {
 	@Test
 	public void recuperamosLaMochilaDeUnPersonaje() {
 
-		Item i = new Item("Yelmo", "cabeza", "tipo", null, new Requerimiento(), 0, 0, null);
 		p.getMochila().agregarItem(i);
 	
 		Personaje recuperado =
@@ -66,5 +64,17 @@ public class HibernatePersonajeDAOTest {
 		    		return persDao.recuperar("Pepito");
 		    	});		
 		assertTrue(recuperado.getMochila().tieneElItem(i) );
+	}
+	
+	@Test
+	public void seRecuperaElInventarioDeUnPersonaje() {
+		p.agregarItem(i);
+		Personaje recuperado =
+		    	Runner.runInSession(() -> {
+		    		Runner.getCurrentSession().save(i);
+		    		this.persDao.guardar(p);
+		    		return persDao.recuperar("Pepito");
+		    	});
+		assertEquals(recuperado.getItemEnUbicacion("cabeza"), i);
 	}
 }

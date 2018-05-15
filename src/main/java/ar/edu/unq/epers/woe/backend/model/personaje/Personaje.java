@@ -15,6 +15,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
@@ -36,8 +37,9 @@ public class Personaje {
 	private Integer nivel;
 	private Integer exp;
 	private Float billetera;
-	@Transient private Inventario inventario;
-	@OneToOne(fetch = FetchType.EAGER) 
+	@OneToOne(fetch = FetchType.EAGER, mappedBy="personaje") 
+	private Inventario inventario;
+	@OneToOne(fetch = FetchType.EAGER, mappedBy="personaje") 
 	private Mochila mochila;
 	@Transient private Set<Atributo> atributos;
 	@ElementCollection private Set<String> misionesAceptadas;
@@ -387,5 +389,9 @@ public class Personaje {
 	public void aceptarMision(Mision mision) {
 		getMisionesAceptadas().add(mision.getNombre());
   }
+
+	public Item getItemEnUbicacion(String ubicacion) {
+		return inventario.getEnUbicacion(ubicacion).getItem();
+	}
   
 }

@@ -22,6 +22,8 @@
 		<property name="hibernate.hbm2ddl.auto">create-drop</property>
 
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.personaje.Personaje" />
+		<mapping class= "ar.edu.unq.epers.woe.backend.model.personaje.Inventario" />
+		<mapping class= "ar.edu.unq.epers.woe.backend.model.personaje.Slot" />
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.personaje.Mochila" />
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.raza.Raza" />
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.lugar.Tienda" />

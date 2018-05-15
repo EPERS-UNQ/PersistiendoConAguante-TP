@@ -5,9 +5,16 @@ import ar.edu.unq.epers.woe.backend.model.item.Item;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.*;
+
+@Entity
 public class Inventario {
 
-    private Set<Slot> slots;
+	@Id @GeneratedValue
+	int id;
+	@ElementCollection(fetch = FetchType.EAGER) @OneToMany(mappedBy="inv", cascade=CascadeType.ALL)
+	private Set<Slot> slots;
+	@OneToOne Personaje personaje;
 
     public Inventario() {
         this.slots = new HashSet<>();
