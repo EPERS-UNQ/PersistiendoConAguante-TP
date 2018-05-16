@@ -1,7 +1,7 @@
 package ar.edu.unq.epers.woe.backend.model.raza;
 
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
-import ar.edu.unq.epers.woe.backend.razadao.RazaDao;
+
 import ar.edu.unq.epers.woe.backend.service.raza.ClaseInvalida;
 import ar.edu.unq.epers.woe.backend.service.raza.RazaService;
 

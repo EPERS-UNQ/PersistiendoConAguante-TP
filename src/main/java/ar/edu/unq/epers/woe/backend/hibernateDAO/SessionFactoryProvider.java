@@ -1,4 +1,4 @@
-package ar.edu.unq.epers.woe.backend.service.hibernateDAO;
+package ar.edu.unq.epers.woe.backend.hibernateDAO;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

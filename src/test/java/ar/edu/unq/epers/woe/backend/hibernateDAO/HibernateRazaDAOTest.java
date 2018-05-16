@@ -2,20 +2,15 @@ package ar.edu.unq.epers.woe.backend.hibernateDAO;
 
 import static org.junit.Assert.*;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.hibernate.Session;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
-import ar.edu.unq.epers.woe.backend.service.hibernateDAO.HibernateRazaDAO;
-import ar.edu.unq.epers.woe.backend.service.hibernateDAO.Runner;
-import ar.edu.unq.epers.woe.backend.service.hibernateDAO.SessionFactoryProvider;
 
 
 public class HibernateRazaDAOTest {

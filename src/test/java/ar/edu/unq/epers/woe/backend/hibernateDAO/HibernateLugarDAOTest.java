@@ -1,23 +1,17 @@
 package ar.edu.unq.epers.woe.backend.hibernateDAO;
 
 import static org.junit.Assert.*;
-import java.io.Serializable;
+
 import java.util.HashSet;
 import java.util.Set;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
-import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
 import ar.edu.unq.epers.woe.backend.model.lugar.Tienda;
 import ar.edu.unq.epers.woe.backend.model.personaje.Atributo;
 import ar.edu.unq.epers.woe.backend.model.requerimiento.Requerimiento;
-import ar.edu.unq.epers.woe.backend.service.hibernateDAO.HibernateLugarDAO;
-import org.hibernate.Session;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
-import ar.edu.unq.epers.woe.backend.model.raza.Raza;
-import ar.edu.unq.epers.woe.backend.service.hibernateDAO.HibernateRazaDAO;
-import ar.edu.unq.epers.woe.backend.service.hibernateDAO.SessionFactoryProvider;
 
 
 public class HibernateLugarDAOTest {

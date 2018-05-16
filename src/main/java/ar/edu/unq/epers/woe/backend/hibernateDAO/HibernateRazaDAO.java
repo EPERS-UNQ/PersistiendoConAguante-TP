@@ -1,10 +1,8 @@
-package ar.edu.unq.epers.woe.backend.service.hibernateDAO;
+package ar.edu.unq.epers.woe.backend.hibernateDAO;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;

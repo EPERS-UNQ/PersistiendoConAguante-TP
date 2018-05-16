@@ -2,11 +2,10 @@ package ar.edu.unq.epers.woe.backend.service.data;
 
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
-import ar.edu.unq.epers.woe.backend.razadao.RazaDao;
-import ar.edu.unq.epers.woe.backend.service.hibernateDAO.SessionFactoryProvider;
+
+import ar.edu.unq.epers.woe.backend.hibernateDAO.SessionFactoryProvider;
 import ar.edu.unq.epers.woe.backend.service.raza.ServiciosRaza;
 
-import java.sql.PreparedStatement;
 import java.util.HashSet;
 import java.util.Set;
 

@@ -5,7 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.service.data.ServiciosDB;
-import ar.edu.unq.epers.woe.backend.service.hibernateDAO.HibernateRazaDAO;
+import ar.edu.unq.epers.woe.backend.hibernateDAO.HibernateRazaDAO;
 import ar.edu.unq.epers.woe.backend.service.raza.ServiciosRaza;
 import org.junit.After;
 import org.junit.Before;
