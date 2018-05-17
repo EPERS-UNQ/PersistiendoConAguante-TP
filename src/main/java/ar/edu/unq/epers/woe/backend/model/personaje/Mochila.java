@@ -3,10 +3,25 @@ import ar.edu.unq.epers.woe.backend.model.item.Item;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+
+@Entity
 public class Mochila {
 
+	@Id @GeneratedValue
+	int id;
+	@ElementCollection (fetch = FetchType.EAGER)
     private List<Item> items = new ArrayList<Item>();
+	@ManyToOne Personaje p;
 
+    public Mochila() {};
+    
     public List<Item> getItems() {
         return items;
     }

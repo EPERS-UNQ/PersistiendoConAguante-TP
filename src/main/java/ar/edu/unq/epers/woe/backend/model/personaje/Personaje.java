@@ -10,6 +10,8 @@ import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.*;
+
 
 /**
  * Un {@link Personaje} existente en el sistema, el mismo tiene un nombre
@@ -17,22 +19,35 @@ import java.util.Set;
  *
  * @author Charly Backend
  */
+@Entity
 public class Personaje {
 
+	@Id
 	private String nombre; //único
+	@ManyToOne
 	private Raza raza;
+	@Enumerated(EnumType.STRING)
 	private Clase clase;
 	private Integer nivel;
 	private Integer exp;
 	private Float billetera;
+	@OneToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	private Inventario inventario;
+	@OneToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	private Mochila mochila;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<Atributo> atributos;
-	private Set<String> misionesAceptadas;
-	private Set<String> misionesCumplidas;
+	
+	@ElementCollection private Set<String> misionesAceptadas;
+	@ElementCollection private Set<String> misionesCumplidas;
+	@ManyToOne
 	private Lugar lugar;
 
 
+	public Personaje() {}
+	
 	public Personaje(Raza raza, String nombre, Clase clase) {
 		this.raza = raza;
 		this.nombre = nombre;
@@ -395,5 +410,9 @@ public class Personaje {
 	public void aceptarMision(Mision mision) {
 		getMisionesAceptadas().add(mision.getNombre());
   }
+
+	public Item getItemEnUbicacion(String ubicacion) {
+		return inventario.getEnUbicacion(ubicacion).getItem();
+	}
   
 }
