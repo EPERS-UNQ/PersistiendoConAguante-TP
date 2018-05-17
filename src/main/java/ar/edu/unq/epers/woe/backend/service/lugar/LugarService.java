@@ -27,8 +27,7 @@ public class LugarService {
 	 */
     public void aceptarMision(Personaje personaje, Mision mision){
 		if((personaje.getLugar().esTaberna())
-		   && (listarMisiones(personaje).contains(mision))){
-			   
+		   && (listarMisiones(personaje).contains(mision))) {
 			   personaje.aceptarMision(mision);
 		}
     }

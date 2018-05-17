@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.service.data.ServiciosDB;
+import ar.edu.unq.epers.woe.backend.hibernateDAO.HibernateRazaDAO;
 import ar.edu.unq.epers.woe.backend.service.raza.ServiciosRaza;
 import org.junit.After;
 import org.junit.Before;
@@ -21,7 +22,7 @@ import java.util.List;
 
 public class RazaDAOTest {
 
-    private RazaDao razaDAO = new RazaDao();
+    private HibernateRazaDAO razaDAO = new HibernateRazaDAO();
     private Raza raza;
     private ServiciosRaza razaServ = new ServiciosRaza();
     private ServiciosDB dbServ = new ServiciosDB();
@@ -78,7 +79,7 @@ public class RazaDAOTest {
     public void testAlRecuperarRazaConIdInvalidoOcurreExcepcion() {
 		int idInvalido = 123456;
 		thrown.expect(RazaNoExistente.class);
-		this.razaDAO.recuperarRaza(idInvalido, this.raza);
+		this.razaServ.getRaza(idInvalido);
     }
     
     @Test

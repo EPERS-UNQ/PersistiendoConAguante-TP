@@ -3,41 +3,49 @@ package ar.edu.unq.epers.woe.backend.service.raza;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
-import ar.edu.unq.epers.woe.backend.razadao.RazaDao;
 
-import java.util.ArrayList;
+import ar.edu.unq.epers.woe.backend.hibernateDAO.HibernateRazaDAO;
+import ar.edu.unq.epers.woe.backend.hibernateDAO.Runner;
+
 import java.util.List;
 
 public class ServiciosRaza implements RazaService {
 
-    private RazaDao razadao;
+    private HibernateRazaDAO razadao;
 
-    public ServiciosRaza() { this.razadao = new RazaDao(); }
+    public ServiciosRaza() { this.razadao = new HibernateRazaDAO(); }
 
     //implementación del método crearPersonaje
     public Personaje crearPersonaje(Integer razaId, String nombrePersonaje, Clase clase) {
-        Personaje pj = this.getRaza(razaId).crearPersonaje(nombrePersonaje, clase);
-        this.razadao.incrementarPjs(razaId);
+        Raza razaR = this.getRaza(razaId) ;
+		Personaje pj = razaR.crearPersonaje(nombrePersonaje, clase);
+		Runner.runInSession(() -> {
+        	this.razadao.incrementarPjs(razaId, razaR.getCantidadPersonajes());
+        	return null;
+		});
         return pj;
     }
 
     //implementación del método getRaza
     public Raza getRaza(Integer id) {
-        Raza raza = new Raza();
-        this.razadao.recuperarRaza(id, raza);
-        return raza;
+    	return Runner.runInSession(() -> {
+    		return this.razadao.recuperar(id);
+    	});
     }
 
     //implementación del método crearRaza
     public void crearRaza(Raza raza) {
-        this.razadao.guardar(raza);
+    	Runner.runInSession(() -> {
+    		this.razadao.guardar(raza);
+    		return null;
+    	});
     }
 
     //implementación del método getAllRazas
     public List<Raza> getAllRazas() {
-        List<Raza> res = new ArrayList<Raza>();
-        this.razadao.agregarRazasOrdenadas(res);
-        return res;
+    	return Runner.runInSession(() -> {
+    		return this.razadao.agregarRazasOrdenadas();
+    	});
     }
 
 

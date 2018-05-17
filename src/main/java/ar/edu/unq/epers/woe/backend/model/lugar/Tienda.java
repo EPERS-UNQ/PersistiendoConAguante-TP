@@ -4,9 +4,17 @@ import java.util.Set;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
 
+import javax.persistence.*;
+
+
+@Entity
+@DiscriminatorValue("TIENDA")
 public class Tienda extends Lugar {
 
+	@OneToMany(mappedBy="lugar", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Item> items;
+
+	public Tienda() {};
 
 	public Tienda(String nombreLugar) {
 		super(nombreLugar);
@@ -14,7 +22,6 @@ public class Tienda extends Lugar {
 
 	public void setItems(Set<Item> listaItems) {
 		this.items = listaItems;
-		
 	}
 
 	public Set<Item> getItems() {

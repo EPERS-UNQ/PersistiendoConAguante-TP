@@ -17,7 +17,7 @@ import java.util.Set;
  *
  * @author Charly Backend
  */
-public class Personaje implements Luchador{
+public class Personaje {
 
 	private String nombre; //único
 	private Raza raza;
@@ -316,11 +316,11 @@ public class Personaje implements Luchador{
 		mochila.sacarItem(i);
 	}
 
-	@Override
-	public void atacar(Luchador l2) {
-		l2.recibirAtaque(this.getDanhoTotal());
-		
-	}
+//	@Override
+//	public void atacar(Luchador l2) {
+//		l2.recibirAtaque(this.getDanhoTotal());
+//
+//	}
 
 	public Danho getDanhoArma() {
 		return new Danho(this.getDanhoManoDerecha().getValor() + this.getDanhoManoIzquierda().getValor());
@@ -338,6 +338,13 @@ public class Personaje implements Luchador{
 		  (this.getAtributo(Destreza.class).getValor() / 100)
 		    / 100));
 	}
+
+//
+//	@Override
+//	public void recibirAtaque(Danho danhoTotal) {
+//		this.calcularDañoRecividoConDefensa(danhoTotal);
+//
+//	}
 
 
 	@Override
@@ -362,16 +369,26 @@ public class Personaje implements Luchador{
 		return new Danho(0f);
 		
 	}
+//	private Danho calcularDañoRecividoConDefensa(Danho danhoTotal) {
+//		return danhoTotal - this.defensa();
+//
+//	}
+
+
+//	private Danho defensa() {
+//
+//		//return
+//	}
 
 
 	public Boolean tieneElItem(Item item) {
 		return this.mochila.tieneElItem(item);		
 	}
 
-	@Override
-	public void setVida(Vida vl1) {
-		this.getAtributo(Vida.class).setValor(vl1.getValor());;
-	}
+//	@Override
+//	public void setVida(Vida vl1) {
+//		this.getAtributo(Vida.class).setValor(vl1.getValor());;
+//	}
 
 
   
