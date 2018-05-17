@@ -166,7 +166,7 @@ public class Personaje implements Luchador{
 		}
 		return res;
 	}
-	//
+	
 
 	public void ganarExperiencia(Integer exp) {
 		this.setExp(this.getExp() + exp);
@@ -341,20 +341,26 @@ public class Personaje implements Luchador{
 
 
 	@Override
-	public void recibirAtaque(Danho danhoTotal) {
-		this.calcularDañoRecividoConDefensa(danhoTotal);
+	public void recibirAtaque(Danho danhoAtacante) {
+		float danhorecibido =danhoAtacante.getValor() - this.calcularDañoRecividoConDefensa(danhoAtacante).getValor();
+		float cantidadVidaActual = this.getVida().getValor();
+		Vida vidatotal = new Vida (cantidadVidaActual - danhorecibido);
+		this.setVida(vidatotal);
+		
+		
 		
 	}
 
-	private Danho calcularDañoRecividoConDefensa(Danho danhoTotal) {
-		return danhoTotal - this.defensa();
+	private Danho calcularDañoRecividoConDefensa(Danho danhoAtacante) {
+		return new Danho(danhoAtacante.getValor() - this.defensa().getValor());
 		
 	}
 
 
-	private Danho defensa() {
+	public Danho defensa() {
+		//hacer
+		return new Danho(0f);
 		
-		//return 
 	}
 
 

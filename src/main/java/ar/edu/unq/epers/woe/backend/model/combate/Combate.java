@@ -1,7 +1,5 @@
 package ar.edu.unq.epers.woe.backend.model.combate;
 
-import ar.edu.unq.epers.woe.backend.model.monstruo.Monstruo;
-import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
 import ar.edu.unq.epers.woe.backend.model.personaje.Vida;
 
 public class Combate {
@@ -20,11 +18,11 @@ public class Combate {
 				Ataque at2 = new Ataque (l2,l1);
 				resultadoC.getDetalle().add(at2);
 			}
-			l1.setVida(vl1);
-			l2.setVida(vl2);
-			return resultadoC;
 		}
 		
+		l1.setVida(vl1);
+		l2.setVida(vl2);
+		return resultadoC;
 	}
 
 	
