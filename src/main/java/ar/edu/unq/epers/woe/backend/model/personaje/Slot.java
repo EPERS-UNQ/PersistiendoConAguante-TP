@@ -7,8 +7,7 @@ public class Slot {
 	
 	@Id @GeneratedValue int id;
     private String ubicacion;
-    @ManyToOne
-    private Inventario inv;
+    
     @ManyToOne(fetch = FetchType.EAGER)
     private Item item;
 

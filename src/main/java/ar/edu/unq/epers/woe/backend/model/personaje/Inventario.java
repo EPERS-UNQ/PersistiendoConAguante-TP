@@ -12,9 +12,8 @@ public class Inventario {
 
 	@Id @GeneratedValue
 	int id;
-	@ElementCollection(fetch = FetchType.EAGER) @OneToMany(mappedBy="inv", cascade=CascadeType.ALL)
+	@ElementCollection(fetch = FetchType.EAGER) @OneToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Slot> slots;
-	@OneToOne Personaje personaje;
 
     public Inventario() {
         this.slots = new HashSet<>();

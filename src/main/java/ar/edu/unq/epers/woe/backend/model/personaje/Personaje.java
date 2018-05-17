@@ -10,14 +10,7 @@ import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 
 /**
@@ -33,15 +26,20 @@ public class Personaje {
 	private String nombre; //único
 	@ManyToOne
 	private Raza raza;
-	@Transient private Clase clase;
+	@Enumerated(EnumType.STRING)
+	private Clase clase;
 	private Integer nivel;
 	private Integer exp;
 	private Float billetera;
-	@OneToOne(fetch = FetchType.EAGER, mappedBy="personaje") 
+	@OneToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	private Inventario inventario;
-	@OneToOne(fetch = FetchType.EAGER, mappedBy="personaje") 
+	@OneToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	private Mochila mochila;
-	@Transient private Set<Atributo> atributos;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<Atributo> atributos;
+	
 	@ElementCollection private Set<String> misionesAceptadas;
 	@ElementCollection private Set<String> misionesCumplidas;
 	@ManyToOne
