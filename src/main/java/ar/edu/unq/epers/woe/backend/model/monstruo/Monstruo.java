@@ -5,7 +5,7 @@ import ar.edu.unq.epers.woe.backend.model.personaje.Danho;
 import ar.edu.unq.epers.woe.backend.model.personaje.Vida;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 
-public class Monstruo implements Luchador{
+public class Monstruo extends Luchador{
 	private Vida vida;
 	private Danho daño;
 	private String tipo;
@@ -35,7 +35,7 @@ public class Monstruo implements Luchador{
 		
 	}
 	
-	public Danho getDanho() {
+	public Danho getDanhoTotal() {
 		return this.daño;
 		}
 	
@@ -48,13 +48,35 @@ public class Monstruo implements Luchador{
 	}
 	@Override
 	public void atacar(Luchador l) {
-		l.recibirAtaque(this.getDanho());
+		l.recibirAtaque(this.getDanhoTotal());
 
 	}
 	@Override
 	public void recibirAtaque(Danho danhoTotal) {
+		this.calcularDanhoRecibido( danhoTotal) ;
+
 		this.setVida(new Vida(this.getVida().getValor() - danhoTotal.getValor()));
 	}
 	
+	@Override
+	public Danho calcularDanhoRecibido(Danho danho) {
+	   return danho;
+	}
 	
+	@Override
+	public boolean sosPersonaje() {
+		return false;
+	}
+	
+	@Override
+	public boolean sosMonstruo() {
+		return true;
+	}
+
+
+
 }
+
+	
+	
+

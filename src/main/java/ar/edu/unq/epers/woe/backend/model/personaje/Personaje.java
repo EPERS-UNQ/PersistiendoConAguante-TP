@@ -17,7 +17,7 @@ import java.util.Set;
  *
  * @author Charly Backend
  */
-public class Personaje {
+public class Personaje extends Luchador {
 
 	private String nombre; //único
 	private Raza raza;
@@ -316,11 +316,11 @@ public class Personaje {
 		mochila.sacarItem(i);
 	}
 
-//	@Override
-//	public void atacar(Luchador l2) {
-//		l2.recibirAtaque(this.getDanhoTotal());
-//
-//	}
+@Override
+	public void atacar(Luchador l2) {
+		l2.recibirAtaque(this.getDanhoTotal());
+
+	}
 
 	public Danho getDanhoArma() {
 		return new Danho(this.getDanhoManoDerecha().getValor() + this.getDanhoManoIzquierda().getValor());
@@ -339,23 +339,26 @@ public class Personaje {
 		    / 100));
 	}
 
-//
-//	@Override
-//	public void recibirAtaque(Danho danhoTotal) {
-//		this.calcularDañoRecividoConDefensa(danhoTotal);
-//
-//	}
+
 
 
 	@Override
 	public void recibirAtaque(Danho danhoAtacante) {
-		float danhorecibido =danhoAtacante.getValor() - this.calcularDañoRecividoConDefensa(danhoAtacante).getValor();
+		Danho danhorecibido = calcularDanhoRecibido(danhoAtacante);
 		float cantidadVidaActual = this.getVida().getValor();
-		Vida vidatotal = new Vida (cantidadVidaActual - danhorecibido);
+		Vida vidatotal = new Vida (cantidadVidaActual - danhorecibido.getValor());
 		this.setVida(vidatotal);
 		
 		
 		
+	}
+
+	@Override
+	public Danho calcularDanhoRecibido(Danho danho) {
+
+		float danhorecibido =danho.getValor() - this.calcularDañoRecividoConDefensa(danho).getValor();
+		return new Danho(danhorecibido);
+	
 	}
 
 	private Danho calcularDañoRecividoConDefensa(Danho danhoAtacante) {
@@ -369,31 +372,41 @@ public class Personaje {
 		return new Danho(0f);
 		
 	}
-//	private Danho calcularDañoRecividoConDefensa(Danho danhoTotal) {
-//		return danhoTotal - this.defensa();
-//
-//	}
 
 
-//	private Danho defensa() {
-//
-//		//return
-//	}
+
+
 
 
 	public Boolean tieneElItem(Item item) {
 		return this.mochila.tieneElItem(item);		
 	}
 
-//	@Override
-//	public void setVida(Vida vl1) {
-//		this.getAtributo(Vida.class).setValor(vl1.getValor());;
-//	}
+	@Override
+	public void setVida(Vida vl1) {
+		this.getAtributo(Vida.class).setValor(vl1.getValor());;
+	}
 
 
   
 	public void aceptarMision(Mision mision) {
 		getMisionesAceptadas().add(mision.getNombre());
   }
+
+@Override
+public boolean sosPersonaje() {
+	return true;
+}
+
+@Override
+public boolean sosMonstruo() {
+	return false;
+}
+	
+
+
+
+	
+
   
 }
