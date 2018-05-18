@@ -1,11 +1,21 @@
 package ar.edu.unq.epers.woe.backend.model.combate;
 
 import java.util.ArrayList;
+import javax.persistence.*;
 
+@Entity
 public class ResultadoCombate {
 
+	@Id @GeneratedValue
+	int id;
+	
+	@ManyToMany(fetch = FetchType.EAGER)
 	private Luchador ganador;
+
+	@ManyToMany(fetch = FetchType.EAGER)
 	private Luchador perdedor;
+	
+	@Transient //temporarily...
 	private ArrayList<Ataque> detalle;
 	
 	public ResultadoCombate() {

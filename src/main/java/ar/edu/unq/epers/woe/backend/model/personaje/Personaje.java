@@ -20,7 +20,7 @@ import javax.persistence.*;
  * @author Charly Backend
  */
 @Entity
-public class Personaje {
+public class Personaje implements Luchador {
 
 	@Id
 	private String nombre; //único
@@ -413,6 +413,22 @@ public class Personaje {
 
 	public Item getItemEnUbicacion(String ubicacion) {
 		return inventario.getEnUbicacion(ubicacion).getItem();
+	}
+
+	@Override
+	public void atacar(Luchador l2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setVida(Vida vl1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setValorDanho(Danho danho) {
+		getAtributo(Danho.class).setValor(danho.getValor()); ;
 	}
   
 }
