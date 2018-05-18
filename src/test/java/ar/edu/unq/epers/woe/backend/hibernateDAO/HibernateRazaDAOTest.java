@@ -23,7 +23,7 @@ public class HibernateRazaDAOTest {
 		razaDAO = new HibernateRazaDAO();
 		raza = new Raza("Elfo");
 	}
-	
+
 	@After
 	public void cleanup() {
 		SessionFactoryProvider.destroy();

@@ -10,6 +10,8 @@ import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.*;
+
 
 /**
  * Un {@link Personaje} existente en el sistema, el mismo tiene un nombre
@@ -17,22 +19,37 @@ import java.util.Set;
  *
  * @author Charly Backend
  */
-public class Personaje extends Luchador {
+@Entity
+class Personaje extends Luchador {
 
+
+
+	@Id
 	private String nombre; //único
+	@ManyToOne
 	private Raza raza;
+	@Enumerated(EnumType.STRING)
 	private Clase clase;
 	private Integer nivel;
 	private Integer exp;
 	private Float billetera;
+	@OneToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	private Inventario inventario;
+	@OneToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	private Mochila mochila;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<Atributo> atributos;
-	private Set<String> misionesAceptadas;
-	private Set<String> misionesCumplidas;
+	
+	@ElementCollection private Set<String> misionesAceptadas;
+	@ElementCollection private Set<String> misionesCumplidas;
+	@ManyToOne
 	private Lugar lugar;
 
 
+	public Personaje() {}
+	
 	public Personaje(Raza raza, String nombre, Clase clase) {
 		this.raza = raza;
 		this.nombre = nombre;
@@ -342,16 +359,18 @@ public class Personaje extends Luchador {
 
 
 
+
 	@Override
 	public void recibirAtaque(Danho danhoAtacante) {
 		Danho danhorecibido = calcularDanhoRecibido(danhoAtacante);
 		float cantidadVidaActual = this.getVida().getValor();
 		Vida vidatotal = new Vida (cantidadVidaActual - danhorecibido.getValor());
-		this.setVida(vidatotal);
+		this.setVida(vidatotal);}
+
 		
 		
 		
-	}
+	
 
 	@Override
 	public Danho calcularDanhoRecibido(Danho danho) {
@@ -393,6 +412,7 @@ public class Personaje extends Luchador {
 		getMisionesAceptadas().add(mision.getNombre());
   }
 
+
 @Override
 public boolean sosPersonaje() {
 	return true;
@@ -407,6 +427,10 @@ public boolean sosMonstruo() {
 
 
 	
+	public Item getItemEnUbicacion(String ubicacion) {
+		return inventario.getEnUbicacion(ubicacion).getItem();
+	}
 
-  
+ 
+	
 }

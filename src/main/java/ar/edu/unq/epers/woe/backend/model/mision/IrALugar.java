@@ -2,10 +2,17 @@ package ar.edu.unq.epers.woe.backend.model.mision;
 
 import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import java.util.Set;
 
+@Entity
+@DiscriminatorValue("IRALUGAR")
 public class IrALugar extends Mision {
 
+    @OneToOne
     private Lugar destino;
 
     public IrALugar(String nombre, Recompensa recompensa, Lugar destino) {

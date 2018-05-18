@@ -8,8 +8,7 @@ import javax.persistence.*;
 @DiscriminatorValue("LUGAR")
 public class Lugar {
 
-	@Id	@GeneratedValue
-	private int id;
+	@Id
 	private String nombre;
 
 	public Lugar() {};

@@ -2,6 +2,7 @@ package ar.edu.unq.epers.woe.backend.model.item;
 
 import java.util.Set;
 import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
+import ar.edu.unq.epers.woe.backend.model.mision.Recompensa;
 import ar.edu.unq.epers.woe.backend.model.personaje.Atributo;
 import ar.edu.unq.epers.woe.backend.model.personaje.Danho;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
@@ -17,6 +18,8 @@ public class Item {
 	private int id;
 	@ManyToOne
 	private Lugar lugar;
+	@ManyToOne
+	private Recompensa recompensa;
 	private String nombre;
 	private String ubicacion;
 	private String tipo;

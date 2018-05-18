@@ -2,11 +2,17 @@ package ar.edu.unq.epers.woe.backend.model.mision;
 
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
+
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class Recompensa {
 
+    @Id @GeneratedValue
+    private Integer id;
+    @OneToMany(mappedBy="recompensa", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Item> items = new ArrayList<Item>();
     private Integer exp = 0;
     private Float monedas = 0f;
