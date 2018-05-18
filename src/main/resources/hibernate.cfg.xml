@@ -37,6 +37,8 @@
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.personaje.Destreza" />
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.personaje.Fuerza" />
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.personaje.Vida" />
+		<mapping class= "ar.edu.unq.epers.woe.backend.model.mision.Mision" />
+		<mapping class= "ar.edu.unq.epers.woe.backend.model.mision.Recompensa" />
 	
 	</session-factory>
 </hibernate-configuration>
