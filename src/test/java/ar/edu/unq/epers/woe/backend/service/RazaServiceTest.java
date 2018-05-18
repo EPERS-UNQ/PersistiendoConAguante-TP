@@ -1,4 +1,4 @@
-package ar.edu.unq.epers.woe.backend.razadao;
+package ar.edu.unq.epers.woe.backend.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -20,7 +20,7 @@ import ar.edu.unq.epers.woe.backend.service.raza.RazaNoExistente;
 import java.util.List;
 
 
-public class RazaDAOTest {
+public class RazaServiceTest {
 
     private HibernateRazaDAO razaDAO = new HibernateRazaDAO();
     private Raza raza;

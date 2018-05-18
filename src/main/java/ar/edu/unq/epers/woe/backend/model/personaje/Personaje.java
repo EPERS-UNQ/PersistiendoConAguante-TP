@@ -362,16 +362,16 @@ public class Personaje {
 //	}
 
 
-	@Override
-	public void recibirAtaque(Danho danhoAtacante) {
-		float danhorecibido =danhoAtacante.getValor() - this.calcularDañoRecividoConDefensa(danhoAtacante).getValor();
-		float cantidadVidaActual = this.getVida().getValor();
-		Vida vidatotal = new Vida (cantidadVidaActual - danhorecibido);
-		this.setVida(vidatotal);
+	//@Override
+	//public void recibirAtaque(Danho danhoAtacante) {
+	//	float danhorecibido =danhoAtacante.getValor() - this.calcularDañoRecividoConDefensa(danhoAtacante).getValor();
+	//	float cantidadVidaActual = this.getVida().getValor();
+	//	Vida vidatotal = new Vida (cantidadVidaActual - danhorecibido);
+	//	this.setVida(vidatotal);
 		
 		
 		
-	}
+	//}
 
 	private Danho calcularDañoRecividoConDefensa(Danho danhoAtacante) {
 		return new Danho(danhoAtacante.getValor() - this.defensa().getValor());

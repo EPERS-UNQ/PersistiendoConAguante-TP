@@ -1,7 +1,7 @@
-package ar.edu.unq.epers.woe.backend.service.hibernateDAO;
+package ar.edu.unq.epers.woe.backend.hibernateDAO;
 
 import org.hibernate.Session;
-import ar.edu.unq.epers.woe.backend.service.hibernateDAO.Runner;
+import ar.edu.unq.epers.woe.backend.hibernateDAO.Runner;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
 
 public class HibernatePersonajeDAO {
