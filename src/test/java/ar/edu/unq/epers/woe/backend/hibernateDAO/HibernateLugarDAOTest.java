@@ -36,7 +36,7 @@ public class HibernateLugarDAOTest {
     @Test
     public void testSeRecuperaLugar() {
         lugarDAO.guardar(this.tienda);
-        assertEquals(lugarDAO.recuperar(1).getNombre(), "tstTienda");
+        assertEquals(lugarDAO.recuperar(this.tienda.getNombre()).getNombre(), "tstTienda");
     }
 
     @Test
@@ -47,7 +47,7 @@ public class HibernateLugarDAOTest {
         Tienda tb = new Tienda("t2");
         tb.setItems(items);
         lugarDAO.guardar(tb);
-        Tienda tr = (Tienda) lugarDAO.recuperar(1);
+        Tienda tr = (Tienda) lugarDAO.recuperar(tb.getNombre());
         assertTrue(items.containsAll(tr.getItems()));
     }
 
