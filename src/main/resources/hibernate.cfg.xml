@@ -28,6 +28,7 @@
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.raza.Raza" />
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.lugar.Tienda" />
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.lugar.Lugar" />
+		<mapping class= "ar.edu.unq.epers.woe.backend.model.lugar.Taberna" />
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.item.Item" />
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.requerimiento.Requerimiento" />
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.personaje.Armadura" />
