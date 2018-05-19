@@ -18,16 +18,7 @@ public class GimnasioTest {
 	}
 	
 	@Test
-	public void unGimnasioTienePersonajesEsperandoAPelear() {
-		
-		//no ingreso ningun personaje
-		assertTrue(gimnasio.getPersonajes().isEmpty());
-	}
-
-	@Test
-	public void unGimnasioDejaIngresarAPersonaje() {
-		Personaje p = new Personaje(null, null, null);
-		gimnasio.ingresaPersonaje(p );
-		assertTrue( gimnasio.getPersonajes().contains(p) );
+	public void unGimnasioEsUnGimnasio() {
+		assertTrue(gimnasio.esGimnasio());
 	}
 }

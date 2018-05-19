@@ -31,4 +31,9 @@ public class Lugar {
 		return false;
 	}
 
+	public boolean esGimnasio() {
+		// devuelve false para todas las subclases de Lugar excepto Gimnasio
+		return false;
+	}
+
 }
