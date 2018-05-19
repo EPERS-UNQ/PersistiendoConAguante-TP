@@ -13,13 +13,48 @@ public class Atributo {
     public Atributo() {}
 
     @Id	@GeneratedValue
-    private int id;
+    private int idAtrib;
+
+    @ManyToOne
+    private Personaje personaje;
 
     @ManyToOne
     private Item item;
 
     @ManyToOne
     private Requerimiento requerimiento;
+
+    public int getIdAtrib() {
+        return idAtrib;
+    }
+
+    public void setIdAtrib(int idAtrib) {
+        this.idAtrib = idAtrib;
+    }
+
+    public Personaje getPersonaje() {
+        return personaje;
+    }
+
+    public void setPersonaje(Personaje personaje) {
+        this.personaje = personaje;
+    }
+
+    public Item getItem() {
+        return item;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
+    }
+
+    public Requerimiento getRequerimiento() {
+        return requerimiento;
+    }
+
+    public void setRequerimiento(Requerimiento requerimiento) {
+        this.requerimiento = requerimiento;
+    }
 
     public void setValor(Float valor) {
         this.valor = valor;

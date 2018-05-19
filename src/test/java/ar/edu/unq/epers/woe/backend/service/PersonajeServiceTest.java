@@ -1,11 +1,17 @@
 package ar.edu.unq.epers.woe.backend.service;
 
 import static org.junit.Assert.*;
+
+import ar.edu.unq.epers.woe.backend.hibernateDAO.*;
 import ar.edu.unq.epers.woe.backend.model.personaje.Atributo;
 import ar.edu.unq.epers.woe.backend.model.personaje.Vida;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import ar.edu.unq.epers.woe.backend.model.requerimiento.Requerimiento;
+import ar.edu.unq.epers.woe.backend.service.data.ServiciosDB;
+import ar.edu.unq.epers.woe.backend.service.raza.ServiciosRaza;
+import org.hibernate.Session;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
@@ -16,35 +22,55 @@ import java.util.Set;
 
 public class PersonajeServiceTest {
 
-	PersonajeService serviceP = new PersonajeService() ;
+	private PersonajeService serviceP = new PersonajeService();
+	private HibernatePersonajeDAO pjhd = new HibernatePersonajeDAO();
+	private HibernateRazaDAO rhd = new HibernateRazaDAO();
+	private HibernateItemDAO ihd = new HibernateItemDAO();
+	private ServiciosRaza sr = new ServiciosRaza();
 	private Personaje pj;
 	private Item i;
+	private Raza r;
+	private ServiciosDB dbServ = new ServiciosDB();
 
 	@Before
 	public void crearModelo() {
-		pj = new Personaje(new Raza("tstRaza"), "tstPJ0", Clase.MAGO);
+		SessionFactoryProvider.destroy();
 		Set<Clase> cls = new HashSet<>();
+		cls.add(Clase.MAGO);
 		Set<Atributo> ats = new HashSet<>();
+		ats.add(new Vida(5f));
 		i = new Item("plateMail", "torso", "espada", cls, new Requerimiento(),
 				5, 1, ats);
-	}
+		Runner.runInSession(() -> { this.ihd.guardar(i); return null; });
+		this.r = new Raza("r1");
+		this.r.setClases(cls);
+		sr.crearRaza(this.r);
+		this.pj = new Personaje(this.r, "tstPJ0", Clase.MAGO);
+		this.pj.getMochila().agregarItem(i);
+		Runner.runInSession(() -> {
+			this.pjhd.guardar(this.pj); return null; });
+		}
 	
 	@Test
 	public void unServicePersonajePuedeEquiparDeUnItemAUnPersonaje() {
-		this.pj.getMochila().agregarItem(i);
-		serviceP.equipar(this.pj, this.i  );
-		assertEquals(this.pj.getInventario().getEnUbicacion("torso").getItem(), this.i);
+		serviceP.equipar(this.pj.getNombre(), 1);
+		Personaje pjr = Runner.runInSession(() -> { return pjhd.recuperar(this.pj.getNombre()); });
+		assertEquals(pjr.getInventario().getEnUbicacion(this.i.getUbicacion()).getItem().getNombre(), this.i.getNombre());
+		assertEquals(pjr.getInventario().getEnUbicacion(this.i.getUbicacion()).getItem().getAtributos().iterator().next().getValor(),
+				this.i.getAtributos().iterator().next().getValor());
+		assertEquals(pjr.getInventario().getEnUbicacion(this.i.getUbicacion()).getItem().getUbicacion(), this.i.getUbicacion());
 	}
 
 	@Test
 	public void alEquiparUnItemSeIncrementaAtributo() {
-		HashSet<Atributo> atts = new HashSet<>();
-		atts.add(new Vida(5f));
-		Item i = new Item(null, "torso", null, null, new Requerimiento(),
-				0, 0, atts);
-		this.pj.getMochila().agregarItem(i);
-		this.serviceP.equipar(this.pj, i);
-		assertEquals(this.pj.getAtributo(Vida.class).getValor(), new Float(6f));
+		serviceP.equipar(this.pj.getNombre(), 1);
+		Personaje pjr = Runner.runInSession(() -> { return pjhd.recuperar(this.pj.getNombre()); });
+		assertEquals(pjr.getAtributo(Vida.class).getValor(), new Float(6f));
+	}
+
+	@After
+	public void cleanup() {
+		//SessionFactoryProvider.destroy();
 	}
 
 }

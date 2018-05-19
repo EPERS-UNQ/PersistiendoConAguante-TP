@@ -38,8 +38,7 @@ public class Personaje extends Luchador {
 	@OneToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	private Mochila mochila;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@ElementCollection(fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="personaje", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Atributo> atributos;
 	
 	@ElementCollection private Set<String> misionesAceptadas;
@@ -62,11 +61,11 @@ public class Personaje extends Luchador {
 		this.atributos = new HashSet<>();
 		this.misionesAceptadas = new HashSet<>();
 		this.misionesCumplidas = new HashSet<>();
-		this.atributos.add(new Armadura(1f));
-		this.atributos.add(new Danho(1f));
-		this.atributos.add(new Destreza(1f));
-		this.atributos.add(new Fuerza(1f));
-		this.atributos.add(new Vida(1f));
+		this.atributos.add(new Armadura(1f, this));
+		this.atributos.add(new Danho(1f, this));
+		this.atributos.add(new Destreza(1f, this));
+		this.atributos.add(new Fuerza(1f, this));
+		this.atributos.add(new Vida(1f, this));
 	}
 
 
