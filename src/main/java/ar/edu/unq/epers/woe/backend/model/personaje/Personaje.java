@@ -20,7 +20,7 @@ import javax.persistence.*;
  * @author Charly Backend
  */
 @Entity
-class Personaje extends Luchador {
+public class Personaje extends Luchador {
 
 
 
