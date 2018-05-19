@@ -14,10 +14,8 @@ public class HibernateItemDAO {
         Session session = Runner.getCurrentSession();
         Item itemr = session.get(Item.class, id);
         if(itemr==null) {
-            throw new RuntimeException("El personaje no existe");
+            throw new RuntimeException("El Item no existe");
         }
         return itemr;
     }
-
-
 }
