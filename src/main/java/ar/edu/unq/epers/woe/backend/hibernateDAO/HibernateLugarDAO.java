@@ -16,9 +16,11 @@ public class HibernateLugarDAO {
     }
 
     public Lugar recuperar(String nombre) {
-        return Runner.runInSession(() -> {
-            Session session = Runner.getCurrentSession();
-            return session.get(Lugar.class, nombre);
-        });
+        Session session = Runner.getCurrentSession();
+        Lugar lugarr = session.get(Lugar.class, nombre);
+        if(lugarr==null) {
+            throw new RuntimeException("El Lugar no existe");
+        }
+        return lugarr;
     }
 }
