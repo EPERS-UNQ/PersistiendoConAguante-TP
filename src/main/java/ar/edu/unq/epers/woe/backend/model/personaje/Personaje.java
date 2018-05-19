@@ -20,7 +20,9 @@ import javax.persistence.*;
  * @author Charly Backend
  */
 @Entity
-public class Personaje {
+class Personaje extends Luchador {
+
+
 
 	@Id
 	private String nombre; //único
@@ -331,11 +333,11 @@ public class Personaje {
 		mochila.sacarItem(i);
 	}
 
-//	@Override
-//	public void atacar(Luchador l2) {
-//		l2.recibirAtaque(this.getDanhoTotal());
-//
-//	}
+@Override
+	public void atacar(Luchador l2) {
+		l2.recibirAtaque(this.getDanhoTotal());
+
+	}
 
 	public Danho getDanhoArma() {
 		return new Danho(this.getDanhoManoDerecha().getValor() + this.getDanhoManoIzquierda().getValor());
@@ -354,24 +356,29 @@ public class Personaje {
 		    / 100));
 	}
 
-//
-//	@Override
-//	public void recibirAtaque(Danho danhoTotal) {
-//		this.calcularDañoRecividoConDefensa(danhoTotal);
-//
-//	}
 
 
-	//@Override
-	//public void recibirAtaque(Danho danhoAtacante) {
-	//	float danhorecibido =danhoAtacante.getValor() - this.calcularDañoRecividoConDefensa(danhoAtacante).getValor();
-	//	float cantidadVidaActual = this.getVida().getValor();
-	//	Vida vidatotal = new Vida (cantidadVidaActual - danhorecibido);
-	//	this.setVida(vidatotal);
+
+
+	@Override
+	public void recibirAtaque(Danho danhoAtacante) {
+		Danho danhorecibido = calcularDanhoRecibido(danhoAtacante);
+		float cantidadVidaActual = this.getVida().getValor();
+		Vida vidatotal = new Vida (cantidadVidaActual - danhorecibido.getValor());
+		this.setVida(vidatotal);}
+
 		
 		
 		
-	//}
+	
+
+	@Override
+	public Danho calcularDanhoRecibido(Danho danho) {
+
+		float danhorecibido =danho.getValor() - this.calcularDañoRecividoConDefensa(danho).getValor();
+		return new Danho(danhorecibido);
+	
+	}
 
 	private Danho calcularDañoRecividoConDefensa(Danho danhoAtacante) {
 		return new Danho(danhoAtacante.getValor() - this.defensa().getValor());
@@ -384,26 +391,20 @@ public class Personaje {
 		return new Danho(0f);
 		
 	}
-//	private Danho calcularDañoRecividoConDefensa(Danho danhoTotal) {
-//		return danhoTotal - this.defensa();
-//
-//	}
 
 
-//	private Danho defensa() {
-//
-//		//return
-//	}
+
+
 
 
 	public Boolean tieneElItem(Item item) {
 		return this.mochila.tieneElItem(item);		
 	}
 
-//	@Override
-//	public void setVida(Vida vl1) {
-//		this.getAtributo(Vida.class).setValor(vl1.getValor());;
-//	}
+	@Override
+	public void setVida(Vida vl1) {
+		this.getAtributo(Vida.class).setValor(vl1.getValor());;
+	}
 
 
   
@@ -411,8 +412,25 @@ public class Personaje {
 		getMisionesAceptadas().add(mision.getNombre());
   }
 
+
+@Override
+public boolean sosPersonaje() {
+	return true;
+}
+
+@Override
+public boolean sosMonstruo() {
+	return false;
+}
+	
+
+
+
+	
 	public Item getItemEnUbicacion(String ubicacion) {
 		return inventario.getEnUbicacion(ubicacion).getItem();
 	}
-  
+
+ 
+	
 }
