@@ -15,7 +15,7 @@ import ar.edu.unq.epers.woe.backend.model.personaje.*;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import ar.edu.unq.epers.woe.backend.model.requerimiento.Requerimiento;
-import ar.edu.unq.epers.woe.backend.service.hibernateDAO.HibernatePersonajeDAO;
+
 
 public class HibernatePersonajeDAOTest {
 

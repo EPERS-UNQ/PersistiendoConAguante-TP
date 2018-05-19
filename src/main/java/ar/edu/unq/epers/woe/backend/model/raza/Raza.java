@@ -44,6 +44,17 @@ public class Raza {
 	private String urlFoto;
 	private int cantidadPersonajes;
 
+	public Set<Personaje> getPersonajes() {
+		return personajes;
+	}
+
+	public void setPersonajes(Set<Personaje> personajes) {
+		this.personajes = personajes;
+	}
+
+	@OneToMany(mappedBy="raza", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<Personaje> personajes;
+
 
 	public Raza() {}
 

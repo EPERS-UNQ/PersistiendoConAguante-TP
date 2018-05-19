@@ -15,10 +15,10 @@ public class HibernateLugarDAO {
         });
     }
 
-    public Lugar recuperar(int idLugar) {
+    public Lugar recuperar(String nombre) {
         return Runner.runInSession(() -> {
             Session session = Runner.getCurrentSession();
-            return session.get(Lugar.class, idLugar);
+            return session.get(Lugar.class, nombre);
         });
     }
 }

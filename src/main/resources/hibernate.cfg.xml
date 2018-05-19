@@ -26,8 +26,10 @@
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.personaje.Slot" />
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.personaje.Mochila" />
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.raza.Raza" />
+		<mapping class= "ar.edu.unq.epers.woe.backend.model.lugar.Gimnasio" />
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.lugar.Tienda" />
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.lugar.Lugar" />
+		<mapping class= "ar.edu.unq.epers.woe.backend.model.lugar.Taberna" />
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.item.Item" />
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.requerimiento.Requerimiento" />
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.personaje.Armadura" />
@@ -36,6 +38,10 @@
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.personaje.Destreza" />
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.personaje.Fuerza" />
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.personaje.Vida" />
+		<mapping class= "ar.edu.unq.epers.woe.backend.model.mision.Mision" />
+		<mapping class= "ar.edu.unq.epers.woe.backend.model.mision.Recompensa" />
+		<mapping class= "ar.edu.unq.epers.woe.backend.model.mision.IrALugar" />
+		<mapping class= "ar.edu.unq.epers.woe.backend.model.mision.ObtenerItem" />
 	
 	</session-factory>
 </hibernate-configuration>

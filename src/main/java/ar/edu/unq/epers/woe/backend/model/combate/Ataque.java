@@ -12,14 +12,35 @@ public class Ataque {
 	public Ataque(Luchador atacante, Luchador atacado) {
 		this.setAtacante(atacante);
 		this.setAtacado(atacado);
-		this.setDanhoAtacante(atacante.getDanho());
+		this.setDanhoAtacante(atacante.getDanhoTotal());
+		this.setDanhoRecibido(atacado.calcularDanhoRecibido(atacante.getDanhoTotal()));
 		
 		
 	}
-	private void setDanhoAtacante(Danho danho) {
+	private void setDanhoRecibido(Danho danhoRecibido) {
+		this.dañoRecibido = danhoRecibido;
+		
+	}
+	public Luchador getAtacante(){
+		return this.atacante;
+	}
+	
+	public Luchador getAtacado() {
+		return this.atacado;
+	}
+	
+	public Danho getDanhoAtante() {
+		return this.dañoAtacante;
+	}
+	
+	public Danho getDanhoRecibido() {
+		return this.dañoRecibido;
+	}
+	
+	public void setDanhoAtacante(Danho danho) {
 		this.dañoAtacante = danho;
 	}
-	private void setAtacado(Luchador atacado2) {
+	public void setAtacado(Luchador atacado2) {
 		this.atacado= atacado2;
 	}
 	public void setAtacante(Luchador atacante2) {

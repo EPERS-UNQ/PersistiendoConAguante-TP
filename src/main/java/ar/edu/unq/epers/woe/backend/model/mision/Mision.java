@@ -2,13 +2,22 @@ package ar.edu.unq.epers.woe.backend.model.mision;
 
 import ar.edu.unq.epers.woe.backend.model.lugar.Taberna;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
+
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@Entity
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="DISCRIMINATOR", discriminatorType=DiscriminatorType.STRING)
+@DiscriminatorValue("MISION")
 public class Mision {
 
+    @Id
     private String nombre; //único
+    @ElementCollection
     private Set<String> prereqs = new HashSet<>();
+    @OneToOne
     private Recompensa recompensa;
 
     public Mision() {};

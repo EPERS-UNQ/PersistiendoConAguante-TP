@@ -3,8 +3,15 @@ package ar.edu.unq.epers.woe.backend.model.mision;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+
+@Entity
+@DiscriminatorValue("OBTENERITEM")
 public class ObtenerItem extends Mision {
 	
+	@OneToOne
 	private Item item;
 	
 	public ObtenerItem(String nombre, Recompensa recompensa, Item item) {

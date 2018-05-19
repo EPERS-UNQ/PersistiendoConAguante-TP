@@ -8,8 +8,7 @@ import javax.persistence.*;
 @DiscriminatorValue("LUGAR")
 public class Lugar {
 
-	@Id	@GeneratedValue
-	private int id;
+	@Id
 	private String nombre;
 
 	public Lugar() {};
@@ -29,6 +28,11 @@ public class Lugar {
 
 	public boolean esTaberna() {
 		// devuelve false para todas las subclases de Lugar excepto Taberna
+		return false;
+	}
+
+	public boolean esGimnasio() {
+		// devuelve false para todas las subclases de Lugar excepto Gimnasio
 		return false;
 	}
 

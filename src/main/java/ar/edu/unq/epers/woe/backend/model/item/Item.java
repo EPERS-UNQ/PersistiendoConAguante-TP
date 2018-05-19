@@ -2,8 +2,10 @@ package ar.edu.unq.epers.woe.backend.model.item;
 
 import java.util.Set;
 import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
+import ar.edu.unq.epers.woe.backend.model.mision.Recompensa;
 import ar.edu.unq.epers.woe.backend.model.personaje.Atributo;
 import ar.edu.unq.epers.woe.backend.model.personaje.Danho;
+import ar.edu.unq.epers.woe.backend.model.personaje.Mochila;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.requerimiento.Requerimiento;
 
@@ -14,17 +16,20 @@ import javax.persistence.*;
 public class Item {
 
 	@Id @GeneratedValue
-	private int id;
+	private int idItem;
+	@ManyToOne
+	private Mochila mochila;
 	@ManyToOne
 	private Lugar lugar;
+	@ManyToOne
+	private Recompensa recompensa;
 	private String nombre;
 	private String ubicacion;
 	private String tipo;
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Enumerated(EnumType.STRING)
 	private Set<Clase> clases;
-	@OneToOne(fetch = FetchType.EAGER)
-	@MapsId
+	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	private Requerimiento requerimiento; 
 	private int costoDeCompra;
 	private int costoDeVenta;
@@ -45,6 +50,38 @@ public class Item {
 		this.setCostoDeCompra(costoDeCompra);
 		this.setCostoDeVenta(costoDeVenta);	
 		this.setAtributos(atributos);
+	}
+
+	public int getIdItem() {
+		return idItem;
+	}
+
+	public void setIdItem(int idItem) {
+		this.idItem = idItem;
+	}
+
+	public Mochila getMochila() {
+		return mochila;
+	}
+
+	public void setMochila(Mochila mochila) {
+		this.mochila = mochila;
+	}
+
+	public Lugar getLugar() {
+		return lugar;
+	}
+
+	public void setLugar(Lugar lugar) {
+		this.lugar = lugar;
+	}
+
+	public Recompensa getRecompensa() {
+		return recompensa;
+	}
+
+	public void setRecompensa(Recompensa recompensa) {
+		this.recompensa = recompensa;
 	}
 
 	public String getNombre() {
@@ -108,7 +145,11 @@ public class Item {
 	}
 
 	public void setAtributos(Set<Atributo> atributos) {
+
 		this.atributos = atributos;
+		for(Atributo a: this.atributos) {
+			a.setItem(this);
+		}
 	}
 
 	public Danho getDanho() {

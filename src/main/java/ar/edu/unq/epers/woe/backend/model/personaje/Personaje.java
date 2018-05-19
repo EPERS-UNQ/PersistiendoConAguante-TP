@@ -20,7 +20,7 @@ import javax.persistence.*;
  * @author Charly Backend
  */
 @Entity
-public class Personaje implements Luchador {
+public class Personaje extends Luchador {
 
 	@Id
 	private String nombre; //único
@@ -36,8 +36,7 @@ public class Personaje implements Luchador {
 	@OneToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	private Mochila mochila;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@ElementCollection(fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="personaje", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Atributo> atributos;
 	
 	@ElementCollection private Set<String> misionesAceptadas;
@@ -60,11 +59,11 @@ public class Personaje implements Luchador {
 		this.atributos = new HashSet<>();
 		this.misionesAceptadas = new HashSet<>();
 		this.misionesCumplidas = new HashSet<>();
-		this.atributos.add(new Armadura(1f));
-		this.atributos.add(new Danho(1f));
-		this.atributos.add(new Destreza(1f));
-		this.atributos.add(new Fuerza(1f));
-		this.atributos.add(new Vida(1f));
+		this.atributos.add(new Armadura(1f, this));
+		this.atributos.add(new Danho(1f, this));
+		this.atributos.add(new Destreza(1f, this));
+		this.atributos.add(new Fuerza(1f, this));
+		this.atributos.add(new Vida(1f, this));
 	}
 
 
@@ -331,11 +330,11 @@ public class Personaje implements Luchador {
 		mochila.sacarItem(i);
 	}
 
-//	@Override
-//	public void atacar(Luchador l2) {
-//		l2.recibirAtaque(this.getDanhoTotal());
-//
-//	}
+@Override
+	public void atacar(Luchador l2) {
+		l2.recibirAtaque(this.getDanhoTotal());
+
+	}
 
 	public Danho getDanhoArma() {
 		return new Danho(this.getDanhoManoDerecha().getValor() + this.getDanhoManoIzquierda().getValor());
@@ -354,23 +353,28 @@ public class Personaje implements Luchador {
 		    / 100));
 	}
 
-//
-//	@Override
-//	public void recibirAtaque(Danho danhoTotal) {
-//		this.calcularDañoRecividoConDefensa(danhoTotal);
-//
-//	}
+
+
 
 
 	@Override
 	public void recibirAtaque(Danho danhoAtacante) {
-		float danhorecibido =danhoAtacante.getValor() - this.calcularDañoRecividoConDefensa(danhoAtacante).getValor();
+		Danho danhorecibido = calcularDanhoRecibido(danhoAtacante);
 		float cantidadVidaActual = this.getVida().getValor();
-		Vida vidatotal = new Vida (cantidadVidaActual - danhorecibido);
-		this.setVida(vidatotal);
+		Vida vidatotal = new Vida (cantidadVidaActual - danhorecibido.getValor());
+		this.setVida(vidatotal);}
+
 		
 		
 		
+	
+
+	@Override
+	public Danho calcularDanhoRecibido(Danho danho) {
+
+		float danhorecibido =danho.getValor() - this.calcularDañoRecividoConDefensa(danho).getValor();
+		return new Danho(danhorecibido);
+	
 	}
 
 	private Danho calcularDañoRecividoConDefensa(Danho danhoAtacante) {
@@ -384,26 +388,20 @@ public class Personaje implements Luchador {
 		return new Danho(0f);
 		
 	}
-//	private Danho calcularDañoRecividoConDefensa(Danho danhoTotal) {
-//		return danhoTotal - this.defensa();
-//
-//	}
 
 
-//	private Danho defensa() {
-//
-//		//return
-//	}
+
+
 
 
 	public Boolean tieneElItem(Item item) {
 		return this.mochila.tieneElItem(item);		
 	}
 
-//	@Override
-//	public void setVida(Vida vl1) {
-//		this.getAtributo(Vida.class).setValor(vl1.getValor());;
-//	}
+	@Override
+	public void setVida(Vida vl1) {
+		this.getAtributo(Vida.class).setValor(vl1.getValor());;
+	}
 
 
   
@@ -411,24 +409,23 @@ public class Personaje implements Luchador {
 		getMisionesAceptadas().add(mision.getNombre());
   }
 
+	@Override
+	public boolean sosPersonaje() {
+		return true;
+	}
+
+	@Override
+	public boolean sosMonstruo() {
+		return false;
+	}
+
 	public Item getItemEnUbicacion(String ubicacion) {
 		return inventario.getEnUbicacion(ubicacion).getItem();
 	}
 
-	@Override
-	public void atacar(Luchador l2) {
-		// TODO Auto-generated method stub
-		
-	}
 
-	@Override
-	public void setVida(Vida vl1) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void setValorDanho(Danho danho) {
-		getAtributo(Danho.class).setValor(danho.getValor()); ;
-	}
-  
+//	public void setValorDanho(Danho danho) {
+//		getAtributo(Danho.class).setValor(danho.getValor()); ;
+//	}
+ 
 }

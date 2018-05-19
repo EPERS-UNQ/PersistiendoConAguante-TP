@@ -11,18 +11,35 @@ import javax.persistence.*;
 public class Inventario {
 
 	@Id @GeneratedValue
-	int id;
-	@ElementCollection(fetch = FetchType.EAGER) @OneToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
+	private int idInv;
+
+    @OneToMany(mappedBy="inventario", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Slot> slots;
 
     public Inventario() {
         this.slots = new HashSet<>();
-        this.slots.add(new Slot("cabeza"));
-        this.slots.add(new Slot("torso"));
-        this.slots.add(new Slot("piernas"));
-        this.slots.add(new Slot("pies"));
-        this.slots.add(new Slot("izquierda"));
-        this.slots.add(new Slot("derecha"));
+        this.slots.add(new Slot("cabeza", this));
+        this.slots.add(new Slot("torso", this));
+        this.slots.add(new Slot("piernas", this));
+        this.slots.add(new Slot("pies", this));
+        this.slots.add(new Slot("izquierda", this));
+        this.slots.add(new Slot("derecha", this));
+    }
+
+    public int getIdInv() {
+        return idInv;
+    }
+
+    public void setIdInv(int idInv) {
+        this.idInv = idInv;
+    }
+
+    public Set<Slot> getSlots() {
+        return slots;
+    }
+
+    public void setSlots(Set<Slot> slots) {
+        this.slots = slots;
     }
 
     public void setItemEnUnaUbicacion(Item item, Personaje pj) {
