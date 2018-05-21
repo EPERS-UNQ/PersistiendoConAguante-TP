@@ -53,6 +53,7 @@ public class VencerA extends Mision {
         this.victoriasActuales = victoriasActuales;
     }
 
+    @Override
     public void incrementarVictoriasActualesSiPuede(ResultadoCombate resComb) {
         if((resComb.getGanador().sosPersonaje()) && (this.getRival().sosPersonaje())
             && resComb.getPerdedor().sosPersonaje()) {
@@ -86,6 +87,7 @@ public class VencerA extends Mision {
         return this.misionAceptadaPor(pj) && (this.victoriasActuales >= this.victoriasReq);
     }
 
-
+    @Override
+    public Boolean esVencerA() { return true; }
 
 }

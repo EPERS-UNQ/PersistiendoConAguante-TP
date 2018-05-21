@@ -1,8 +1,8 @@
 package ar.edu.unq.epers.woe.backend.model.mision;
 
+import ar.edu.unq.epers.woe.backend.model.combate.ResultadoCombate;
 import ar.edu.unq.epers.woe.backend.model.lugar.Taberna;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -98,5 +98,13 @@ public class Mision {
     }
 
     public Boolean puedeCompletarMision(Personaje pj) {return false;}
+
+    public Boolean esIrALugar() {return false;}
+
+    public Boolean esObtenerItem() {return false;}
+
+    public Boolean esVencerA() {return false;}
+
+    public void incrementarVictoriasActualesSiPuede(ResultadoCombate resComb) {}
 
 }

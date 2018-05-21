@@ -36,5 +36,8 @@ public class ObtenerItem extends Mision {
         return this.misionAceptadaPor(pj) && (tieneElItem(pj,this.item));
     }
 
+	@Override
+	public Boolean esObtenerItem() { return true; }
+
 }
 

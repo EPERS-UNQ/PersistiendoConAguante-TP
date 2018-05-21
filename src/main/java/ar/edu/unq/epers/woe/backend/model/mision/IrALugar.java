@@ -38,6 +38,9 @@ public class IrALugar extends Mision {
         return this.misionAceptadaPor(pj) && (pj.getLugar().getClass() == this.destino.getClass());
     }
 
+    @Override
+    public Boolean esIrALugar() { return true; }
+
 
 
 
