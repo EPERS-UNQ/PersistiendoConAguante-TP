@@ -59,6 +59,7 @@ public class Personaje extends Luchador {
 		this.inventario = new Inventario();
 		this.billetera = 0f;
 		this.atributos = new HashSet<>();
+		this.misionesEnCurso = new HashSet<>();
 		this.misionesAceptadas = new HashSet<>();
 		this.misionesCumplidas = new HashSet<>();
 		this.atributos.add(new Armadura(1f, this));
@@ -391,6 +392,8 @@ public class Personaje extends Luchador {
 	}
 
 	public void aceptarMision(Mision mision) {
+		mision.setPjOwner(this);
+		getMisionesEnCurso().add(mision);
 		getMisionesAceptadas().add(mision.getNombre());
   }
 
