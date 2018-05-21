@@ -20,6 +20,9 @@ public class Mision {
     @OneToOne
     private Recompensa recompensa;
 
+    @ManyToOne
+    private Personaje pjOwner;
+
     public Mision() {};
 
     public Mision(String nombre, Recompensa recompensa) {
@@ -54,6 +57,14 @@ public class Mision {
 
     public void setPrereqs(Set<String> prereqs) {
         this.prereqs = prereqs;
+    }
+
+    public Personaje getPjOwner() {
+        return pjOwner;
+    }
+
+    public void setPjOwner(Personaje pjOwner) {
+        this.pjOwner = pjOwner;
     }
 
     public Boolean misionDisponiblePara(Personaje pj) {

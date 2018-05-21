@@ -22,9 +22,9 @@ import ar.edu.unq.epers.woe.backend.hibernateDAO.SessionFactoryProvider;
 
 public class HibernatePersonajeDAOTest {
 
-	HibernatePersonajeDAO persDao;
-	Personaje p;
-	Item i;
+	private HibernatePersonajeDAO persDao;
+	private Personaje p;
+	private Item i;
 
 	@Before
 	public void setUp(){

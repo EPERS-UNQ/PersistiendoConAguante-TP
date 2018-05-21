@@ -71,6 +71,14 @@ public class MisionTest {
         assertTrue(m.puedeCompletarMision(this.pj));
     }
 
+    @Test
+    public void personajeQTieneVictoriasSuficientesPuedeCumplirMisionDeVencerA() {
+        Mision m = new VencerA("tstOI", new Recompensa(new ArrayList<Item>(), 10, 0f),
+                this.pj, 0);
+        this.pj.aceptarMision(m);
+        assertTrue(m.puedeCompletarMision(this.pj));
+    }
+
     @After
     public void tearDown() {
 

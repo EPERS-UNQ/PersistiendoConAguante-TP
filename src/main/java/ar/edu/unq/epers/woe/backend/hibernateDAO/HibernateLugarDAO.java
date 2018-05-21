@@ -8,11 +8,8 @@ public class HibernateLugarDAO {
     public HibernateLugarDAO() {}
 
     public void guardar(Lugar l) {
-        Runner.runInSession(() -> {
             Session session = Runner.getCurrentSession();
             session.save(l);
-            return null;
-        });
     }
 
     public Lugar recuperar(String nombre) {
