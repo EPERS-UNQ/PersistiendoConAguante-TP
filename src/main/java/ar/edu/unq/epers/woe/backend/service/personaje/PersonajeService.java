@@ -15,7 +15,8 @@ public class PersonajeService {
             Runner.runInSession(() -> {
                 Item i = ihd.recuperar(item);
                 Personaje pj = pjhd.recuperar(nombrePj);
-                if(i.getRequerimiento().cumpleRequerimiento(pj) && pj.getMochila().getItems().contains(i)) {
+                if(i.getRequerimiento().cumpleRequerimiento(pj) && pj.getMochila().getItems().contains(i)
+                        && i.getClases().contains(pj.getClase())) {
                     i.setMochila(null);
                     pj.getInventario().setItemEnUnaUbicacion(i, pj);
                     pj.getMochila().getItems().remove(i);

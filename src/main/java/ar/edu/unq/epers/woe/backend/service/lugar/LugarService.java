@@ -1,24 +1,41 @@
 package ar.edu.unq.epers.woe.backend.service.lugar;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
+import ar.edu.unq.epers.woe.backend.hibernateDAO.*;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
+import ar.edu.unq.epers.woe.backend.model.lugar.Taberna;
 import ar.edu.unq.epers.woe.backend.model.mision.Mision;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
 
 public class LugarService {
+
+	private HibernatePersonajeDAO pjhd = new HibernatePersonajeDAO();
+	private HibernateItemDAO ihd = new HibernateItemDAO();
+	private HibernateMisionDAO imd = new HibernateMisionDAO();
+	private HibernateMonstruoDAO imod = new HibernateMonstruoDAO();
 	
     /*
      * Devuelve la lista de misiones disponibles para un jugador. 
      * Validar que el personaje se encuentre en una Taberna
      */
-	public List<Mision> listarMisiones(Personaje personaje){
-		if(personaje.getLugar().esTaberna()) {
-			// devolver las misiones que puede hacer
-		}
-		return null;
-		
+	public List<Mision> listarMisiones(String nombrePj){
+		return Runner.runInSession(() -> {
+			Personaje pj = pjhd.recuperar(nombrePj);
+			if(!pj.getLugar().esTaberna()) {
+				throw new RuntimeException("El Personaje no está en una Taberna.");
+			} else {
+				List<Mision> res = new ArrayList<Mision>();
+				Taberna tab = (Taberna) pj.getLugar();
+				for(Mision m : tab.getMisiones()) {
+					if(m.puedeAceptarMision(pj)) {
+						res.add(m);
+					}
+				}
+			return res; }});
 	}
     
 	/*
@@ -26,10 +43,10 @@ public class LugarService {
 	 * Validar que el personaje se encuentre en una Taberna y que la mision este disponible.
 	 */
     public void aceptarMision(Personaje personaje, Mision mision){
-		if((personaje.getLugar().esTaberna())
-		   && (listarMisiones(personaje).contains(mision))) {
-			   personaje.aceptarMision(mision);
-		}
+//		if((personaje.getLugar().esTaberna())
+//		   && (listarMisiones(personaje).contains(mision))) {
+//			   personaje.aceptarMision(mision);
+//		}
     }
     
     /*

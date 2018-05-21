@@ -13,6 +13,8 @@ public class ObtenerItem extends Mision {
 	
 	@OneToOne
 	private Item item;
+
+	public ObtenerItem() {}
 	
 	public ObtenerItem(String nombre, Recompensa recompensa, Item item) {
         super(nombre, recompensa);
@@ -35,6 +37,9 @@ public class ObtenerItem extends Mision {
     public Boolean puedeCompletarMision(Personaje pj) {
         return this.misionAceptadaPor(pj) && (tieneElItem(pj,this.item));
     }
+
+	@Override
+	public Boolean esObtenerItem() { return true; }
 
 }
 

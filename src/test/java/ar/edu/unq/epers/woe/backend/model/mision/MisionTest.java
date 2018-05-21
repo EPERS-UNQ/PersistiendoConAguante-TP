@@ -1,5 +1,6 @@
 package ar.edu.unq.epers.woe.backend.model.mision;
 
+import ar.edu.unq.epers.woe.backend.model.combate.ResultadoCombate;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.lugar.Taberna;
 import ar.edu.unq.epers.woe.backend.model.personaje.Atributo;
@@ -10,6 +11,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
+
+import javax.xml.transform.Result;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -68,6 +71,26 @@ public class MisionTest {
                 this.i);
         this.pj.aceptarMision(m);
         this.pj.getMochila().agregarItem(this.i);
+        assertTrue(m.puedeCompletarMision(this.pj));
+    }
+
+    @Test
+    public void personajeQTieneVictoriasSuficientesPuedeCumplirMisionDeVencerA() {
+        Mision m = new VencerA("tstOI", new Recompensa(new ArrayList<Item>(), 10, 0f),
+                this.pj, 0);
+        this.pj.aceptarMision(m);
+        assertTrue(m.puedeCompletarMision(this.pj));
+    }
+
+    @Test
+    public void personajeQGanaBatallaContraRivalIncrementaBatallasGanadas() {
+        Mision m = new VencerA("tstOI", new Recompensa(new ArrayList<Item>(), 10, 0f),
+                this.pj, 1);
+        this.pj.aceptarMision(m);
+        ResultadoCombate res = new ResultadoCombate();
+        res.setGanador(this.pj);
+        res.setPerdedor(this.pj);
+        m.incrementarVictoriasActualesSiPuede(res);
         assertTrue(m.puedeCompletarMision(this.pj));
     }
 

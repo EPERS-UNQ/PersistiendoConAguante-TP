@@ -31,6 +31,7 @@ public class PersonajeServiceTest {
 	private Item i;
 	private Raza r;
 	private ServiciosDB dbServ = new ServiciosDB();
+	private int idItem;
 
 	@Before
 	public void crearModelo() {
@@ -41,7 +42,8 @@ public class PersonajeServiceTest {
 		ats.add(new Vida(5f));
 		i = new Item("plateMail", "torso", "espada", cls, new Requerimiento(),
 				5, 1, ats);
-		Runner.runInSession(() -> { this.ihd.guardar(i); return null; });
+		Runner.runInSession(() -> { this.ihd.guardar(i);
+		idItem = ihd.recuperarPorNombre(i.getNombre()).getIdItem(); return null; });
 		this.r = new Raza("r1");
 		this.r.setClases(cls);
 		sr.crearRaza(this.r);
@@ -53,7 +55,8 @@ public class PersonajeServiceTest {
 	
 	@Test
 	public void unServicePersonajePuedeEquiparDeUnItemAUnPersonaje() {
-		serviceP.equipar(this.pj.getNombre(), 1);
+		
+		serviceP.equipar(this.pj.getNombre(), idItem);
 		Personaje pjr = Runner.runInSession(() -> { return pjhd.recuperar(this.pj.getNombre()); });
 		assertEquals(pjr.getInventario().getEnUbicacion(this.i.getUbicacion()).getItem().getNombre(), this.i.getNombre());
 		assertEquals(pjr.getInventario().getEnUbicacion(this.i.getUbicacion()).getItem().getAtributos().iterator().next().getValor(),

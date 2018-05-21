@@ -11,6 +11,8 @@ import javax.persistence.OneToMany;
 @DiscriminatorValue("GIMNASIO")
 public class Gimnasio extends Lugar  {
 
+	public Gimnasio() {}
+
 	public Gimnasio(String nombreLugar) {
 		super(nombreLugar);
 	}

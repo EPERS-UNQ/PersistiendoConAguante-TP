@@ -9,7 +9,6 @@ import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.persistence.*;
 
 
@@ -36,6 +35,9 @@ public class Personaje extends Luchador {
 	@OneToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	private Mochila mochila;
 
+	@OneToMany(mappedBy="pjOwner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<Mision> misionesEnCurso;
+
 	@OneToMany(mappedBy="personaje", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Atributo> atributos;
 	
@@ -57,6 +59,7 @@ public class Personaje extends Luchador {
 		this.inventario = new Inventario();
 		this.billetera = 0f;
 		this.atributos = new HashSet<>();
+		this.misionesEnCurso = new HashSet<>();
 		this.misionesAceptadas = new HashSet<>();
 		this.misionesCumplidas = new HashSet<>();
 		this.atributos.add(new Armadura(1f, this));
@@ -68,6 +71,14 @@ public class Personaje extends Luchador {
 
 
 	// Getters y Setters
+	public Set<Mision> getMisionesEnCurso() {
+		return misionesEnCurso;
+	}
+
+	public void setMisionesEnCurso(Set<Mision> misionesEnCurso) {
+		this.misionesEnCurso = misionesEnCurso;
+	}
+
 	public Set<String> getMisionesAceptadas() {
 		return misionesAceptadas;
 	}
@@ -139,6 +150,7 @@ public class Personaje extends Luchador {
 	public Set<Atributo> getAtributos() {
 		return atributos;
 	}
+
 	public Vida getVida() {
 		return (Vida) this.getAtributo(Vida.class);
 	}
@@ -180,7 +192,6 @@ public class Personaje extends Luchador {
 		}
 		return res;
 	}
-	
 
 	public void ganarExperiencia(Integer exp) {
 		this.setExp(this.getExp() + exp);
@@ -298,7 +309,6 @@ public class Personaje extends Luchador {
 		this.getAtributo(Destreza.class).setValor(this.getAtributo(Destreza.class).getValor() * 1.02f);
 	}
 
-
 	public void comprar(Item i) {
 		Tienda t = (Tienda) lugar;
 		t.comprar(this, i);
@@ -307,33 +317,28 @@ public class Personaje extends Luchador {
 	public void gastarBilletera(int costo) {
 		setBilletera(billetera-costo);
 	}
-
 	
 	public void agregarItem(Item i) {
 		getInventario().setItemEnUnaUbicacion(i, this);
 	}
-
 
 	public void vender(Item i) {
 		Tienda t = (Tienda) lugar;
 		t.vender(this, i);
 	}
 
-
 	public void agregarABilletera(int suma) {
 		setBilletera(billetera+suma);
 	}
-
 
 	public void sacarItem(Item i) {
 		//Por ahora: sacar item de la mochila, no del inventario
 		mochila.sacarItem(i);
 	}
 
-@Override
+	@Override
 	public void atacar(Luchador l2) {
 		l2.recibirAtaque(this.getDanhoTotal());
-
 	}
 
 	public Danho getDanhoArma() {
@@ -341,10 +346,10 @@ public class Personaje extends Luchador {
 	}
 
     public Danho getDanhoManoIzquierda() {
-    	return this.getInventario().getEnUbicacion("Izquierda").getItem().getDanho();
+    	return this.getInventario().getEnUbicacion("izquierda").getItem().getDanho();
     }
 	public Danho getDanhoManoDerecha() {
-		return this.getInventario().getEnUbicacion("Derecha").getItem().getDanho();
+		return this.getInventario().getEnUbicacion("derecha").getItem().getDanho();
 	}
 	public Danho getDanhoTotal() {
 		return new Danho(this.getDanhoArma().getValor()  * 
@@ -353,10 +358,6 @@ public class Personaje extends Luchador {
 		    / 100));
 	}
 
-
-
-
-
 	@Override
 	public void recibirAtaque(Danho danhoAtacante) {
 		Danho danhorecibido = calcularDanhoRecibido(danhoAtacante);
@@ -364,35 +365,22 @@ public class Personaje extends Luchador {
 		Vida vidatotal = new Vida (cantidadVidaActual - danhorecibido.getValor());
 		this.setVida(vidatotal);}
 
-		
-		
-		
-	
-
 	@Override
 	public Danho calcularDanhoRecibido(Danho danho) {
 
 		float danhorecibido =danho.getValor() - this.calcularDañoRecividoConDefensa(danho).getValor();
 		return new Danho(danhorecibido);
-	
 	}
 
 	private Danho calcularDañoRecividoConDefensa(Danho danhoAtacante) {
 		return new Danho(danhoAtacante.getValor() - this.defensa().getValor());
-		
 	}
 
 
 	public Danho defensa() {
 		//hacer
 		return new Danho(0f);
-		
 	}
-
-
-
-
-
 
 	public Boolean tieneElItem(Item item) {
 		return this.mochila.tieneElItem(item);		
@@ -403,9 +391,9 @@ public class Personaje extends Luchador {
 		this.getAtributo(Vida.class).setValor(vl1.getValor());;
 	}
 
-
-  
 	public void aceptarMision(Mision mision) {
+		mision.setPjOwner(this);
+		getMisionesEnCurso().add(mision);
 		getMisionesAceptadas().add(mision.getNombre());
   }
 
@@ -423,9 +411,8 @@ public class Personaje extends Luchador {
 		return inventario.getEnUbicacion(ubicacion).getItem();
 	}
 
-
 	public void setValorDanho(Danho danho) {
 		getAtributo(Danho.class).setValor(danho.getValor()); ;
 	}
- 
+
 }

@@ -1,8 +1,8 @@
 package ar.edu.unq.epers.woe.backend.model.mision;
 
+import ar.edu.unq.epers.woe.backend.model.combate.ResultadoCombate;
 import ar.edu.unq.epers.woe.backend.model.lugar.Taberna;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,10 +15,18 @@ public class Mision {
 
     @Id
     private String nombre; //único
+
     @ElementCollection
     private Set<String> prereqs = new HashSet<>();
-    @OneToOne
+
+    @OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     private Recompensa recompensa;
+
+    @ManyToOne
+    private Personaje pjOwner;
+
+    @ManyToOne
+    private Taberna taberna;
 
     public Mision() {};
 
@@ -40,6 +48,14 @@ public class Mision {
         this.recompensa = recompensa;
     }
 
+    public Taberna getTaberna() {
+        return taberna;
+    }
+
+    public void setTaberna(Taberna taberna) {
+        this.taberna = taberna;
+    }
+
     public String getNombre() {
         return nombre;
     }
@@ -54,6 +70,14 @@ public class Mision {
 
     public void setPrereqs(Set<String> prereqs) {
         this.prereqs = prereqs;
+    }
+
+    public Personaje getPjOwner() {
+        return pjOwner;
+    }
+
+    public void setPjOwner(Personaje pjOwner) {
+        this.pjOwner = pjOwner;
     }
 
     public Boolean misionDisponiblePara(Personaje pj) {
@@ -87,5 +111,13 @@ public class Mision {
     }
 
     public Boolean puedeCompletarMision(Personaje pj) {return false;}
+
+    public Boolean esIrALugar() {return false;}
+
+    public Boolean esObtenerItem() {return false;}
+
+    public Boolean esVencerA() {return false;}
+
+    public void incrementarVictoriasActualesSiPuede(ResultadoCombate resComb) {}
 
 }
