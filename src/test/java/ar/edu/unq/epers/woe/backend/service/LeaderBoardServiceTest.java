@@ -62,6 +62,11 @@ public class LeaderBoardServiceTest {
 		rc2.setPerdedor(perdedor);
 		testServ.crearEntidad(rc2);
 		
+		ResultadoCombate rc3 = new ResultadoCombate();
+		rc2.setGanador(ganador);
+		rc2.setPerdedor(perdedor);
+		testServ.crearEntidad(rc2);
+		
 	}
 
 	

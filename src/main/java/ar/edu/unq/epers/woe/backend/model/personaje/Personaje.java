@@ -424,8 +424,8 @@ public class Personaje extends Luchador {
 	}
 
 
-//	public void setValorDanho(Danho danho) {
-//		getAtributo(Danho.class).setValor(danho.getValor()); ;
-//	}
+	public void setValorDanho(Danho danho) {
+		getAtributo(Danho.class).setValor(danho.getValor()); ;
+	}
  
 }
