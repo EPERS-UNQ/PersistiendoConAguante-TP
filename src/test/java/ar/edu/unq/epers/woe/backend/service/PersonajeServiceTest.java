@@ -31,7 +31,7 @@ public class PersonajeServiceTest {
 	private Item i;
 	private Raza r;
 	private ServiciosDB dbServ = new ServiciosDB();
-	int idItem;
+	private int idItem;
 
 	@Before
 	public void crearModelo() {

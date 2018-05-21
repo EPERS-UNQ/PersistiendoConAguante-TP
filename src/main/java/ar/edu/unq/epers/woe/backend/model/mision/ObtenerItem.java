@@ -13,6 +13,8 @@ public class ObtenerItem extends Mision {
 	
 	@OneToOne
 	private Item item;
+
+	public ObtenerItem() {}
 	
 	public ObtenerItem(String nombre, Recompensa recompensa, Item item) {
         super(nombre, recompensa);

@@ -7,12 +7,10 @@ public abstract class Luchador {
 
 	public Vida getVida() {
 		return null;
-		
 	}
 
 	public Danho getDanhoTotal() {
 		return null;
-		
 	}
 
 	public void atacar(Luchador l2) {}

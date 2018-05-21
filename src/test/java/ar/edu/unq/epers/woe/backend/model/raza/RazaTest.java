@@ -24,6 +24,7 @@ public class RazaTest {
 
     @Before
     public void crearModelo() {
+        this.dbServ.eliminarDatos();
         this.dbServ.crearSetDatosIniciales();
         this.raza = this.razaServ.getRaza(1);
     }
@@ -57,7 +58,5 @@ public class RazaTest {
     }
 
     @After
-    public void tearDown() {
-        this.dbServ.eliminarDatos();
-    }
+    public void tearDown() {}
 }

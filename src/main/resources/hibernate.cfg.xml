@@ -42,6 +42,8 @@
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.mision.Recompensa" />
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.mision.IrALugar" />
 		<mapping class= "ar.edu.unq.epers.woe.backend.model.mision.ObtenerItem" />
+		<mapping class= "ar.edu.unq.epers.woe.backend.model.mision.VencerA" />
+		<mapping class= "ar.edu.unq.epers.woe.backend.model.monstruo.Monstruo" />
 	
 	</session-factory>
 </hibernate-configuration>

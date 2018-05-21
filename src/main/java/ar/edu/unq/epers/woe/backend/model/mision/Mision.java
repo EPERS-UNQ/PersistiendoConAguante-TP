@@ -15,13 +15,18 @@ public class Mision {
 
     @Id
     private String nombre; //único
+
     @ElementCollection
     private Set<String> prereqs = new HashSet<>();
-    @OneToOne
+
+    @OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     private Recompensa recompensa;
 
     @ManyToOne
     private Personaje pjOwner;
+
+    @ManyToOne
+    private Taberna taberna;
 
     public Mision() {};
 
@@ -41,6 +46,14 @@ public class Mision {
 
     public void setRecompensa(Recompensa recompensa) {
         this.recompensa = recompensa;
+    }
+
+    public Taberna getTaberna() {
+        return taberna;
+    }
+
+    public void setTaberna(Taberna taberna) {
+        this.taberna = taberna;
     }
 
     public String getNombre() {
