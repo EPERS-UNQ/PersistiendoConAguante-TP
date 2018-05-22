@@ -3,6 +3,8 @@ package ar.edu.unq.epers.woe.backend.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import ar.edu.unq.epers.woe.backend.hibernateDAO.SessionFactoryProvider;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.service.data.ServiciosDB;
 import ar.edu.unq.epers.woe.backend.hibernateDAO.HibernateRazaDAO;
@@ -32,6 +34,7 @@ public class RazaServiceTest {
 
     @Before
     public void crearModelo() {
+        SessionFactoryProvider.destroy();
         this.dbServ.crearSetDatosIniciales();
         this.raza = this.razaServ.getRaza(1);
     }
