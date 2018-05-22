@@ -17,6 +17,7 @@ public class LugarService {
 	private HibernateItemDAO ihd = new HibernateItemDAO();
 	private HibernateMisionDAO imd = new HibernateMisionDAO();
 	private HibernateMonstruoDAO imod = new HibernateMonstruoDAO();
+	private HibernateLugarDAO ild = new HibernateLugarDAO();
 	
     /*
      * Devuelve la lista de misiones disponibles para un jugador. 
@@ -42,19 +43,25 @@ public class LugarService {
 	 * El personaje acepta la mision. 
 	 * Validar que el personaje se encuentre en una Taberna y que la mision este disponible.
 	 */
-    public void aceptarMision(Personaje personaje, Mision mision){
-//		if((personaje.getLugar().esTaberna())
-//		   && (listarMisiones(personaje).contains(mision))) {
-//			   personaje.aceptarMision(mision);
-//		}
+    public void aceptarMision(String nombrePj, String nombreMis) {
+		Runner.runInSession(() -> {
+		Personaje pj = this.pjhd.recuperar(nombrePj);
+		Mision m = this.imd.recuperar(nombreMis);
+		if((pj.getLugar().esTaberna()) && (this.listarMisiones(nombrePj).contains(m))) {
+			pj.aceptarMision(m);
+		}
+		return null; });
     }
     
     /*
      * Cambia la ubicación actual del personaje por la especificada por parámetro.
      */
-    
-    public void mover(Personaje pj, Lugar lugar) {
+    public void mover(String nombrePj, String nombrLugar) {
+		Runner.runInSession(() -> {
+		Personaje pj = this.pjhd.recuperar(nombrePj);
+		Lugar lugar = this.ild.recuperar(nombrLugar);
         pj.setLugar(lugar);
+        return null; });
     }
     
     /*

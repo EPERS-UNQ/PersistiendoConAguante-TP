@@ -41,8 +41,8 @@ public class Personaje extends Luchador {
 	@OneToMany(mappedBy="personaje", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Atributo> atributos;
 	
-	@ElementCollection private Set<String> misionesAceptadas;
-	@ElementCollection private Set<String> misionesCumplidas;
+	@ElementCollection(fetch = FetchType.EAGER) private Set<String> misionesAceptadas;
+	@ElementCollection(fetch = FetchType.EAGER) private Set<String> misionesCumplidas;
 	@ManyToOne
 	private Lugar lugar;
 
@@ -393,8 +393,8 @@ public class Personaje extends Luchador {
 
 	public void aceptarMision(Mision mision) {
 		mision.setPjOwner(this);
-		getMisionesEnCurso().add(mision);
-		getMisionesAceptadas().add(mision.getNombre());
+		this.getMisionesEnCurso().add(mision);
+		this.getMisionesAceptadas().add(mision.getNombre());
   }
 
 	@Override

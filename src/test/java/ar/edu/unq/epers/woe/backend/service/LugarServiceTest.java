@@ -46,15 +46,18 @@ public class LugarServiceTest {
     @Before
     public void crearModelo() {
         SessionFactoryProvider.destroy();
+
         Taberna t1 = new Taberna("tab0");
         Tienda t2 = new Tienda("tie1");
         Runner.runInSession(() -> { this.ild.guardar(t1); return null; });
         Runner.runInSession(() -> { this.ild.guardar(t2); return null; });
+
         HashSet<Mision> mis = new HashSet<Mision>();
         mis.add(new IrALugar("ia1", new Recompensa(), t1));
         mis.add(new IrALugar("ia2", new Recompensa(), t2));
         this.tab = new Taberna("tab1", mis);
         Runner.runInSession(() -> { this.ild.guardar(this.tab); return null; });
+
         Set<Clase> cls = new HashSet<>();
         cls.add(Clase.MAGO);
         Set<Atributo> ats = new HashSet<>();
@@ -63,9 +66,11 @@ public class LugarServiceTest {
                      5, 1, ats);
         Runner.runInSession(() -> { this.ihd.guardar(i);
         this.idItem = ihd.recuperarPorNombre(i.getNombre()).getIdItem(); return null; });
+
         this.r = new Raza("r1");
         this.r.setClases(cls);
         sr.crearRaza(this.r);
+
         this.pj = new Personaje(this.r, "tstPJ0", Clase.MAGO);
         this.pj.getMochila().agregarItem(i);
         this.pj.setLugar(this.tab);
@@ -86,8 +91,22 @@ public class LugarServiceTest {
     }
 
     @Test
+    public void pjEnUnaTabernaPuedeAceptarMisionDisponible() {
+        this.ls.aceptarMision("tstPJ0", "ia1");
+        Personaje pjr = Runner.runInSession(() -> {
+            return pjhd.recuperar(this.pj.getNombre());
+        });
+        assertTrue(pjr.getMisionesAceptadas().contains("ia1"));
+        assertTrue(pjr.getMisionesEnCurso().iterator().next().esIrALugar());
+    }
+
+    @Test
     public void alMoverAlPJAUnLugarYPreguntarleSuLugarRetornaElNuevoLugar() {
-        this.ls.mover(this.pj, new Tienda("tstTienda"));
-        assertEquals(this.pj.getLugar().getClass(), Tienda.class);
+        this.ls.mover(this.pj.getNombre(), "tie1");
+        Personaje pjr = Runner.runInSession(() -> {
+            return pjhd.recuperar(this.pj.getNombre());
+        });
+        assertEquals(pjr.getLugar().getClass(), Tienda.class);
+        assertEquals(pjr.getLugar().getNombre(), "tie1");
     }
 }
