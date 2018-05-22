@@ -60,4 +60,19 @@ public class Inventario {
         }
         return res;
     }
+
+    public boolean tieneElItem(Item item) {
+        Boolean res = false;
+        for(Slot s : this.slots) {
+            if(s.getItem() != null && s.getItem().getNombre() == item.getNombre() &&
+                s.getItem().getUbicacion() == item.getUbicacion() &&
+                s.getItem().getAtributos() == item.getAtributos() && s.getItem().getClases() == item.getClases() &&
+                s.getItem().getCostoDeCompra() == item.getCostoDeCompra() &&
+                s.getItem().getCostoDeVenta() == item.getCostoDeVenta()) {
+                res = true;
+                break;
+            }
+        }
+        return res;
+    }
 }

@@ -3,6 +3,8 @@ package ar.edu.unq.epers.woe.backend.hibernateDAO;
 import static org.junit.Assert.*;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
@@ -21,6 +23,7 @@ public class HibernateLugarDAOTest {
     private Tienda tienda;
     private Item i;
     private Item ii;
+    private HibernateItemDAO ihd = new HibernateItemDAO();
 
     @Before
     public void setUp() {
@@ -33,6 +36,8 @@ public class HibernateLugarDAOTest {
                 5, 1, ats);
         this.ii = new Item("plateMail", "torso", "espada", cls, new Requerimiento(),
                 500, 1, ats);
+        Runner.runInSession(() -> { this.ihd.guardar(this.i); return null; });
+        Runner.runInSession(() -> { this.ihd.guardar(this.ii); return null; });
     }
 
     @Test
@@ -51,7 +56,14 @@ public class HibernateLugarDAOTest {
         tb.setItems(items);
         Runner.runInSession(() -> { lugarDAO.guardar(tb); return null; });
         Tienda tr = (Tienda) Runner.runInSession(() -> { return lugarDAO.recuperar(tb.getNombre()); });
-        assertTrue(items.containsAll(tr.getItems()));
+        List<Item> ilist = new LinkedList<Item>(tr.getItems());
+        assertTrue(tr.getItems().size() == 2);
+        assertEquals(ilist.get(0).getNombre(), this.i.getNombre());
+        assertEquals(ilist.get(0).getAtributos(), this.i.getAtributos());
+        assertEquals(ilist.get(0).getCostoDeCompra(), this.i.getCostoDeCompra());
+        assertEquals(ilist.get(1).getNombre(), this.ii.getNombre());
+        assertEquals(ilist.get(1).getAtributos(), this.ii.getAtributos());
+        assertEquals(ilist.get(1).getCostoDeCompra(), this.ii.getCostoDeCompra());
     }
 
     @After

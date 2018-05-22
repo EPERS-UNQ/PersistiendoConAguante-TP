@@ -55,7 +55,7 @@ public class Personaje extends Luchador {
 		this.clase = clase;
 		this.nivel = 1;
 		this.exp = 0;
-		this.mochila = new Mochila();
+		this.mochila = new Mochila(this);
 		this.inventario = new Inventario();
 		this.billetera = 0f;
 		this.atributos = new HashSet<>();
@@ -383,7 +383,7 @@ public class Personaje extends Luchador {
 	}
 
 	public Boolean tieneElItem(Item item) {
-		return this.mochila.tieneElItem(item);		
+		return this.mochila.tieneElItem(item) || this.inventario.tieneElItem(item);
 	}
 
 	@Override

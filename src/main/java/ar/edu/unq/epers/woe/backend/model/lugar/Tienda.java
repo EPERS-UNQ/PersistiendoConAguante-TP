@@ -22,6 +22,9 @@ public class Tienda extends Lugar {
 
 	public void setItems(Set<Item> listaItems) {
 		this.items = listaItems;
+		for(Item i : this.items) {
+			i.setLugar(this);
+		}
 	}
 
 	public Set<Item> getItems() {
@@ -31,7 +34,7 @@ public class Tienda extends Lugar {
 	public void comprar(Personaje pj, Item i) {
 		if(pj.getBilletera()>=i.getCostoDeCompra()) {
 			pj.gastarBilletera(i.getCostoDeCompra());
-			pj.agregarItem(i);
+			pj.getMochila().agregarItem(i);
 		}
 	}
 
@@ -39,5 +42,8 @@ public class Tienda extends Lugar {
 		pj.agregarABilletera(i.getCostoDeVenta());
 		pj.sacarItem(i);
 	}
+
+	@Override
+	public boolean esTienda() { return true; }
 
 }

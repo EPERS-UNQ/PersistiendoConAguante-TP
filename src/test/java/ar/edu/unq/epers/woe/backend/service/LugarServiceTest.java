@@ -109,4 +109,51 @@ public class LugarServiceTest {
         assertEquals(pjr.getLugar().getClass(), Tienda.class);
         assertEquals(pjr.getLugar().getNombre(), "tie1");
     }
+
+    @Test
+    public void pjQEstaEnUnaTiendaPuedeConsultarItemsDisponibles() {
+        Tienda t = new Tienda("tie2");
+        HashSet<Item> is = new HashSet<Item>();
+        is.add(this.i);
+        t.setItems(is);
+        Runner.runInSession(() -> { this.ild.guardar(t); return null; });
+        this.ls.mover(this.pj.getNombre(), "tie2");
+        List<Item> li = this.ls.listarItems(this.pj.getNombre());
+        assertEquals(li.size(), 1);
+        assertEquals(li.iterator().next().getNombre(), this.i.getNombre());
+        assertEquals(li.iterator().next().getAtributos().iterator().next().getValor(),
+                this.i.getAtributos().iterator().next().getValor());
+    }
+
+    @Test
+    public void pjQEstaEnUnaTiendaYTieneDineroPuedeComprarItemDisponible() {
+        Tienda t = new Tienda("tie2");
+        HashSet<Item> is = new HashSet<Item>();
+        is.add(this.i);
+        t.setItems(is);
+        Runner.runInSession(() -> { this.ild.guardar(t); return null; });
+        Personaje pjn = new Personaje(this.r, "tstPJ1", Clase.MAGO);
+        pjn.setBilletera(500f);
+        pjn.setLugar(t);
+        Runner.runInSession(() -> { this.pjhd.guardar(pjn); return null; });
+        ls.comprarItem("tstPJ1", this.idItem);
+        Personaje pjr = Runner.runInSession(() -> {
+            return pjhd.recuperar(pjn.getNombre());
+        });
+        assertTrue(pjr.getBilletera().floatValue() == 495f);
+        assertEquals(pjr.getMochila().getItems().iterator().next().getNombre(), this.i.getNombre());
+        assertEquals(pjr.getMochila().getItems().iterator().next().getAtributos().iterator().next().getValor(),
+                     this.i.getAtributos().iterator().next().getValor());
+    }
+
+    @Test
+    public void pjQEstaEnUnaTiendaYVendeUnItemSeLeAcreditaElValorDeVenta() {
+        this.ls.mover(this.pj.getNombre(), "tie1");
+        this.ls.venderItem(this.pj.getNombre(), this.idItem);
+        Personaje pjr = Runner.runInSession(() -> {
+            return pjhd.recuperar(this.pj.getNombre());
+        });
+        assertTrue(pjr.getBilletera().floatValue() == 1f);
+        assertFalse(pjr.getMochila().tieneElItem(this.i));
+    }
 }
