@@ -11,10 +11,15 @@ public class Mochila {
 	@Id @GeneratedValue
 	int id;
 	@OneToMany (mappedBy="mochila", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Item> items = new ArrayList<Item>();
+    private List<Item> items;
 	@ManyToOne Personaje p;
 
-    public Mochila() {};
+    public Mochila() { this.items = new ArrayList<Item>(); }
+
+    public Mochila(Personaje p) {
+        this.p = p;
+        this.items = new ArrayList<Item>();
+    };
     
     public List<Item> getItems() {
         return items;
@@ -38,13 +43,16 @@ public class Mochila {
     }
 
 	public void sacarItem(Item i) {
+        i.setMochila(null);
 		items.remove(i);
 	}
 
 	public Boolean tieneElItem(Item item) {
 		Boolean res = false;
         for(Item i : this.items ) {
-            if( i == item ) {
+            if( i.getNombre() == item.getNombre() && i.getUbicacion() == item.getUbicacion() &&
+                    i.getAtributos() == item.getAtributos() && i.getClases() == item.getClases() &&
+                    i.getCostoDeCompra() == item.getCostoDeCompra() && i.getCostoDeVenta() == item.getCostoDeVenta()) {
                 res = true;
                 break;
             }

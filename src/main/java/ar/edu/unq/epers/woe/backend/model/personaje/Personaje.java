@@ -41,8 +41,8 @@ public class Personaje extends Luchador {
 	@OneToMany(mappedBy="personaje", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Atributo> atributos;
 	
-	@ElementCollection private Set<String> misionesAceptadas;
-	@ElementCollection private Set<String> misionesCumplidas;
+	@ElementCollection(fetch = FetchType.EAGER) private Set<String> misionesAceptadas;
+	@ElementCollection(fetch = FetchType.EAGER) private Set<String> misionesCumplidas;
 	@ManyToOne
 	private Lugar lugar;
 
@@ -55,7 +55,7 @@ public class Personaje extends Luchador {
 		this.clase = clase;
 		this.nivel = 1;
 		this.exp = 0;
-		this.mochila = new Mochila();
+		this.mochila = new Mochila(this);
 		this.inventario = new Inventario();
 		this.billetera = 0f;
 		this.atributos = new HashSet<>();
@@ -332,8 +332,11 @@ public class Personaje extends Luchador {
 	}
 
 	public void sacarItem(Item i) {
-		//Por ahora: sacar item de la mochila, no del inventario
-		mochila.sacarItem(i);
+		if(this.mochila.tieneElItem(i)) {
+			this.mochila.sacarItem(i);
+		} else if(this.inventario.tieneElItem(i)) {
+			this.inventario.sacarItem(i, this);
+		}
 	}
 
 	@Override
@@ -383,7 +386,7 @@ public class Personaje extends Luchador {
 	}
 
 	public Boolean tieneElItem(Item item) {
-		return this.mochila.tieneElItem(item);		
+		return this.mochila.tieneElItem(item) || this.inventario.tieneElItem(item);
 	}
 
 	@Override
@@ -393,8 +396,8 @@ public class Personaje extends Luchador {
 
 	public void aceptarMision(Mision mision) {
 		mision.setPjOwner(this);
-		getMisionesEnCurso().add(mision);
-		getMisionesAceptadas().add(mision.getNombre());
+		this.getMisionesEnCurso().add(mision);
+		this.getMisionesAceptadas().add(mision.getNombre());
   }
 
 	@Override

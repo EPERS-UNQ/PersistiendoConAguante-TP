@@ -8,6 +8,7 @@ import ar.edu.unq.epers.woe.backend.hibernateDAO.*;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
 import ar.edu.unq.epers.woe.backend.model.lugar.Taberna;
+import ar.edu.unq.epers.woe.backend.model.lugar.Tienda;
 import ar.edu.unq.epers.woe.backend.model.mision.Mision;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
 
@@ -17,9 +18,10 @@ public class LugarService {
 	private HibernateItemDAO ihd = new HibernateItemDAO();
 	private HibernateMisionDAO imd = new HibernateMisionDAO();
 	private HibernateMonstruoDAO imod = new HibernateMonstruoDAO();
-	
+	private HibernateLugarDAO ild = new HibernateLugarDAO();
+
     /*
-     * Devuelve la lista de misiones disponibles para un jugador. 
+     * Devuelve la lista de misiones disponibles para un jugador.
      * Validar que el personaje se encuentre en una Taberna
      */
 	public List<Mision> listarMisiones(String nombrePj){
@@ -37,53 +39,83 @@ public class LugarService {
 				}
 			return res; }});
 	}
-    
+
 	/*
-	 * El personaje acepta la mision. 
+	 * El personaje acepta la mision.
 	 * Validar que el personaje se encuentre en una Taberna y que la mision este disponible.
 	 */
-    public void aceptarMision(Personaje personaje, Mision mision){
-//		if((personaje.getLugar().esTaberna())
-//		   && (listarMisiones(personaje).contains(mision))) {
-//			   personaje.aceptarMision(mision);
-//		}
+    public void aceptarMision(String nombrePj, String nombreMis) {
+		Runner.runInSession(() -> {
+		Personaje pj = this.pjhd.recuperar(nombrePj);
+		Mision m = this.imd.recuperar(nombreMis);
+		if(!pj.getLugar().esTaberna()) {
+			throw new RuntimeException("El Personaje no está en una Taberna.");
+		} else if(this.listarMisiones(nombrePj).contains(m)) {
+			pj.aceptarMision(m);
+		}
+		return null; });
     }
-    
+
     /*
      * Cambia la ubicación actual del personaje por la especificada por parámetro.
      */
-    
-    public void mover(Personaje pj, Lugar lugar) {
+    public void mover(String nombrePj, String nombrLugar) {
+		Runner.runInSession(() -> {
+		Personaje pj = this.pjhd.recuperar(nombrePj);
+		Lugar lugar = this.ild.recuperar(nombrLugar);
         pj.setLugar(lugar);
+        return null; });
     }
-    
+
     /*
      * Devuelve una lista de items disponibles que tiene la tienda.
      * Validar que el personaje se encuentre en una Tienda.
      */
-
-    public List<Item> listarItems(Personaje personaje) {
-		return null;
-    	
+    public List<Item> listarItems(String nombrePj) {
+		return Runner.runInSession(() -> {
+			Personaje pj = pjhd.recuperar(nombrePj);
+			if(!pj.getLugar().esTienda()) {
+				throw new RuntimeException("El Personaje no está en una Tienda.");
+			} else {
+				List<Item> res = new ArrayList<Item>();
+				Tienda tie = (Tienda) pj.getLugar();
+				for(Item i : tie.getItems()) {
+					res.add(i);
+				}
+				return res; }});
     }
-    
+
     /*
      * El personaje obtiene el item y se le debita el costo del mismo.
      * Validar que tenga la cantidad de monedas necesarias para comprar el item.
      */
-
-    public void comprarItem(Personaje personaje, Item item) {
-    	
+    public void comprarItem(String nombrePj, int idItem) {
+		Runner.runInSession(() -> {
+		Personaje pj = pjhd.recuperar(nombrePj);
+		Item i = ihd.recuperar(idItem);
+		if(!pj.getLugar().esTienda()) {
+			throw new RuntimeException("El Personaje no está en una Tienda.");
+		} else if(pj.getBilletera() < i.getCostoDeCompra()) {
+			throw new RuntimeException("Dinero insuficiente para comprar el item.");
+		} else {
+			pj.comprar(i);
+			return null; }});
     }
-    
-    /* 
+
+    /*
      * El personaje vende el item y se le acredita el costo del mismo.
      */
-    public void venderItem(Personaje personaje, Item item) {
-    	
-    }
+    public void venderItem(String nombrePj, int idItem) {
+		Runner.runInSession(() -> {
+			Personaje pj = pjhd.recuperar(nombrePj);
+			Item i = ihd.recuperar(idItem);
+			if (!pj.getLugar().esTienda()) {
+				throw new RuntimeException("El Personaje no está en una Tienda.");
+			} else if(pj.tieneElItem(i)) {
+				pj.vender(i);
+			}
+			return null;
+		});
+	}
 
-
-    
-    
 }

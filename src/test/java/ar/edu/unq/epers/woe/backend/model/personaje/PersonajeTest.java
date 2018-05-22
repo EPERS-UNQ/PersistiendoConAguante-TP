@@ -101,7 +101,7 @@ public class PersonajeTest {
     	//pj tiene menos plata en billetera
     	assertTrue(pj.getBilletera()< billeteraPrevia);
     	//pj cuenta con ese item en esa ubicacion
-    	assertEquals(this.pj.getInventario().getEnUbicacion("torso").getItem(), i);
+    	assertEquals(this.pj.getMochila().getItems().iterator().next(), i);
     }
     
     @Test

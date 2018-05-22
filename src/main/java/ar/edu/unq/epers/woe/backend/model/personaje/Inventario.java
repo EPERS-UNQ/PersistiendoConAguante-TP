@@ -51,6 +51,13 @@ public class Inventario {
         pj.incrementarAtributos(item.getAtributos());
     }
 
+    public void sacarItem(Item i, Personaje pj) {
+        if(this.getEnUbicacion(i.getUbicacion()).getItem() != null) {
+            pj.decrementarAtributos(this.getEnUbicacion(i.getUbicacion()).getItem().getAtributos());
+            this.getEnUbicacion(i.getUbicacion()).setItem(null);
+        }
+    }
+
     public Slot getEnUbicacion(String ubicacion) {
         Slot res = null;
         for(Slot s : this.slots) {
@@ -60,4 +67,20 @@ public class Inventario {
         }
         return res;
     }
+
+    public boolean tieneElItem(Item item) {
+        Boolean res = false;
+        for(Slot s : this.slots) {
+            if(s.getItem() != null && s.getItem().getNombre() == item.getNombre() &&
+                s.getItem().getUbicacion() == item.getUbicacion() &&
+                s.getItem().getAtributos() == item.getAtributos() && s.getItem().getClases() == item.getClases() &&
+                s.getItem().getCostoDeCompra() == item.getCostoDeCompra() &&
+                s.getItem().getCostoDeVenta() == item.getCostoDeVenta()) {
+                res = true;
+                break;
+            }
+        }
+        return res;
+    }
+
 }
