@@ -10,7 +10,26 @@ import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
 
 public class HibernateCombateDAO {
+
+	public Personaje personajeMayorDanho() {
+		
+		Session s = Runner.getCurrentSession();
+		String hql = "select p from Personaje p join Atributo a "
+				+ "where aType = :atr order by a.valor asc";
+		
+		Query query = s.createQuery(hql,  Personaje.class);
+		query.setParameter("atr", "DANHO");
+		List list = query.getResultList();
+
+		return (Personaje) list.get(0) ;
+//		if(res==null) {
+//			throw new RuntimeException("Todavia no combatio ningun personaje!");
+//		}
+//		return null;
+	}
 	
+// select nombre, max(valor) danho from personaje join atributo atrs where DISCRIMINATOR="DANHO" ;
+// < select perdedor_id from resultadocombate:// id's de luchadores	
 //	public HibernateCombateDAO() {}
 //
 //	public List<ResultadoCombate> mejoresCombatientesMax(int n) {

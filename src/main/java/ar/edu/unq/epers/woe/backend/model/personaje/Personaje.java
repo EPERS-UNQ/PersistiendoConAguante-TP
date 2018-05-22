@@ -11,6 +11,8 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 
+import org.hibernate.annotations.Proxy;
+
 
 /**
  * Un {@link Personaje} existente en el sistema, el mismo tiene un nombre
@@ -21,8 +23,6 @@ import javax.persistence.*;
 @Entity
 public class Personaje extends Luchador {
 
-	@Id
-	private String nombre; //único
 	@ManyToOne
 	private Raza raza;
 	@Enumerated(EnumType.STRING)

@@ -9,10 +9,10 @@ public class ResultadoCombate {
 	@Id @GeneratedValue
 	int id;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	private Luchador ganador;
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	private Luchador perdedor;
 	
 	@Transient //temporarily...
@@ -21,7 +21,7 @@ public class ResultadoCombate {
 	public ResultadoCombate() {
 		ganador = null;
 		perdedor = null;
-		detalle = new ArrayList<Ataque>();
+//		detalle = new ArrayList<Ataque>();
 	}
 	
 	public void setGanador(Luchador g){

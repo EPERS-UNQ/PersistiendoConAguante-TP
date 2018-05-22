@@ -10,9 +10,9 @@ import javax.persistence.*;
 @Entity
 public class Monstruo extends Luchador{
 
-	@Id
-	@GeneratedValue
-	private Integer idMonstruo;
+//	@Id
+//	@GeneratedValue
+//	private int id;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	private Vida vida;
