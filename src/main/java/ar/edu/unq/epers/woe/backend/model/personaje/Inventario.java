@@ -51,6 +51,13 @@ public class Inventario {
         pj.incrementarAtributos(item.getAtributos());
     }
 
+    public void sacarItem(Item i, Personaje pj) {
+        if(this.getEnUbicacion(i.getUbicacion()).getItem() != null) {
+            pj.decrementarAtributos(this.getEnUbicacion(i.getUbicacion()).getItem().getAtributos());
+            this.getEnUbicacion(i.getUbicacion()).setItem(null);
+        }
+    }
+
     public Slot getEnUbicacion(String ubicacion) {
         Slot res = null;
         for(Slot s : this.slots) {
@@ -75,4 +82,5 @@ public class Inventario {
         }
         return res;
     }
+
 }

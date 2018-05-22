@@ -332,8 +332,11 @@ public class Personaje extends Luchador {
 	}
 
 	public void sacarItem(Item i) {
-		//Por ahora: sacar item de la mochila, no del inventario
-		mochila.sacarItem(i);
+		if(this.mochila.tieneElItem(i)) {
+			this.mochila.sacarItem(i);
+		} else if(this.inventario.tieneElItem(i)) {
+			this.inventario.sacarItem(i, this);
+		}
 	}
 
 	@Override
