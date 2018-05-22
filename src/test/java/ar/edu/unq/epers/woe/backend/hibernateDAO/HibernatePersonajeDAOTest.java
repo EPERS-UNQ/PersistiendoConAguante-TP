@@ -86,7 +86,7 @@ public class HibernatePersonajeDAOTest {
 	
 	@Test
 	public void seRecuperaElInventarioDeUnPersonaje() {
-		p.agregarItem(i);
+		p.agregarItemAInv(i);
 		Personaje recuperado =
 		    	Runner.runInSession(() -> {
 		    		Runner.getCurrentSession().save(i);

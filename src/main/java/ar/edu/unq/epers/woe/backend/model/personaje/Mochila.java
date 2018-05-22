@@ -35,6 +35,7 @@ public class Mochila {
         } else {
             item.setMochila(this);
             this.items.add(item);
+            this.p.cumplirMisionesSiPuede();
         }
     }
 

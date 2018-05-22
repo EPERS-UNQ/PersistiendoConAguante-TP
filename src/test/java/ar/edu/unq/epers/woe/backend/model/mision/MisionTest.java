@@ -3,8 +3,11 @@ package ar.edu.unq.epers.woe.backend.model.mision;
 import ar.edu.unq.epers.woe.backend.model.combate.ResultadoCombate;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.lugar.Taberna;
+import ar.edu.unq.epers.woe.backend.model.monstruo.Monstruo;
 import ar.edu.unq.epers.woe.backend.model.personaje.Atributo;
+import ar.edu.unq.epers.woe.backend.model.personaje.Danho;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
+import ar.edu.unq.epers.woe.backend.model.personaje.Vida;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.requerimiento.Requerimiento;
 import org.junit.After;
@@ -71,7 +74,7 @@ public class MisionTest {
                 this.i);
         this.pj.aceptarMision(m);
         this.pj.getMochila().agregarItem(this.i);
-        assertTrue(m.puedeCompletarMision(this.pj));
+        assertTrue(this.pj.getMisionesCumplidas().contains("tstOI"));
     }
 
     @Test
@@ -90,6 +93,20 @@ public class MisionTest {
         ResultadoCombate res = new ResultadoCombate();
         res.setGanador(this.pj);
         res.setPerdedor(this.pj);
+        m.incrementarVictoriasActualesSiPuede(res);
+        assertTrue(m.puedeCompletarMision(this.pj));
+    }
+
+    @Test
+    public void personajeQGanaBatallaContraMonstruoIncrementaBatallasGanadas() {
+        Monstruo monstruo = new Monstruo("tstM1", new Vida(1f), new Danho(0f),
+                                         "dragon", new Raza("tstRaza2"));
+        Mision m = new VencerA("tstOI", new Recompensa(new ArrayList<Item>(), 10, 0f),
+                               monstruo, 1);
+        this.pj.aceptarMision(m);
+        ResultadoCombate res = new ResultadoCombate();
+        res.setGanador(this.pj);
+        res.setPerdedor(monstruo);
         m.incrementarVictoriasActualesSiPuede(res);
         assertTrue(m.puedeCompletarMision(this.pj));
     }

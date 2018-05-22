@@ -54,16 +54,17 @@ public class HibernateLugarDAOTest {
         items.add(this.ii);
         Tienda tb = new Tienda("t2");
         tb.setItems(items);
-        Runner.runInSession(() -> { lugarDAO.guardar(tb); return null; });
-        Tienda tr = (Tienda) Runner.runInSession(() -> { return lugarDAO.recuperar(tb.getNombre()); });
+        Runner.runInSession(() -> {
+            lugarDAO.guardar(tb);
+            return null;
+        });
+        Tienda tr = (Tienda) Runner.runInSession(() -> {
+            return lugarDAO.recuperar(tb.getNombre());
+        });
         List<Item> ilist = new LinkedList<Item>(tr.getItems());
         assertTrue(tr.getItems().size() == 2);
-        assertEquals(ilist.get(0).getNombre(), this.i.getNombre());
-        assertEquals(ilist.get(0).getAtributos(), this.i.getAtributos());
-        assertEquals(ilist.get(0).getCostoDeCompra(), this.i.getCostoDeCompra());
-        assertEquals(ilist.get(1).getNombre(), this.ii.getNombre());
-        assertEquals(ilist.get(1).getAtributos(), this.ii.getAtributos());
-        assertEquals(ilist.get(1).getCostoDeCompra(), this.ii.getCostoDeCompra());
+        assertEquals(ilist.get(0).getClass(), Item.class);
+        assertEquals(ilist.get(1).getClass(), Item.class);
     }
 
     @After

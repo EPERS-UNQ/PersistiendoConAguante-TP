@@ -1,6 +1,8 @@
 package ar.edu.unq.epers.woe.backend.model.mision;
 
 import ar.edu.unq.epers.woe.backend.model.combate.ResultadoCombate;
+import ar.edu.unq.epers.woe.backend.model.item.Item;
+import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
 import ar.edu.unq.epers.woe.backend.model.lugar.Taberna;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
 import javax.persistence.*;
@@ -119,5 +121,15 @@ public class Mision {
     public Boolean esVencerA() {return false;}
 
     public void incrementarVictoriasActualesSiPuede(ResultadoCombate resComb) {}
+
+    public void cumplirMisionSiPuede() {
+        if(puedeCompletarMision(this.getPjOwner())) {
+            this.getPjOwner().getMisionesEnCurso().remove(this);
+            this.getPjOwner().getMisionesAceptadas().remove(this.getNombre());
+            this.getPjOwner().getMisionesCumplidas().add(this.getNombre());
+            this.getRecompensa().otorgarRecompensaA(this.getPjOwner());
+            this.setPjOwner(null);
+        }
+    }
 
 }

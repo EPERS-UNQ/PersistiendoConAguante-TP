@@ -110,7 +110,7 @@ public class PersonajeTest {
     	tienda.setItems(new HashSet<Item>());
     	
     	Item i = new Item("plateMail", "torso", null, null, null, 5, 1, this.atts);
-    	pj.agregarItem(i);
+    	pj.agregarItemAInv(i);
     	
     	Float billeteraPrevia = pj.getBilletera();
     	pj.setLugar(tienda);

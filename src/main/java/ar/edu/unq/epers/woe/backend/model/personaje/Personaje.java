@@ -1,10 +1,12 @@
 package ar.edu.unq.epers.woe.backend.model.personaje;
 
 import ar.edu.unq.epers.woe.backend.model.combate.Luchador;
+import ar.edu.unq.epers.woe.backend.model.combate.ResultadoCombate;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
 import ar.edu.unq.epers.woe.backend.model.lugar.Tienda;
 import ar.edu.unq.epers.woe.backend.model.mision.Mision;
+import ar.edu.unq.epers.woe.backend.model.mision.VencerA;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import java.util.HashSet;
@@ -109,6 +111,7 @@ public class Personaje extends Luchador {
 
 	public void setLugar(Lugar lugar) {
 		this.lugar = lugar;
+		this.cumplirMisionesSiPuede();
 	}
 
 	public Mochila getMochila() {
@@ -318,7 +321,7 @@ public class Personaje extends Luchador {
 		setBilletera(billetera-costo);
 	}
 	
-	public void agregarItem(Item i) {
+	public void agregarItemAInv(Item i) {
 		getInventario().setItemEnUnaUbicacion(i, this);
 	}
 
@@ -345,44 +348,61 @@ public class Personaje extends Luchador {
 	}
 
 	public Danho getDanhoArma() {
-		return new Danho(this.getDanhoManoDerecha().getValor() + this.getDanhoManoIzquierda().getValor());
+		return new Danho(this.getDanhoManoDerecha().getValor() +
+				(this.getDanhoManoIzquierda().getValor() * 0.35f), this);
 	}
 
     public Danho getDanhoManoIzquierda() {
-    	return this.getInventario().getEnUbicacion("izquierda").getItem().getDanho();
+		Danho res = new Danho(0f, this);
+		if(this.getInventario().getEnUbicacion("izquierda").getItem() != null) {
+			res.setValor(this.getInventario().getEnUbicacion("izquierda").getItem().getDanho().getValor());
+		}
+		return res;
     }
 	public Danho getDanhoManoDerecha() {
-		return this.getInventario().getEnUbicacion("derecha").getItem().getDanho();
+		Danho res = new Danho(0f, this);
+		if(this.getInventario().getEnUbicacion("derecha").getItem() != null) {
+			res.setValor(this.getInventario().getEnUbicacion("derecha").getItem().getDanho().getValor());
+		}
+		return res;
 	}
+
 	public Danho getDanhoTotal() {
-		return new Danho(this.getDanhoArma().getValor()  * 
-		(this.getAtributo(Fuerza.class).getValor() + 
-		  (this.getAtributo(Destreza.class).getValor() / 100)
-		    / 100));
+		Danho res = new Danho(this.getAtributo(Fuerza.class).getValor() +
+				               (this.getAtributo(Destreza.class).getValor() / 100) / 100);
+		if(this.getDanhoArma().getValor() > 0) {
+			res.setValor(res.getValor() * this.getDanhoArma().getValor());
+		}
+		return res;
 	}
 
 	@Override
 	public void recibirAtaque(Danho danhoAtacante) {
 		Danho danhorecibido = calcularDanhoRecibido(danhoAtacante);
 		float cantidadVidaActual = this.getVida().getValor();
-		Vida vidatotal = new Vida (cantidadVidaActual - danhorecibido.getValor());
-		this.setVida(vidatotal);}
+		Vida vidatotal = new Vida (cantidadVidaActual - danhorecibido.getValor(), this);
+		this.setVida(vidatotal);
+	}
 
 	@Override
 	public Danho calcularDanhoRecibido(Danho danho) {
-
-		float danhorecibido =danho.getValor() - this.calcularDañoRecividoConDefensa(danho).getValor();
-		return new Danho(danhorecibido);
+		float danhorecibido = this.calcularDañoRecividoConDefensa(danho).getValor();
+		return new Danho(danhorecibido, this);
 	}
 
 	private Danho calcularDañoRecividoConDefensa(Danho danhoAtacante) {
-		return new Danho(danhoAtacante.getValor() - this.defensa().getValor());
+		return new Danho(danhoAtacante.getValor() - (this.defensa().getValor() + danhoAtacante.getValor() * 0.1f),
+				         this);
 	}
 
-
 	public Danho defensa() {
-		//hacer
-		return new Danho(0f);
+		float val = 0f;
+		for(Slot s : this.getInventario().getSlots()) {
+			if(s.getItem() != null) {
+				val = val + s.getItem().getArmadura().getValor();
+			}
+		}
+		return new Danho(val, this);
 	}
 
 	public Boolean tieneElItem(Item item) {
@@ -416,6 +436,20 @@ public class Personaje extends Luchador {
 
 	public void setValorDanho(Danho danho) {
 		getAtributo(Danho.class).setValor(danho.getValor()); ;
+	}
+
+	public void incrementarVictoriasActualesSiPuede(ResultadoCombate resultadoC) {
+		for(Mision m : this.getMisionesEnCurso()) {
+			if(m.getClass() == VencerA.class) {
+				m.incrementarVictoriasActualesSiPuede(resultadoC);
+			}
+		}
+	}
+
+	public void cumplirMisionesSiPuede() {
+		for(Mision m : this.getMisionesEnCurso()) {
+			m.cumplirMisionSiPuede();
+		}
 	}
 
 }

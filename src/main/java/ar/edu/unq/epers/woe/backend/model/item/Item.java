@@ -3,6 +3,7 @@ package ar.edu.unq.epers.woe.backend.model.item;
 import java.util.Set;
 import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
 import ar.edu.unq.epers.woe.backend.model.mision.Recompensa;
+import ar.edu.unq.epers.woe.backend.model.personaje.Armadura;
 import ar.edu.unq.epers.woe.backend.model.personaje.Atributo;
 import ar.edu.unq.epers.woe.backend.model.personaje.Danho;
 import ar.edu.unq.epers.woe.backend.model.personaje.Mochila;
@@ -145,7 +146,6 @@ public class Item {
 	}
 
 	public void setAtributos(Set<Atributo> atributos) {
-
 		this.atributos = atributos;
 		for(Atributo a: this.atributos) {
 			a.setItem(this);
@@ -153,8 +153,24 @@ public class Item {
 	}
 
 	public Danho getDanho() {
-		return new Danho(0f);
+		float val = 0f;
+		for(Atributo a : this.getAtributos()) {
+			if(a.getClass() == Danho.class) {
+				val = val + a.getValor();
+				break;
+			}
+		}
+		return new Danho(val);
 	}
-	
 
+    public Armadura getArmadura() {
+		float val = 0f;
+		for(Atributo a : this.getAtributos()) {
+			if(a.getClass() == Armadura.class) {
+				val = val + a.getValor();
+				break;
+			}
+		}
+		return new Armadura(val);
+    }
 }

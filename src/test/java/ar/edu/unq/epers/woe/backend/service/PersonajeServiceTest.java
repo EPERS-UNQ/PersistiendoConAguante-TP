@@ -3,12 +3,16 @@ package ar.edu.unq.epers.woe.backend.service;
 import static org.junit.Assert.*;
 
 import ar.edu.unq.epers.woe.backend.hibernateDAO.*;
+import ar.edu.unq.epers.woe.backend.model.combate.ResultadoCombate;
+import ar.edu.unq.epers.woe.backend.model.lugar.Gimnasio;
 import ar.edu.unq.epers.woe.backend.model.personaje.Atributo;
+import ar.edu.unq.epers.woe.backend.model.personaje.Fuerza;
 import ar.edu.unq.epers.woe.backend.model.personaje.Vida;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import ar.edu.unq.epers.woe.backend.model.requerimiento.Requerimiento;
 import ar.edu.unq.epers.woe.backend.service.data.ServiciosDB;
+import ar.edu.unq.epers.woe.backend.service.lugar.LugarService;
 import ar.edu.unq.epers.woe.backend.service.raza.ServiciosRaza;
 import org.hibernate.Session;
 import org.junit.After;
@@ -26,7 +30,9 @@ public class PersonajeServiceTest {
 	private HibernatePersonajeDAO pjhd = new HibernatePersonajeDAO();
 	private HibernateRazaDAO rhd = new HibernateRazaDAO();
 	private HibernateItemDAO ihd = new HibernateItemDAO();
+	private HibernateLugarDAO ild = new HibernateLugarDAO();
 	private ServiciosRaza sr = new ServiciosRaza();
+	private LugarService lr = new LugarService();
 	private Personaje pj;
 	private Item i;
 	private Raza r;
@@ -69,6 +75,22 @@ public class PersonajeServiceTest {
 		serviceP.equipar(this.pj.getNombre(), 1);
 		Personaje pjr = Runner.runInSession(() -> { return pjhd.recuperar(this.pj.getNombre()); });
 		assertEquals(pjr.getAtributo(Vida.class).getValor(), new Float(6f));
+	}
+
+	@Test
+	public void alCombatirDosPjsQEstanEnUnGimnasioSeObtieneElResultadoCombate() {
+		Gimnasio gim = new Gimnasio("tstGim0");
+		Runner.runInSession(() -> { this.ild.guardar(gim); return null; });
+		Personaje pjii = new Personaje(this.r, "tstPJ1", Clase.MAGO);
+		pjii.setLugar(gim);
+		pjii.setVida(new Vida(10f));
+		pjii.getAtributo(Fuerza.class).setValor(200f);
+		Runner.runInSession(() -> {
+			this.pjhd.guardar(pjii); return null; });
+		this.lr.mover(this.pj.getNombre(), gim.getNombre());
+		ResultadoCombate rc = this.serviceP.combatir(this.pj.getNombre(), pjii.getNombre());
+		assertTrue(rc.getClass().equals(ResultadoCombate.class));
+		assertTrue(rc.getGanador().sosPersonaje());
 	}
 
 	@After
