@@ -16,7 +16,7 @@ public class LeaderboardService {
 	
 	public List<Personaje> campeones(){
 		Runner.runInSession(()->{
-			daoCombates.mejoresCombatientesMax(10);
+//			daoCombates.mejoresCombatientesMax(10);
 			return null;
 		});
 		return null;

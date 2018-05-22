@@ -25,13 +25,11 @@ public class LeaderBoardServiceTest {
 	Raza r;
 	Raza r2;
 	TestService testServ;
-	LeaderboardService leaderboardS;
+	LeaderboardService leaderboardS= new LeaderboardService();;
 	
 	@Before
 	public void setUp(){
-		
-		SessionFactoryProvider.destroy();//cleanup
-		
+				
 		leaderboardS = new LeaderboardService();
 		testServ = new TestService();
 		
@@ -44,6 +42,7 @@ public class LeaderBoardServiceTest {
 		
 		r2 = new Raza();
 		r2.setClases(clases);
+		testServ.crearEntidad(r2);
 		
 		ganador = new Personaje(r, "Winner", Clase.BRUJO);
 		ganador.setValorDanho(new Danho(500f));
@@ -63,9 +62,9 @@ public class LeaderBoardServiceTest {
 		testServ.crearEntidad(rc2);
 		
 		ResultadoCombate rc3 = new ResultadoCombate();
-		rc2.setGanador(ganador);
-		rc2.setPerdedor(perdedor);
-		testServ.crearEntidad(rc2);
+		rc3.setGanador(ganador);
+		rc3.setPerdedor(perdedor);
+		testServ.crearEntidad(rc3);
 		
 	}
 
@@ -79,7 +78,8 @@ public class LeaderBoardServiceTest {
 	@Test
 	public void seObtieneElPersonajeConMasDanho() {
 		
-		assertEquals(ganador, leaderboardS.masFuerte());
+		assertEquals(leaderboardS.masFuerte(), ganador);
+		assertTrue(true);
 		
 	}
 
