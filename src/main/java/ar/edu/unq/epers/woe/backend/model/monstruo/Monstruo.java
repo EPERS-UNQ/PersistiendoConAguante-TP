@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 public class Monstruo extends Luchador{
 
-//	@Id
+//	@Id ahora hay 'nombre' como Id para monstruo
 //	@GeneratedValue
 //	private int id;
 
@@ -27,11 +27,16 @@ public class Monstruo extends Luchador{
 
 	public Monstruo() {}
 	
-	public Monstruo ( Vida cantv, Danho cantdaño, String unTipo, Raza unaRaza){
+	public Monstruo ( String nombreMonstruo, Vida cantv, Danho cantdaño, String unTipo, Raza unaRaza){
+		this.setNombre(nombreMonstruo);
 		this.setVida(cantv);
 		this.setDaño(cantdaño);
 		this.setTipo(unTipo);
 		this.setRaza(unaRaza);
+	}
+
+	private void setNombre(String nombreMonstruo) {
+			this.nombre = nombreMonstruo;
 	}
 
 	public void setRaza(Raza unaRaza) {
@@ -57,6 +62,10 @@ public class Monstruo extends Luchador{
 	public Danho getDanhoTotal() {
 		return this.daño;
 		}
+	
+	public String getNombre() {
+		return this.nombre;
+	}
 	
 	public String getTipo() {
 		return this.tipo;

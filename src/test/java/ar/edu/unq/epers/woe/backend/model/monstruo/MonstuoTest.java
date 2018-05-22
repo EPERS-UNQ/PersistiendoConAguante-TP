@@ -15,7 +15,7 @@ public class MonstuoTest {
 	
 	@Before 
 	public void setUp() {
-		monstruo = new Monstruo(new Vida(10f), new Danho (10f), "hogro",new Raza("terrestre"));
+		monstruo = new Monstruo("MonsterT", new Vida(10f), new Danho (10f), "hogro",new Raza("terrestre"));
 
 	}
 	

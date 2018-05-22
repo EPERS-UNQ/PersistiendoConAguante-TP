@@ -21,7 +21,7 @@ public class ResultadoCombate {
 	public ResultadoCombate() {
 		ganador = null;
 		perdedor = null;
-//		detalle = new ArrayList<Ataque>();
+		detalle = new ArrayList<Ataque>();
 	}
 	
 	public void setGanador(Luchador g){
