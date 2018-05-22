@@ -33,6 +33,7 @@ public class Combate {
 			if(resultadoC.getGanador().sosPersonaje()) {
 				Personaje ganador = (Personaje) resultadoC.getGanador();
 				ganador.incrementarVictoriasActualesSiPuede(resultadoC);
+				ganador.ganarExperiencia(10*ganador.getNivel());
 				ganador.cumplirMisionesSiPuede();
 			}
 
@@ -40,11 +41,11 @@ public class Combate {
 			l2.setVida(vl2);
 			return resultadoC;
 		}
-		else {throw new RuntimeException("El combate no es posible con dos monstruos"); } // tirar exepcion
+		else {throw new RuntimeException("El combate no es posible con dos monstruos."); } // tirar exepcion
 	}
 
 	private boolean sonUnPersonajeYunMonstruo(Luchador l1, Luchador l2) {
-		return (l1.sosPersonaje() &&  l2.sosMonstruo()) || (l2.sosPersonaje() &&  l1.sosMonstruo());
+		return (l1.sosPersonaje() && l2.sosMonstruo()) || (l2.sosPersonaje() && l1.sosMonstruo());
 	}
 
 	private boolean sonDosPersonajes(Luchador l1, Luchador l2) {
