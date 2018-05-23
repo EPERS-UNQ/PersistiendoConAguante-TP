@@ -23,8 +23,7 @@ public class LeaderboardService {
 	public Personaje masFuerte() {
 		return
 				Runner.runInSession(()->{
-					daoCombates.personajeMayorDanho();
-					return null;
+					return daoCombates.personajeMayorDanho();
 				});
 	}
 }

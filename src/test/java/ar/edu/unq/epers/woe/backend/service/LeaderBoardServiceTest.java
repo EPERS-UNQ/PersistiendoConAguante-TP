@@ -86,9 +86,8 @@ public class LeaderBoardServiceTest {
 	
 	@Test
 	public void seObtieneElPersonajeConMasDanho() {
-		//SWLGrammarExceptin: could not extract ResultSet
-		assertEquals(leaderboardS.masFuerte(), ganador); // fail, en construccion...
-		
+
+		assertEquals(leaderboardS.masFuerte().getNombre(), "Winner"); //
 	}
 
 }
