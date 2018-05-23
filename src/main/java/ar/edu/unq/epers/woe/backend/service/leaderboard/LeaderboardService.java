@@ -5,6 +5,8 @@ import java.util.List;
 import ar.edu.unq.epers.woe.backend.hibernateDAO.HibernateCombateDAO;
 import ar.edu.unq.epers.woe.backend.hibernateDAO.Runner;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
+import ar.edu.unq.epers.woe.backend.model.raza.Clase;
+import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 
 public class LeaderboardService {
 	
@@ -21,9 +23,20 @@ public class LeaderboardService {
 	}
 
 	public Personaje masFuerte() {
-		return
-				Runner.runInSession(()->{
-					return daoCombates.personajeMayorDanho();
-				});
+		return Runner.runInSession(() -> {
+			return daoCombates.personajeMayorDanho();
+		});
+	}
+
+	public Raza razaLider() {
+		return Runner.runInSession(() -> {
+			return daoCombates.razaMasCombatesGanados();
+		});
+	}
+
+	public Clase claseLider() {
+		return Runner.runInSession(()-> {
+			return daoCombates.claseMasCombatesGanados();
+		});
 	}
 }

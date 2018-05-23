@@ -1,6 +1,8 @@
 package ar.edu.unq.epers.woe.backend.service;
 
 import static org.junit.Assert.*;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -8,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import ar.edu.unq.epers.woe.backend.hibernateDAO.SessionFactoryProvider;
 import ar.edu.unq.epers.woe.backend.model.combate.ResultadoCombate;
 import ar.edu.unq.epers.woe.backend.model.personaje.Danho;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
@@ -20,8 +23,10 @@ public class LeaderBoardServiceTest {
 	List<ResultadoCombate> combates;
 	Personaje ganador;
 	Personaje perdedor;
-	Raza r;
-	Raza r2;
+	Raza razaGanador;
+	Raza razaP;
+	Clase claseGanador = Clase.BRUJO;
+	Clase claseMayoria = Clase.CABALLERO;
 	TestService testServ;
 	LeaderboardService leaderboardS= new LeaderboardService();;
 	
@@ -31,24 +36,24 @@ public class LeaderBoardServiceTest {
 		leaderboardS = new LeaderboardService();
 		testServ = new TestService();
 		
-		r = new Raza();
 		Set<Clase> clases = new HashSet<Clase>();
 		clases.add(Clase.BRUJO);
 		clases.add(Clase.CABALLERO);
-		r.setClases(clases);
-		testServ.crearEntidad(r);
+		razaGanador = new Raza("Raza Uno");
+		razaGanador.setClases(clases);
+		testServ.crearEntidad(razaGanador);
 		
-		r2 = new Raza();
-		r2.setClases(clases);
-		testServ.crearEntidad(r2);
+		razaP = new Raza("Raza Dos");
+		razaP.setClases(clases);
+		testServ.crearEntidad(razaP);
 		
-		//tres combates ganados
-		ganador = new Personaje(r, "Winner", Clase.BRUJO);
+		//dos combates ganados
+		ganador = new Personaje(razaGanador, "Winner", claseGanador);
 		ganador.setValorDanho(new Danho(500f));
 		testServ.crearEntidad(ganador);
-		
+
 		//solo un combate ganado
-		perdedor = new Personaje(r2, "Loser", Clase.CABALLERO);
+		perdedor = new Personaje(razaP, "Loser", claseMayoria);
 		testServ.crearEntidad(perdedor);
 		
 		ResultadoCombate rc0 = new ResultadoCombate();
@@ -66,13 +71,30 @@ public class LeaderBoardServiceTest {
 		rc2.setPerdedor(perdedor);
 		testServ.crearEntidad(rc2);
 		
+		// "razaP" raza con mayor cantidad de combates ganados
+		// "clase Mayoria" clase con mayor cantidad de combates ganados
+		Personaje personaje3 = new Personaje(razaP, "Persnj 3", claseMayoria);
+		Personaje personaje4 = new Personaje(razaP, "Persnj 4", claseMayoria);
+		testServ.crearEntidad(personaje3);
+		testServ.crearEntidad(personaje4);
+		
 		ResultadoCombate rc3 = new ResultadoCombate();
-		rc3.setGanador(ganador);
-		rc3.setPerdedor(perdedor);
+		rc3.setGanador(personaje3); 
+		rc3.setPerdedor(ganador);
 		testServ.crearEntidad(rc3);
+		
+		ResultadoCombate rc4 = new ResultadoCombate();
+		rc4.setGanador(personaje4);
+		rc4.setPerdedor(ganador);
+		testServ.crearEntidad(rc4);
 		
 	}
 
+	@After
+	public void cleanup() {
+		SessionFactoryProvider.destroy();
+	}
+	
 	
 	@Test
 	public void seObtienenDiezPersonajesConMasBatallasGanadas() {
@@ -90,4 +112,17 @@ public class LeaderBoardServiceTest {
 		assertEquals(leaderboardS.masFuerte().getNombre(), "Winner"); //
 	}
 
+	
+	@Test
+	public void seObtieneLaRazaQueGanoMasCombates() {
+		
+		assertEquals( razaP.getNombre(), leaderboardS.razaLider().getNombre() );
+	}
+	
+	
+	@Test
+	public void seObtieneClaseQueGanoMasCombates() {
+		
+		assertEquals( claseMayoria, leaderboardS.claseLider()  );
+	}
 }
