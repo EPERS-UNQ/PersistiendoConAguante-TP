@@ -9,6 +9,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.HashSet;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -16,45 +18,31 @@ import static org.junit.Assert.assertFalse;
 public class RazaTest {
 
     private Raza raza;
-    private ServiciosRaza razaServ = new ServiciosRaza();
-    private ServiciosDB dbServ = new ServiciosDB();
 
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void crearModelo() {
-        this.dbServ.eliminarDatos();
-        this.dbServ.crearSetDatosIniciales();
-        this.raza = this.razaServ.getRaza(1);
-    }
-
-    @Test
-    public void alRecuperarUnaRazaSeCreaUnaInstanciaConAtributosCorrectos() {
-        Raza raza = this.razaServ.getRaza(1);
-        assertEquals(raza.getId(), new Integer(1));
-        assertEquals(raza.getNombre(), this.raza.getNombre());
-        assertEquals(raza.getClases(), this.raza.getClases());
-        assertEquals(raza.getEnergiaInicial(), this.raza.getEnergiaInicial());
-        assertEquals(raza.getPeso(), this.raza.getPeso());
-        assertEquals(raza.getUrlFoto(), this.raza.getUrlFoto());
-        assertEquals(raza.getCantidadPersonajes(), this.raza.getCantidadPersonajes());
+        HashSet<Clase> cls = new HashSet<Clase>();
+        cls.add(Clase.SACERDOTE);
+        this.raza = new Raza("Elfo");
+        this.raza.setClases(cls);
     }
 
     @Test
     public void alCrearPjSeIncrementanPjsDeLaRaza() {
         Integer cantPrevia = this.raza.getCantidadPersonajes();
-        this.razaServ.crearPersonaje(this.raza.getId(), "Seiya", Clase.SACERDOTE);
-        assertEquals(this.razaServ.getRaza(this.raza.getId()).getCantidadPersonajes(), cantPrevia + 1);
+        this.raza.crearPersonaje("Seiya", Clase.SACERDOTE);
+        assertEquals(this.raza.getCantidadPersonajes(), cantPrevia + 1);
     }
 
     @Test
     public void alCrearPersonajeConClaseQueNoCorrespondeOcurreExcepcion() {
         Clase claseNoIncluidaEnRaza = Clase.PALADIN;
         assertFalse( this.raza.getClases().contains(claseNoIncluidaEnRaza) );
-
         thrown.expect(ClaseInvalida.class);
-        this.razaServ.crearPersonaje(this.raza.getId(), "Seiya", claseNoIncluidaEnRaza);
+        this.raza.crearPersonaje("Seiya", claseNoIncluidaEnRaza);
     }
 
     @After
