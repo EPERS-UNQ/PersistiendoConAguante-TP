@@ -1,9 +1,15 @@
 package ar.edu.unq.epers.woe.backend.hibernateDAO;
 
 import static org.junit.Assert.*;
+
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import ar.edu.unq.epers.woe.backend.model.lugar.Gimnasio;
+import ar.edu.unq.epers.woe.backend.model.mision.IrALugar;
+import ar.edu.unq.epers.woe.backend.model.mision.Mision;
+import ar.edu.unq.epers.woe.backend.model.mision.Recompensa;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -98,7 +104,18 @@ public class HibernatePersonajeDAOTest {
 	
 	@Test
 	public void seRecuperanMisionesAceptadas() {
-		// TODO
+		Personaje recuperado =
+				Runner.runInSession(() -> {
+					Gimnasio gim = new Gimnasio("tstGim");
+					Mision m = new IrALugar("tstOI", new Recompensa(new ArrayList<Item>(), 10, 5f), gim);
+					p.aceptarMision(m);
+					Runner.getCurrentSession().save(gim);
+					Runner.getCurrentSession().save(m);
+					this.persDao.guardar(p);
+					return persDao.recuperar("Pepito");
+				});
+		assertTrue(recuperado.getMisionesAceptadas().contains("tstOI"));
+		assertTrue(recuperado.getMisionesEnCurso().iterator().next().esIrALugar());
 	}
 
 }
