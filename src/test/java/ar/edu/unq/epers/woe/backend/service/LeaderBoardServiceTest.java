@@ -8,8 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import ar.edu.unq.epers.woe.backend.hibernateDAO.SessionFactoryProvider;
-import ar.edu.unq.epers.woe.backend.model.combate.Luchador;
 import ar.edu.unq.epers.woe.backend.model.combate.ResultadoCombate;
 import ar.edu.unq.epers.woe.backend.model.personaje.Danho;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
@@ -44,12 +42,19 @@ public class LeaderBoardServiceTest {
 		r2.setClases(clases);
 		testServ.crearEntidad(r2);
 		
+		//tres combates ganados
 		ganador = new Personaje(r, "Winner", Clase.BRUJO);
 		ganador.setValorDanho(new Danho(500f));
 		testServ.crearEntidad(ganador);
 		
+		//solo un combate ganado
 		perdedor = new Personaje(r2, "Loser", Clase.CABALLERO);
 		testServ.crearEntidad(perdedor);
+		
+		ResultadoCombate rc0 = new ResultadoCombate();
+		rc0.setGanador(perdedor); 
+		rc0.setPerdedor(ganador);
+		testServ.crearEntidad(rc0);
 		
 		ResultadoCombate rc1 = new ResultadoCombate();
 		rc1.setGanador(ganador);
@@ -72,14 +77,17 @@ public class LeaderBoardServiceTest {
 	@Test
 	public void seObtienenDiezPersonajesConMasBatallasGanadas() {
 		
-//		assertEquals(ganador, leaderboardS.campeones().get(0));
+		// para usar este assert habria q reescribir el equals o crear metodo
+		// equivalente
+		// assertTrue( leaderboardS.campeones().get(0), ganador );
+		
+		assertEquals( leaderboardS.campeones().get(0).getNombre(), "Winner");
 	}
 	
 	@Test
 	public void seObtieneElPersonajeConMasDanho() {
-		
-		assertEquals(leaderboardS.masFuerte(), ganador);
-		assertTrue(true);
+		//SWLGrammarExceptin: could not extract ResultSet
+		assertEquals(leaderboardS.masFuerte(), ganador); // fail, en construccion...
 		
 	}
 

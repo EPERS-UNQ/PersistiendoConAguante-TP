@@ -15,11 +15,9 @@ public class LeaderboardService {
 	}
 	
 	public List<Personaje> campeones(){
-		Runner.runInSession(()->{
-//			daoCombates.mejoresCombatientesMax(10);
-			return null;
+		return Runner.runInSession(() -> {
+			return daoCombates.conMasBatallasGanadas();
 		});
-		return null;
 	}
 
 	public Personaje masFuerte() {
