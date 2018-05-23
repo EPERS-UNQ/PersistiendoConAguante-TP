@@ -8,6 +8,8 @@ import org.hibernate.query.Query;
 import ar.edu.unq.epers.woe.backend.hibernateDAO.Runner;
 import ar.edu.unq.epers.woe.backend.model.combate.ResultadoCombate;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
+import ar.edu.unq.epers.woe.backend.model.raza.Clase;
+import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 
 public class HibernateCombateDAO {
 
@@ -65,5 +67,31 @@ public class HibernateCombateDAO {
 			list.add((Personaje) o[posicion]);
 		}
 		return list;
+	}
+
+	
+	public Raza razaMasCombatesGanados() {
+		Session session = Runner.getCurrentSession();
+		String hqlCount = "select r.ganador.raza, count(*) as c " 
+				+ "from ResultadoCombate r " 
+				+ "group by r.ganador.raza "
+				+ "order by c desc";
+		Query<Object[]> query = session.createQuery(hqlCount);
+		query.setMaxResults(1);
+		
+		return ((Raza) query.getSingleResult()[0]);
+	}
+	
+	
+	public Clase claseMasCombatesGanados() {
+		Session session = Runner.getCurrentSession();
+		String hqlCount = "select r.ganador.clase, count(*) as c " 
+				+ "from ResultadoCombate r " 
+				+ "group by r.ganador.clase "
+				+ "order by c desc";
+		Query<Object[]> query = session.createQuery(hqlCount);
+		query.setMaxResults(1);
+		
+		return ((Clase) query.getSingleResult()[0]);
 	}
 }
