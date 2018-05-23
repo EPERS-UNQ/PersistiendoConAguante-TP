@@ -16,57 +16,53 @@ public class HibernateCombateDAO {
 		return (int) s.save(resComb);
 	}
 
+	
 	public ResultadoCombate recuperar(int id) {
 		Session s = Runner.getCurrentSession();
 		ResultadoCombate r = s.get(ResultadoCombate.class, id);
-		if(r==null) {
+		if (r == null) {
 			throw new RuntimeException("No existe id ResultadoCombate");
 		}
 		return r;
 	}
+
 	
 	public Personaje personajeMayorDanho() {
-		// metodo en construccion...
+		// no se aclara si el pesonaje tiene q tener un ResultadoCombate..
 		Session s = Runner.getCurrentSession();
-		String hql = "select p "+
-				"from Personaje p join Danho d "
-				+ "order by d.valor desc";
-		Query<Personaje> query = s.createQuery(hql, Personaje.class);
+		String hql = "select d.personaje " 
+				+ "from Danho d " 
+				+ "where d.valor= :maximo ";
+		Query query = s.createQuery(hql);
 
-		// aca pretendia retornar el personaje que tenga valor de danho 'maxValor',
-		// obtenido de otra query, usando 'where d.valor = maxValor' pero tambien me
-		// tiraba error...
-		// Query<Float> queryMaxDanho = s.createQuery("select max(d.valor) from Danho
-		// d", Float.class);
-		// Float maxValor= queryMaxDanho.getSingleResult();
-		//
-		// Query query = s.createQuery(hql, String.class);
-		// query.setParameter("maximo", maxValor);
-		
-		System.out.println("nombre del forro: "+ query.getResultList().get(0) );
+		Query<Float> queryMaxDanho = s.createQuery("select max(d.valor) from Danho d", Float.class);
+		Float maxValor = queryMaxDanho.getSingleResult();
 
-		return null ;
+		query.setParameter("maximo", maxValor);
+
+		return (Personaje) query.getSingleResult();
 	}
 	
-	public List<Personaje> conMasBatallasGanadas(){
-		
+	
+	public List<Personaje> conMasBatallasGanadas() {
+
 		Session session = Runner.getCurrentSession();
-		
-		String hqlCount = "select r.ganador, count(*) as c "
-				+ "from ResultadoCombate r "
+		String hqlCount = "select r.ganador, count(*) as c " 
+				+ "from ResultadoCombate r " 
 				+ "group by r.ganador "
 				+ "order by c desc";
 		Query<Object[]> query = session.createQuery(hqlCount);
 		query.setMaxResults(10);
 		// query me retorna un ArrayList<Object[2]>
 
-		return( recolectarPersonajeEnPos(query.getResultList(), 0) );
+		return (recolectarPersonajeEnPos(query.getResultList(), 0));
 	}
 
+	
 	private List<Personaje> recolectarPersonajeEnPos(List<Object[]> resultList, int posicion) {
 		List<Personaje> list = new ArrayList<Personaje>();
-		for( Object[] o : resultList ) {
-			list.add( (Personaje) o[posicion] );
+		for (Object[] o : resultList) {
+			list.add((Personaje) o[posicion]);
 		}
 		return list;
 	}
