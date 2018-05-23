@@ -14,9 +14,9 @@ public class HibernateRazaDAO {
 		
 	}
 
-	public void guardar(Raza r) {
+	public int guardar(Raza r) {
 			Session session = Runner.getCurrentSession();
-			session.save(r);
+			return (int) session.save(r);
 	}
 	
 	public Raza recuperar(int idRaza) {

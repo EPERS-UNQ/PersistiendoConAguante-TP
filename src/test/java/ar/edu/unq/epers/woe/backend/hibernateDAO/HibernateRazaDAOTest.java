@@ -34,9 +34,9 @@ public class HibernateRazaDAOTest {
 	public void testSeRecuperaRaza() {
 		Raza recuperada =
 	    	Runner.runInSession(() -> {
-	    		this.razaDAO.guardar(raza);
+	    		int id = this.razaDAO.guardar(raza);
 	    		
-	    		return razaDAO.recuperar(1);
+	    		return razaDAO.recuperar(id);
 	    	});
 
 		assertEquals(recuperada.getNombre(), "Elfo");
@@ -50,9 +50,9 @@ public class HibernateRazaDAOTest {
 		
 		Raza recuperada =
 		    	Runner.runInSession(() -> {
-		    		this.razaDAO.guardar(raza);
+		    		int id = this.razaDAO.guardar(raza);
 		    		
-		    		return razaDAO.recuperar(1);
+		    		return razaDAO.recuperar(id);
 		    	});
 
 		assertTrue( clases.containsAll(recuperada.getClases()) );	
