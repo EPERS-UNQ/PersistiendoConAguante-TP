@@ -10,10 +10,6 @@ import javax.persistence.*;
 @Entity
 public class Monstruo extends Luchador{
 
-//	@Id ahora hay 'nombre' como Id para monstruo
-//	@GeneratedValue
-//	private int id;
-
 	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	private Vida vida;
 

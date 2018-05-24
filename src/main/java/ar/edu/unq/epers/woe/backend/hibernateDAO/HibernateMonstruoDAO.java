@@ -10,9 +10,9 @@ public class HibernateMonstruoDAO {
         session.save(m);
     }
 
-    public Monstruo recuperar(Integer id) {
+    public Monstruo recuperar(String nombre) {
         Session session = Runner.getCurrentSession();
-        Monstruo mr = session.get(Monstruo.class, id);
+        Monstruo mr = session.get(Monstruo.class, nombre);
         if(mr==null) {
             throw new RuntimeException("El Monstruo no existe");
         }
