@@ -218,38 +218,7 @@ public class Personaje extends Luchador {
 	public void subirDeNivelSiPuede() {
 		if(this.expSuficiente()) {
 			this.nivel++;
-			switch(this.getClase().ordinal()) {
-				case 0:
-					incrementarBrujo();
-					break;
-				case 1:
-					incrementarDruida();
-					break;
-				case 2:
-					incrementarCaballero();
-					break;
-				case 3:
-					incrementarSacerdote();
-					break;
-				case 4:
-					incrementarGuerrero();
-					break;
-				case 5:
-					incrementarMonje();
-					break;
-				case 6:
-					incrementarMago();
-					break;
-				case 7:
-					incrementarCazador();
-					break;
-				case 8:
-					incrementarPaladin();
-					break;
-				case 9:
-					incrementarPicaro();
-					break;
-			}
+			new RetribucionAdicionalPersonaje(this);
 		}
 	}
 
@@ -265,52 +234,6 @@ public class Personaje extends Luchador {
 		}
 	}
 
-	private void incrementarPicaro() {
-		this.getAtributo(Fuerza.class).setValor(this.getAtributo(Fuerza.class).getValor() * 1.06f);
-	}
-
-	private void incrementarPaladin() {
-		this.getAtributo(Vida.class).setValor(this.getAtributo(Vida.class).getValor() * 1.02f);
-		this.getAtributo(Fuerza.class).setValor(this.getAtributo(Fuerza.class).getValor() * 1.04f);
-	}
-
-	private void incrementarCazador() {
-		this.getAtributo(Vida.class).setValor(this.getAtributo(Vida.class).getValor() * 1.05f);
-	}
-
-	private void incrementarMago() {
-		this.getAtributo(Fuerza.class).setValor(this.getAtributo(Fuerza.class).getValor() * 1.02f);
-		this.getAtributo(Destreza.class).setValor(this.getAtributo(Destreza.class).getValor() * 1.09f);
-		this.getAtributo(Vida.class).setValor(this.getAtributo(Vida.class).getValor() * 1.05f);
-	}
-
-	private void incrementarMonje() {
-		this.getAtributo(Fuerza.class).setValor(this.getAtributo(Fuerza.class).getValor() * 1.02f);
-		this.getAtributo(Destreza.class).setValor(this.getAtributo(Destreza.class).getValor() * 1.09f);
-	}
-
-	private void incrementarGuerrero() {
-		this.getAtributo(Fuerza.class).setValor(this.getAtributo(Fuerza.class).getValor() * 1.04f);
-		this.getAtributo(Destreza.class).setValor(this.getAtributo(Destreza.class).getValor() * 1.01f);
-	}
-
-	private void incrementarSacerdote() {
-		this.getAtributo(Vida.class).setValor(this.getAtributo(Vida.class).getValor() * 1.02f);
-	}
-
-	private void incrementarCaballero() {
-		this.getAtributo(Fuerza.class).setValor(this.getAtributo(Fuerza.class).getValor() * 1.1f);
-		this.getAtributo(Destreza.class).setValor(this.getAtributo(Destreza.class).getValor() * 1.03f);
-		this.getAtributo(Vida.class).setValor(this.getAtributo(Vida.class).getValor() * 1.08f);
-	}
-
-	private void incrementarDruida() {
-		this.getAtributo(Vida.class).setValor(this.getAtributo(Vida.class).getValor() * 1.06f);
-	}
-
-	private void incrementarBrujo() {
-		this.getAtributo(Destreza.class).setValor(this.getAtributo(Destreza.class).getValor() * 1.02f);
-	}
 
 	public void comprar(Item i) {
 		Tienda t = (Tienda) lugar;
