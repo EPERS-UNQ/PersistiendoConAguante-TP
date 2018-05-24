@@ -37,7 +37,7 @@ public class HibernateRazaDAOTest {
 	@Test
 	public void alRecuperarUnaRazaSeCreaUnaInstanciaConAtributosCorrectos() {
 		this.dbServ.crearSetDatosIniciales();
-		this.raza = this.razaServ.getRaza(1);
+		this.raza = Runner.runInSession(() -> { return this.razaDAO.recuperarPorNombre("xRaza1"); });
 		Raza razaATestear = this.raza;
 		assertEquals(razaATestear.getId(), new Integer(1));
 		assertEquals(razaATestear.getNombre(), this.raza.getNombre());
@@ -51,7 +51,7 @@ public class HibernateRazaDAOTest {
 	@Test
 	public void alCrearPjSeIncrementanPjsDeLaRazaRecuperada() {
 		this.dbServ.crearSetDatosIniciales();
-		this.raza = this.razaServ.getRaza(1);
+		this.raza = Runner.runInSession(() -> { return this.razaDAO.recuperarPorNombre("xRaza1"); });
 		Integer cantPrevia = this.raza.getCantidadPersonajes();
 		this.razaServ.crearPersonaje(this.raza.getId(), "Seiya", Clase.SACERDOTE);
 		assertEquals(this.razaServ.getRaza(this.raza.getId()).getCantidadPersonajes(), cantPrevia + 1);
