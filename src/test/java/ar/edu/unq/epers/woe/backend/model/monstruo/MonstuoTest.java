@@ -15,14 +15,13 @@ public class MonstuoTest {
 	
 	@Before 
 	public void setUp() {
-		monstruo = new Monstruo("MonsterT", new Vida(10f), new Danho (10f), "hogro",new Raza("terrestre"));
+		monstruo = new Monstruo("MonsterT", new Vida(10f), new Danho (10f), "hogro");
 
 	}
 	
 	@Test
 	public void unMonstuoRecienCreado() {
 		assertTrue(monstruo.getDanhoTotal().getValor() == 10f);
-		assertTrue(monstruo.getRaza().getNombre() == "terrestre");
 		assertTrue(monstruo.getVida().getValor() == 10f);
 		assertTrue(monstruo.getTipo() == "hogro");
 	}

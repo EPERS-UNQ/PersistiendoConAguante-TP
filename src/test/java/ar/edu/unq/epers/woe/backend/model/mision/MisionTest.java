@@ -98,7 +98,7 @@ public class MisionTest {
     @Test
     public void personajeQGanaBatallaContraMonstruoIncrementaBatallasGanadas() {
         Monstruo monstruo = new Monstruo("tstM1", new Vida(1f), new Danho(0f),
-                                         "dragon", new Raza("tstRaza2"));
+                                         "dragon");
         Mision m = new VencerA("tstOI", new Recompensa(new ArrayList<Item>(), 10, 0f),
                                monstruo, 1);
         this.pj.aceptarMision(m);
@@ -112,7 +112,7 @@ public class MisionTest {
     @Test
     public void personajeQCumpleMisionVencerARecibeRecompensa() {
         Monstruo monstruo = new Monstruo("tstM1", new Vida(1f), new Danho(0f),
-                "dragon", new Raza("tstRaza2"));
+                "dragon");
         Mision m = new VencerA("tstOI", new Recompensa(new ArrayList<Item>(), 10, 5f),
                 monstruo, 1);
         this.pj.setVida(new Vida(500f));

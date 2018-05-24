@@ -22,25 +22,17 @@ public class Monstruo extends Luchador{
 
 	private String tipo;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
-	private Raza raza;
-
 	public Monstruo() {}
 	
-	public Monstruo ( String nombreMonstruo, Vida cantv, Danho cantdaño, String unTipo, Raza unaRaza){
+	public Monstruo(String nombreMonstruo, Vida cantv, Danho cantdaño, String unTipo) {
 		this.setNombre(nombreMonstruo);
 		this.setVida(cantv);
 		this.setDaño(cantdaño);
 		this.setTipo(unTipo);
-		this.setRaza(unaRaza);
 	}
 
 	private void setNombre(String nombreMonstruo) {
 			this.nombre = nombreMonstruo;
-	}
-
-	public void setRaza(Raza unaRaza) {
-		this.raza= unaRaza;
 	}
 
 	public void setTipo(String unTipo) {
@@ -70,16 +62,12 @@ public class Monstruo extends Luchador{
 	public String getTipo() {
 		return this.tipo;
 	}
-	
-	public Raza getRaza() {
-		return this.raza;
-	}
 
 	@Override
 	public void atacar(Luchador l) {
 		l.recibirAtaque(this.getDanhoTotal());
-
 	}
+
 	@Override
 	public void recibirAtaque(Danho danhoTotal) {
 		this.calcularDanhoRecibido( danhoTotal) ;

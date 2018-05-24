@@ -44,25 +44,14 @@ public class Raza {
 	private String urlFoto;
 	private int cantidadPersonajes;
 
-	public Set<Personaje> getPersonajes() {
-		return personajes;
-	}
-
-	public void setPersonajes(Set<Personaje> personajes) {
-		this.personajes = personajes;
-	}
-
 	@OneToMany(mappedBy="raza", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Personaje> personajes;
-
 
 	public Raza() {}
 
 	public Raza(String nombre) {
 		this.nombre = nombre;
 	}
-
-
 
 	public Personaje crearPersonaje(String nombrePersonaje, Clase clase){
 		this.validarClase(clase);
@@ -147,6 +136,7 @@ public class Raza {
 	public void setClases(Set<Clase> clases) {
 		this.clases = clases;
 	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -155,7 +145,11 @@ public class Raza {
 		this.id = id;
 	}
 
-	public void setEnergiaInicial(int energiaInicial) {
-		this.energiaInicial = energiaInicial;
+	public Set<Personaje> getPersonajes() {
+		return personajes;
+	}
+
+	public void setPersonajes(Set<Personaje> personajes) {
+		this.personajes = personajes;
 	}
 }

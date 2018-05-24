@@ -58,7 +58,7 @@ public class CombateTest {
 	@Test
 	public void unCombateConUnPersonajesyUnMonstruoMasFuerteGanaElMonstruo() {
 		Monstruo monstruo = new Monstruo("tstMonstruo1", new Vida(500f),
-				                          new Danho(100f), "dragon", this.r);
+				                          new Danho(100f), "dragon");
 		Personaje pjii = new Personaje(this.r, "tstPJ1", Clase.MAGO);
 		pjii.setVida(new Vida(10f));
 		pjii.getAtributo(Fuerza.class).setValor(200f);
