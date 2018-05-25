@@ -275,15 +275,15 @@ public class Personaje extends Luchador {
 
     public Danho getDanhoManoIzquierda() {
 		Danho res = new Danho(0f, this);
-		if(this.getInventario().getEnUbicacion("izquierda").getItem() != null) {
-			res.setValor(this.getInventario().getEnUbicacion("izquierda").getItem().getDanho().getValor());
+		if( getItemEnUbicacion("izquierda") != null) {
+			res.setValor(getItemEnUbicacion("izquierda").getDanho().getValor());
 		}
 		return res;
     }
 	public Danho getDanhoManoDerecha() {
 		Danho res = new Danho(0f, this);
-		if(this.getInventario().getEnUbicacion("derecha").getItem() != null) {
-			res.setValor(this.getInventario().getEnUbicacion("derecha").getItem().getDanho().getValor());
+		if(getItemEnUbicacion("derecha") != null) {
+			res.setValor(getItemEnUbicacion("derecha").getDanho().getValor());
 		}
 		return res;
 	}
@@ -318,11 +318,7 @@ public class Personaje extends Luchador {
 
 	public Danho defensa() {
 		float val = 0f;
-		for(Slot s : this.getInventario().getSlots()) {
-			if(s.getItem() != null) {
-				val = val + s.getItem().getArmadura().getValor();
-			}
-		}
+		val = getInventario().defensaDeItems();
 		return new Danho(val, this);
 	}
 

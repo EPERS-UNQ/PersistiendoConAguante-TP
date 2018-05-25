@@ -83,4 +83,14 @@ public class Inventario {
         return res;
     }
 
+	public float defensaDeItems() {
+		float val = 0f;
+		for(Slot s : this.getSlots()) {
+			if(s.getItem() != null) {
+				val = val + s.getItem().getArmadura().getValor();
+			}
+		}
+		return val;
+	}
+
 }
