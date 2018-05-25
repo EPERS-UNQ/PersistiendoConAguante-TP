@@ -49,6 +49,6 @@ public class HibernateItemDAOTest {
 			return daoIt.recuperar(rec1.getIdItem());
 		});
 		
-		assertEquals(item, recuperado);
+		assertTrue(item.equivaleA(recuperado));
 	}
 }

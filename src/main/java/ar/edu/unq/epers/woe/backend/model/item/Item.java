@@ -173,4 +173,10 @@ public class Item {
 		}
 		return new Armadura(val);
     }
+
+	public boolean equivaleA(Item i) {
+		return nombre.equals(i.getNombre()) &&
+				ubicacion.equals(i.getUbicacion()) &&
+				tipo.equals(i.getTipo());
+	}
 }
