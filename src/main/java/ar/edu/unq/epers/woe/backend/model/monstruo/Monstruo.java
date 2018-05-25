@@ -3,7 +3,6 @@ package ar.edu.unq.epers.woe.backend.model.monstruo;
 import ar.edu.unq.epers.woe.backend.model.combate.Luchador;
 import ar.edu.unq.epers.woe.backend.model.personaje.Danho;
 import ar.edu.unq.epers.woe.backend.model.personaje.Vida;
-import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 
 import javax.persistence.*;
 
@@ -18,16 +17,16 @@ public class Monstruo extends Luchador{
 	private Vida vida;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
-	private Danho daño;
+	private Danho danho;
 
 	private String tipo;
 
 	public Monstruo() {}
 	
-	public Monstruo(String nombreMonstruo, Vida cantv, Danho cantdaño, String unTipo) {
+	public Monstruo(String nombreMonstruo, Vida cantv, Danho cantdanho, String unTipo) {
 		this.setNombre(nombreMonstruo);
 		this.setVida(cantv);
-		this.setDaño(cantdaño);
+		this.setDanho(cantdanho);
 		this.setTipo(unTipo);
 	}
 
@@ -39,8 +38,8 @@ public class Monstruo extends Luchador{
 		this.tipo = unTipo;
 	}
 
-	public void setDaño(Danho cantdaño) {
-		this.daño = cantdaño;
+	public void setDanho(Danho cantdanho) {
+		this.danho = cantdanho;
 	}
 
 	public void setVida(Vida cantv2) {
@@ -52,7 +51,7 @@ public class Monstruo extends Luchador{
 	}
 	
 	public Danho getDanhoTotal() {
-		return this.daño;
+		return this.danho;
 		}
 	
 	public String getNombre() {

@@ -3,6 +3,9 @@ package ar.edu.unq.epers.woe.backend.model.personaje;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.lugar.Taberna;
 import ar.edu.unq.epers.woe.backend.model.lugar.Tienda;
+import ar.edu.unq.epers.woe.backend.model.mision.IrALugar;
+import ar.edu.unq.epers.woe.backend.model.mision.Mision;
+import ar.edu.unq.epers.woe.backend.model.mision.Recompensa;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.requerimiento.Requerimiento;
 import org.junit.After;
@@ -31,6 +34,38 @@ public class PersonajeTest {
     public void crearModelo() {
         pj = new Personaje(new Raza("tstRaza"), "tstPJ0", Clase.MAGO);
         atts.add(new Vida(5f));
+    }
+
+    @Test
+    public void pjPermiteSetearSusPropiedades() {
+        HashSet<Mision> mis = new HashSet<Mision>();
+        IrALugar ia = new IrALugar("ia0", new Recompensa(), new Tienda("tie0"));
+        mis.add(ia);
+        HashSet<String> misn = new HashSet<String>();
+        misn.add(ia.getNombre());
+        Mochila m = new Mochila();
+        HashSet<Atributo> ats = new HashSet<Atributo>();
+        ats.add(new Danho(1f));
+        Inventario inv = new Inventario();
+        this.pj.setMisionesCumplidas(misn);
+        this.pj.setMisionesAceptadas(misn);
+        this.pj.setMisionesEnCurso(mis);
+        this.pj.setInventario(inv);
+        this.pj.setMochila(m);
+        this.pj.setClase(Clase.CABALLERO);
+        this.pj.setNombre("anm1");
+        this.pj.setNivel(8);
+        this.pj.setAtributos(ats);
+        this.pj.getAtributo(Danho.class).setValor(5f);
+        assertEquals(this.pj.getClase(), Clase.CABALLERO);
+        assertEquals(this.pj.getDanho().getValor(), new Float(5f));
+        assertEquals(this.pj.getNombre(), "anm1");
+        assertEquals(this.pj.getNivel(), new Integer(8));
+        assertEquals(this.pj.getAtributos(), ats);
+        assertEquals(this.pj.getInventario(), inv);
+        assertEquals(this.pj.getMisionesEnCurso(), mis);
+        assertEquals(this.pj.getMisionesAceptadas(), misn);
+        assertEquals(this.pj.getMisionesCumplidas(), misn);
     }
 
     @Test
