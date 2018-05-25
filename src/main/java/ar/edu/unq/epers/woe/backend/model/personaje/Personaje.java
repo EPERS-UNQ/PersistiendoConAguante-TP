@@ -13,8 +13,6 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 
-import org.hibernate.annotations.Proxy;
-
 
 /**
  * Un {@link Personaje} existente en el sistema, el mismo tiene un nombre
@@ -309,11 +307,11 @@ public class Personaje extends Luchador {
 
 	@Override
 	public Danho calcularDanhoRecibido(Danho danho) {
-		float danhorecibido = this.calcularDañoRecividoConDefensa(danho).getValor();
+		float danhorecibido = this.calcularDanhoRecividoConDefensa(danho).getValor();
 		return new Danho(danhorecibido, this);
 	}
 
-	private Danho calcularDañoRecividoConDefensa(Danho danhoAtacante) {
+	public Danho calcularDanhoRecividoConDefensa(Danho danhoAtacante) {
 		return new Danho(danhoAtacante.getValor() - (this.defensa().getValor() + danhoAtacante.getValor() * 0.1f),
 				         this);
 	}

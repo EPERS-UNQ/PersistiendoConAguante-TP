@@ -1,9 +1,7 @@
 package ar.edu.unq.epers.woe.backend.model.combate;
 
-import ar.edu.unq.epers.woe.backend.hibernateDAO.Runner;
 import ar.edu.unq.epers.woe.backend.hibernateDAO.SessionFactoryProvider;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
-import ar.edu.unq.epers.woe.backend.model.lugar.Gimnasio;
 import ar.edu.unq.epers.woe.backend.model.monstruo.Monstruo;
 import ar.edu.unq.epers.woe.backend.model.personaje.*;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
@@ -58,7 +56,7 @@ public class CombateTest {
 	@Test
 	public void unCombateConUnPersonajesyUnMonstruoMasFuerteGanaElMonstruo() {
 		Monstruo monstruo = new Monstruo("tstMonstruo1", new Vida(500f),
-				                          new Danho(100f), "dragon", this.r);
+				                          new Danho(100f), "dragon");
 		Personaje pjii = new Personaje(this.r, "tstPJ1", Clase.MAGO);
 		pjii.setVida(new Vida(10f));
 		pjii.getAtributo(Fuerza.class).setValor(200f);
@@ -66,5 +64,44 @@ public class CombateTest {
 		Monstruo ganador = (Monstruo) rc.getGanador();
 		assertTrue(rc.getClass().equals(ResultadoCombate.class));
 		assertTrue(rc.getGanador().sosMonstruo());
+	}
+
+	@Test
+	public void pjConArmaHaceMasDanho() {
+		Set<Clase> cls = new HashSet<>();
+		cls.add(Clase.MAGO);
+		Set<Atributo> ats = new HashSet<>();
+		ats.add(new Danho(1f));
+		Item i = new Item("espada0", "derecha", "espada", cls,
+				          new Requerimiento(0, new HashSet<Atributo>()),1, 1, ats);
+		Item ii = new Item("espada1", "izquierda", "espada", cls,
+				           new Requerimiento(0, new HashSet<Atributo>()),1, 1, ats);
+		Float danhoAnterior = this.pj.getDanhoTotal().getValor();
+		this.pj.getInventario().setItemEnUnaUbicacion(i, this.pj);
+		this.pj.getInventario().setItemEnUnaUbicacion(ii, this.pj);
+		Personaje pjii = new Personaje(this.r, "tstPJ1", Clase.MAGO);
+		ResultadoCombate rc = this.combate.combatir(this.pj, pjii);
+		assertEquals(rc.getDetalle().iterator().next().getDanhoAtante().getValor(), this.pj.getDanhoTotal().getValor());
+		assertTrue(rc.getDetalle().iterator().next().getDanhoAtante().getValor() > danhoAnterior);
+	}
+
+	@Test
+	public void pjConArmaduraRecibeMenosDanho() {
+		Set<Clase> cls = new HashSet<>();
+		cls.add(Clase.MAGO);
+		Set<Atributo> ats = new HashSet<>();
+		ats.add(new Armadura(1f));
+		Item i = new Item("armadura0", "torso", "armadura", cls,
+				new Requerimiento(0, new HashSet<Atributo>()),1, 1, ats);
+		Item ii = new Item("armadura1", "izquierda", "armadura", cls,
+				new Requerimiento(0, new HashSet<Atributo>()),1, 1, ats);
+		Float defAnterior = this.pj.calcularDanhoRecividoConDefensa(new Danho(1.0001f)).getValor();
+		this.pj.getInventario().setItemEnUnaUbicacion(i, this.pj);
+		this.pj.getInventario().setItemEnUnaUbicacion(ii, this.pj);
+		Personaje pjii = new Personaje(this.r, "tstPJ1", Clase.MAGO);
+		ResultadoCombate rc = this.combate.combatir(pjii, this.pj);
+		assertEquals(rc.getDetalle().iterator().next().getDanhoRecibido().getValor(),
+				     this.pj.calcularDanhoRecividoConDefensa(new Danho(1.0001f)).getValor());
+		assertTrue(this.pj.calcularDanhoRecividoConDefensa(new Danho(1.0001f)).getValor() < defAnterior);
 	}
 }

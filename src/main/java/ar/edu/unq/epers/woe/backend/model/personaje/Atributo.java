@@ -24,6 +24,8 @@ public class Atributo {
     @ManyToOne
     private Requerimiento requerimiento;
 
+    private Float valor;
+
     public int getIdAtrib() {
         return idAtrib;
     }
@@ -63,7 +65,4 @@ public class Atributo {
     public Float getValor() {
         return valor;
     }
-
-    private Float valor;
-
 }

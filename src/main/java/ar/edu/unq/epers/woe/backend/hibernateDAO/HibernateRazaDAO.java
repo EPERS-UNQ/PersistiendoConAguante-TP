@@ -10,9 +10,7 @@ import ar.edu.unq.epers.woe.backend.service.raza.RazaNoExistente;
 
 public class HibernateRazaDAO {
 	
-	public HibernateRazaDAO() {
-		
-	}
+	public HibernateRazaDAO() {}
 
 	public int guardar(Raza r) {
 			Session session = Runner.getCurrentSession();
@@ -49,5 +47,17 @@ public class HibernateRazaDAO {
 		query.setParameter("id", razaId);
 		query.executeUpdate();
 	}
-	
+
+	public Raza recuperarPorNombre(String nombre) {
+
+		Session s = Runner.getCurrentSession();
+		String hql = "from Raza r "
+				+ "where r.nombre= :n";
+
+		Query<Raza> query = s.createQuery(hql,  Raza.class);
+		query.setParameter("n", nombre);
+		query.setMaxResults(1);
+
+		return query.getSingleResult();
+	}
 }

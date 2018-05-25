@@ -18,5 +18,4 @@ public class HibernateMonstruoDAO {
         }
         return mr;
     }
-
 }

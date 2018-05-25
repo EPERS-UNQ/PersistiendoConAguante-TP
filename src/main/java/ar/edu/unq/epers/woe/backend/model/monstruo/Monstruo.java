@@ -3,7 +3,6 @@ package ar.edu.unq.epers.woe.backend.model.monstruo;
 import ar.edu.unq.epers.woe.backend.model.combate.Luchador;
 import ar.edu.unq.epers.woe.backend.model.personaje.Danho;
 import ar.edu.unq.epers.woe.backend.model.personaje.Vida;
-import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 
 import javax.persistence.*;
 
@@ -14,37 +13,29 @@ public class Monstruo extends Luchador{
 	private Vida vida;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
-	private Danho daño;
+	private Danho danho;
 
 	private String tipo;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
-	private Raza raza;
-
 	public Monstruo() {}
 	
-	public Monstruo ( String nombreMonstruo, Vida cantv, Danho cantdaño, String unTipo, Raza unaRaza){
+	public Monstruo(String nombreMonstruo, Vida cantv, Danho cantdanho, String unTipo) {
 		this.setNombre(nombreMonstruo);
 		this.setVida(cantv);
-		this.setDaño(cantdaño);
+		this.setDanho(cantdanho);
 		this.setTipo(unTipo);
-		this.setRaza(unaRaza);
 	}
 
 	private void setNombre(String nombreMonstruo) {
 			this.nombre = nombreMonstruo;
 	}
 
-	public void setRaza(Raza unaRaza) {
-		this.raza= unaRaza;
-	}
-
 	public void setTipo(String unTipo) {
 		this.tipo = unTipo;
 	}
 
-	public void setDaño(Danho cantdaño) {
-		this.daño = cantdaño;
+	public void setDanho(Danho cantdanho) {
+		this.danho = cantdanho;
 	}
 
 	public void setVida(Vida cantv2) {
@@ -56,7 +47,7 @@ public class Monstruo extends Luchador{
 	}
 	
 	public Danho getDanhoTotal() {
-		return this.daño;
+		return this.danho;
 		}
 	
 	public String getNombre() {
@@ -66,16 +57,12 @@ public class Monstruo extends Luchador{
 	public String getTipo() {
 		return this.tipo;
 	}
-	
-	public Raza getRaza() {
-		return this.raza;
-	}
 
 	@Override
 	public void atacar(Luchador l) {
 		l.recibirAtaque(this.getDanhoTotal());
-
 	}
+
 	@Override
 	public void recibirAtaque(Danho danhoTotal) {
 		this.calcularDanhoRecibido( danhoTotal) ;
