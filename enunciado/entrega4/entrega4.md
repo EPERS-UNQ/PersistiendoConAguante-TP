@@ -20,7 +20,7 @@ Moverse de una ubicación a otra por medio de un *camino terrestre* costará una
 dos si se trata un *camino maritimo* o cinco si es un *camino aereo*.
 
 <p align="center">
-  <img src="graph.png" />
+  <img src="graph.png" styles="width: 100%;" />
 </p>
 
 ## Se deberá implementar:
