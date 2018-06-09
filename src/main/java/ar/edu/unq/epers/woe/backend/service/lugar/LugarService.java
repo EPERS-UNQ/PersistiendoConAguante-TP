@@ -11,6 +11,7 @@ import ar.edu.unq.epers.woe.backend.model.lugar.Taberna;
 import ar.edu.unq.epers.woe.backend.model.lugar.Tienda;
 import ar.edu.unq.epers.woe.backend.model.mision.Mision;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
+import ar.edu.unq.epers.woe.backend.neo4jDAO.Neo4jLugarDAO;
 
 public class LugarService {
 
@@ -19,6 +20,7 @@ public class LugarService {
 	private HibernateMisionDAO imd = new HibernateMisionDAO();
 	private HibernateMonstruoDAO imod = new HibernateMonstruoDAO();
 	private HibernateLugarDAO ild = new HibernateLugarDAO();
+	private Neo4jLugarDAO n4ld = new Neo4jLugarDAO();
 
     /*
      * Devuelve la lista de misiones disponibles para un jugador.
@@ -116,6 +118,14 @@ public class LugarService {
 			}
 			return null;
 		});
+	}
+
+	public void crearUbicacion(Lugar l) {
+		Runner.runInSession(() -> {
+			this.ild.guardar(l);
+			return null;
+		});
+    	this.n4ld.create(l);
 	}
 
 }

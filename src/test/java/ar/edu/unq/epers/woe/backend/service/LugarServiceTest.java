@@ -2,6 +2,7 @@ package ar.edu.unq.epers.woe.backend.service;
 
 import ar.edu.unq.epers.woe.backend.hibernateDAO.*;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
+import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
 import ar.edu.unq.epers.woe.backend.model.lugar.Taberna;
 import ar.edu.unq.epers.woe.backend.model.lugar.Tienda;
 import ar.edu.unq.epers.woe.backend.model.mision.IrALugar;
@@ -13,6 +14,7 @@ import ar.edu.unq.epers.woe.backend.model.personaje.Vida;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import ar.edu.unq.epers.woe.backend.model.requerimiento.Requerimiento;
+import ar.edu.unq.epers.woe.backend.neo4jDAO.Neo4jLugarDAO;
 import ar.edu.unq.epers.woe.backend.service.data.ServiciosDB;
 import ar.edu.unq.epers.woe.backend.service.lugar.LugarService;
 import ar.edu.unq.epers.woe.backend.service.personaje.PersonajeService;
@@ -41,11 +43,13 @@ public class LugarServiceTest {
     private ServiciosDB dbServ = new ServiciosDB();
     private int idItem;
     private Taberna tab;
+    private Neo4jLugarDAO n4jl = new Neo4jLugarDAO();
 
 
     @Before
     public void crearModelo() {
-        SessionFactoryProvider.destroy();
+        this.dbServ.eliminarDatos();
+        this.dbServ.eliminarDatosNeo4j();
 
         Taberna t1 = new Taberna("tab0");
         Tienda t2 = new Tienda("tie1");
@@ -156,4 +160,14 @@ public class LugarServiceTest {
         assertTrue(pjr.getBilletera().floatValue() == 1f);
         assertFalse(pjr.getMochila().tieneElItem(this.i));
     }
+
+    @Test
+    public void alCrearNuevoLugarSeGuardaBien() {
+        Tienda t = new Tienda("tie99");
+        this.ls.crearUbicacion(t);
+        Lugar lr = Runner.runInSession(() -> { return this.ild.recuperar(t.getNombre()); });
+        assertTrue(this.n4jl.existeLugar(t.getNombre()));
+        assertEquals(t.getNombre(), lr.getNombre());
+    }
+
 }

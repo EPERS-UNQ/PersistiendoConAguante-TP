@@ -2,10 +2,9 @@ package ar.edu.unq.epers.woe.backend.service.data;
 
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
-
 import ar.edu.unq.epers.woe.backend.hibernateDAO.SessionFactoryProvider;
+import ar.edu.unq.epers.woe.backend.neo4jDAO.Neo4jLugarDAO;
 import ar.edu.unq.epers.woe.backend.service.raza.ServiciosRaza;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -49,6 +48,11 @@ public class ServiciosDB implements DataService {
 //        RazaDao razadao = new RazaDao();
 //        razadao.executeQuery("TRUNCATE raza;");
     	SessionFactoryProvider.destroy(); //???
+    }
+
+    public void eliminarDatosNeo4j() {
+        Neo4jLugarDAO njld = new Neo4jLugarDAO();
+        njld.eliminarDatos();
     }
 
 }
