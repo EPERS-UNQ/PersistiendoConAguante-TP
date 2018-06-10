@@ -128,4 +128,16 @@ public class LugarService {
     	this.n4ld.create(l);
 	}
 
+	public void conectar(String ubicacion1, String ubicacion2, String tipoCamino) {
+    	this.n4ld.crearRelacionConectadoCon(ubicacion1, ubicacion2, tipoCamino);
+	}
+
+	public List<Lugar> conectados(String ubicacion, String tipoCamino) {
+    	List<Lugar> res = new ArrayList<Lugar>();
+    	for(String nombreLugar : this.n4ld.conectadosCon(ubicacion, tipoCamino)) {
+			Runner.runInSession(() -> { res.add(this.ild.recuperar(nombreLugar)); return null; });
+		}
+		return res;
+	}
+
 }

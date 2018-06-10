@@ -1,13 +1,9 @@
 package ar.edu.unq.epers.woe.backend.neo4jDAO;
 
 import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
-import org.neo4j.driver.v1.AuthTokens;
-import org.neo4j.driver.v1.Driver;
-import org.neo4j.driver.v1.GraphDatabase;
-import org.neo4j.driver.v1.Session;
-import org.neo4j.driver.v1.StatementResult;
-import org.neo4j.driver.v1.Value;
-import org.neo4j.driver.v1.Values;
+import org.neo4j.driver.v1.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Neo4jLugarDAO {
 
@@ -53,10 +49,28 @@ public class Neo4jLugarDAO {
         Session session = this.driver.session();
         try {
             String query = "MATCH (p:Lugar { nombre: {elNombreP} }) " +
-                    "MATCH (l:Lugar { nombre: {elNombreL} }) " +
-                    "MERGE (p)-[:conectadoCon {tipoCamino: {tipoCamino}}]->(l)";
+                           "MATCH (l:Lugar { nombre: {elNombreL} }) " +
+                           "MERGE (p)-[:conectadoCon {tipoCamino: {tipoCamino}}]->(l)";
             session.run(query, Values.parameters("elNombreP", lugarPartida,
                     "elNombreL", lugarLlegada, "tipoCamino", tipoCamino));
+        } finally {
+            session.close();
+        }
+    }
+
+    public List<String> conectadosCon(String nombreLugar, String tipoCamino) {
+        Session session = this.driver.session();
+        try {
+            List<String> res = new ArrayList<String>();
+            String query = "MATCH(l:Lugar)-[r:conectadoCon]->(lugar) " +
+                           "WHERE l.nombre = {elNombre} and r.tipoCamino = {tipoCamino} " +
+                           "RETURN lugar.nombre";
+            StatementResult result = session.run(query, Values.parameters("elNombre", nombreLugar,
+                                                 "tipoCamino", tipoCamino));
+            for(Record r : result.list()) {
+                res.add(r.get(0).asString());
+            }
+            return res;
         } finally {
             session.close();
         }

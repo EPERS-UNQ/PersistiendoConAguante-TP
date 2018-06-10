@@ -170,4 +170,15 @@ public class LugarServiceTest {
         assertEquals(t.getNombre(), lr.getNombre());
     }
 
+    @Test
+    public void seObtieneLugaresConectados() {
+        Tienda t = new Tienda("tie99");
+        Tienda t1 = new Tienda("tie100");
+        String tipoCamino = "terrestre";
+        this.ls.crearUbicacion(t);
+        this.ls.crearUbicacion(t1);
+        this.ls.conectar(t.getNombre(), t1.getNombre(), tipoCamino);
+        assertEquals(this.ls.conectados(t.getNombre(), tipoCamino).iterator().next().getNombre(), t1.getNombre());
+    }
+
 }
