@@ -145,7 +145,7 @@ public class LugarService {
 			case "masBarato": costoViaje = this.n4ld.costoRutaMasBarata(pj.getLugar().getNombre(), ubicacion); break;
 		}
 		if(costoViaje > pj.getBilletera()) {
-			throw new CaminoMuyCostoso(this.n4ld.costoRutaMasCorta(pj.getLugar().getNombre(), ubicacion), pj.getBilletera());
+			throw new CaminoMuyCostoso(costoViaje, pj.getBilletera());
 		}
 	}
 
