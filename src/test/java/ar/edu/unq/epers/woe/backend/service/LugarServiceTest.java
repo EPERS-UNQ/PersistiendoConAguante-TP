@@ -16,15 +16,18 @@ import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import ar.edu.unq.epers.woe.backend.model.requerimiento.Requerimiento;
 import ar.edu.unq.epers.woe.backend.neo4jDAO.Neo4jLugarDAO;
 import ar.edu.unq.epers.woe.backend.service.data.ServiciosDB;
+import ar.edu.unq.epers.woe.backend.service.lugar.CaminoMuyCostoso;
 import ar.edu.unq.epers.woe.backend.service.lugar.LugarService;
+import ar.edu.unq.epers.woe.backend.service.lugar.UbicacionMuyLejana;
 import ar.edu.unq.epers.woe.backend.service.personaje.PersonajeService;
 import ar.edu.unq.epers.woe.backend.service.raza.ServiciosRaza;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import static org.junit.Assert.*;
 
 public class LugarServiceTest {
@@ -45,6 +48,8 @@ public class LugarServiceTest {
     private Taberna tab;
     private Neo4jLugarDAO n4jl = new Neo4jLugarDAO();
 
+    @Rule
+    public final ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void crearModelo() {
@@ -106,12 +111,19 @@ public class LugarServiceTest {
 
     @Test
     public void alMoverAlPJAUnLugarYPreguntarleSuLugarRetornaElNuevoLugar() {
-        this.ls.mover(this.pj.getNombre(), "tie1");
-        Personaje pjr = Runner.runInSession(() -> {
-            return pjhd.recuperar(this.pj.getNombre());
-        });
+        Tienda t = new Tienda("tie99");
+        Tienda t1 = new Tienda("tie100");
+        this.ls.crearUbicacion(t);
+        this.ls.crearUbicacion(t1);
+        this.ls.conectar(t.getNombre(), t1.getNombre(), "terrestre");
+        Personaje pjn = new Personaje(this.r, "tstPJ1", Clase.MAGO);
+        pjn.agregarABilletera(5);
+        pjn.setLugar(t);
+        Runner.runInSession(() -> { this.pjhd.guardar(pjn); return null; });
+        this.ls.mover(pjn.getNombre(), t1.getNombre());
+        Personaje pjr = Runner.runInSession(() -> { return this.pjhd.recuperar(pjn.getNombre()); });
         assertEquals(pjr.getLugar().getClass(), Tienda.class);
-        assertEquals(pjr.getLugar().getNombre(), "tie1");
+        assertEquals(pjr.getLugar().getNombre(), t1.getNombre());
     }
 
     @Test
@@ -121,7 +133,7 @@ public class LugarServiceTest {
         is.add(this.i);
         t.setItems(is);
         Runner.runInSession(() -> { this.ild.guardar(t); return null; });
-        this.ls.mover(this.pj.getNombre(), "tie2");
+        this.ls.moverPermisivo(this.pj.getNombre(), "tie2");
         List<Item> li = this.ls.listarItems(this.pj.getNombre());
         assertEquals(li.size(), 1);
         assertEquals(li.iterator().next().getNombre(), this.i.getNombre());
@@ -152,7 +164,7 @@ public class LugarServiceTest {
 
     @Test
     public void pjQEstaEnUnaTiendaYVendeUnItemSeLeAcreditaElValorDeVenta() {
-        this.ls.mover(this.pj.getNombre(), "tie1");
+        this.ls.moverPermisivo(this.pj.getNombre(), "tie1");
         this.ls.venderItem(this.pj.getNombre(), this.idItem);
         Personaje pjr = Runner.runInSession(() -> {
             return pjhd.recuperar(this.pj.getNombre());
@@ -179,6 +191,73 @@ public class LugarServiceTest {
         this.ls.crearUbicacion(t1);
         this.ls.conectar(t.getNombre(), t1.getNombre(), tipoCamino);
         assertEquals(this.ls.conectados(t.getNombre(), tipoCamino).iterator().next().getNombre(), t1.getNombre());
+    }
+
+    @Test
+    public void personajeConMonedasPuedeMoversePorLaRutaMasCorta() {
+        Tienda t = new Tienda("tie99");
+        Tienda t1 = new Tienda("tie100");
+        String tipoCamino = "terrestre";
+        this.ls.crearUbicacion(t);
+        this.ls.crearUbicacion(t1);
+        this.ls.conectar(t.getNombre(), t1.getNombre(), tipoCamino);
+        Personaje pjn = new Personaje(this.r, "tstPJ1", Clase.MAGO);
+        pjn.setBilletera(500f);
+        pjn.setLugar(t);
+        Runner.runInSession(() -> { this.pjhd.guardar(pjn); return null; });
+        this.ls.moverMasCorto(pjn.getNombre(), t1.getNombre());
+        Personaje pjr = Runner.runInSession(() -> { return this.pjhd.recuperar(pjn.getNombre()); });
+        assertEquals(pjr.getLugar().getNombre(), t1.getNombre());
+        assertTrue(pjr.getBilletera() == 499f);
+    }
+
+    @Test
+    public void personajeSinMonedasAlIntentarMoverseRecibeExcepcionCaminoMuyCostoso() {
+        Tienda t = new Tienda("tie99");
+        Tienda t1 = new Tienda("tie100");
+        String tipoCamino = "terrestre";
+        this.ls.crearUbicacion(t);
+        this.ls.crearUbicacion(t1);
+        this.ls.conectar(t.getNombre(), t1.getNombre(), tipoCamino);
+        Personaje pjn = new Personaje(this.r, "tstPJ1", Clase.MAGO);
+        pjn.setLugar(t);
+        Runner.runInSession(() -> { this.pjhd.guardar(pjn); return null; });
+        thrown.expect(CaminoMuyCostoso.class);
+        this.ls.moverMasCorto(pjn.getNombre(), t1.getNombre());
+    }
+
+    @Test
+    public void personajeAlIntentarMoverseEntreLugaresNoConectadosRecibeExcepcionUbicacionMuyLejana() {
+        Tienda t = new Tienda("tie99");
+        Tienda t1 = new Tienda("tie100");
+        String tipoCamino = "terrestre";
+        this.ls.crearUbicacion(t);
+        this.ls.crearUbicacion(t1);
+        Personaje pjn = new Personaje(this.r, "tstPJ1", Clase.MAGO);
+        pjn.setLugar(t);
+        Runner.runInSession(() -> { this.pjhd.guardar(pjn); return null; });
+        thrown.expect(UbicacionMuyLejana.class);
+        this.ls.moverMasCorto(pjn.getNombre(), t1.getNombre());
+    }
+
+    @Test
+    public void personajeConDosCaminosDisponiblesVaPorElMasBarato() {
+        Tienda t = new Tienda("tie99");
+        Tienda t1 = new Tienda("tie100");
+        String tipoCaminoBarato = "maritimo";
+        String tipoCaminoCaro = "aereo";
+        this.ls.crearUbicacion(t);
+        this.ls.crearUbicacion(t1);
+        this.ls.conectar(t.getNombre(), t1.getNombre(), tipoCaminoBarato);
+        this.ls.conectar(t.getNombre(), t1.getNombre(), tipoCaminoCaro);
+        Personaje pjn = new Personaje(this.r, "tstPJ1", Clase.MAGO);
+        pjn.setLugar(t);
+        pjn.agregarABilletera(2);
+        Runner.runInSession(() -> { this.pjhd.guardar(pjn); return null; });
+        this.ls.mover(pjn.getNombre(), t1.getNombre());
+        Personaje pjr = Runner.runInSession(() -> { return this.pjhd.recuperar(pjn.getNombre()); });
+        assertEquals(pjr.getLugar().getNombre(), t1.getNombre());
+        assertTrue(pjr.getBilletera() == 0f);
     }
 
 }

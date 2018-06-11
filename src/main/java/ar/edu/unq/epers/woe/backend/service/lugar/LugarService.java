@@ -1,9 +1,7 @@
 package ar.edu.unq.epers.woe.backend.service.lugar;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-
 import ar.edu.unq.epers.woe.backend.hibernateDAO.*;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
@@ -58,10 +56,7 @@ public class LugarService {
 		return null; });
     }
 
-    /*
-     * Cambia la ubicación actual del personaje por la especificada por parámetro.
-     */
-    public void mover(String nombrePj, String nombrLugar) {
+    public void moverPermisivo(String nombrePj, String nombrLugar) {
 		Runner.runInSession(() -> {
 		Personaje pj = this.pjhd.recuperar(nombrePj);
 		Lugar lugar = this.ild.recuperar(nombrLugar);
@@ -140,4 +135,40 @@ public class LugarService {
 		return res;
 	}
 
+	public void validarRequisitosParaMover(Personaje pj, String ubicacion, String criterio) {
+		if(!this.n4ld.existeCaminoEntre(pj.getLugar().getNombre(), ubicacion)) {
+			throw new UbicacionMuyLejana(pj.getLugar().getNombre(), ubicacion);
+		}
+    	Integer costoViaje = null;
+    	switch(criterio) {
+			case "masCorto": costoViaje = this.n4ld.costoRutaMasCorta(pj.getLugar().getNombre(), ubicacion); break;
+			case "masBarato": costoViaje = this.n4ld.costoRutaMasBarata(pj.getLugar().getNombre(), ubicacion); break;
+		}
+		if(costoViaje > pj.getBilletera()) {
+			throw new CaminoMuyCostoso(this.n4ld.costoRutaMasCorta(pj.getLugar().getNombre(), ubicacion), pj.getBilletera());
+		}
+	}
+
+	public void moverMasCorto(String personaje, String ubicacion) {
+		Runner.runInSession(() -> {
+			Personaje pj = this.pjhd.recuperar(personaje);
+			validarRequisitosParaMover(pj, ubicacion, "masCorto");
+				Lugar lr = this.ild.recuperar(ubicacion);
+				pj.gastarBilletera(this.n4ld.costoRutaMasCorta(pj.getLugar().getNombre(), ubicacion));
+				pj.setLugar(lr);
+		return null; });
+	}
+
+	/*
+	 * Cambia la ubicación actual del personaje por la especificada por parámetro.
+	 */
+	public void mover(String personaje, String ubicacion) {
+		Runner.runInSession(() -> {
+			Personaje pj = this.pjhd.recuperar(personaje);
+			validarRequisitosParaMover(pj, ubicacion, "masBarato");
+			Lugar lr = this.ild.recuperar(ubicacion);
+			pj.gastarBilletera(this.n4ld.costoRutaMasBarata(pj.getLugar().getNombre(), ubicacion));
+			pj.setLugar(lr);
+		return null; });
+	}
 }

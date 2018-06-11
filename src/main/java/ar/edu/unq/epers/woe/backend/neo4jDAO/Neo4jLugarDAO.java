@@ -35,6 +35,19 @@ public class Neo4jLugarDAO {
         }
     }
 
+    public Boolean existeCaminoEntre(String lugarPartida, String lugarLlegada) {
+        Session session = this.driver.session();
+        try {
+            String query = "MATCH(l:Lugar {nombre: {elNombreP}})-[:conectadoCon*]->(d:Lugar {nombre: {elNombreL}}) " +
+                           "RETURN d";
+            StatementResult result = session.run(query, Values.parameters("elNombreP", lugarPartida,
+                                                 "elNombreL", lugarLlegada));
+            return result.list().size() >= 1;
+        } finally {
+            session.close();
+        }
+    }
+
     public void eliminarDatos() {
         Session session = this.driver.session();
         try {
@@ -77,6 +90,35 @@ public class Neo4jLugarDAO {
                 res.add(r.get(0).asString());
             }
             return res;
+        } finally {
+            session.close();
+        }
+    }
+
+    public Integer costoRutaMasCorta(String lugarPartida, String lugarLlegada) {
+        Session session = this.driver.session();
+        try {
+            String query = "MATCH (p:Lugar { nombre: {elNombreP} }) " +
+                           "MATCH (l:Lugar { nombre: {elNombreL} }) " +
+                           "MATCH ds=shortestPath((p)-[:conectadoCon*]->(l)) " +
+                           "RETURN reduce(costoTotal=0, rels in relationships(ds) |  costoTotal+rels.costoCamino)";
+            return session.run(query, Values.parameters("elNombreP", lugarPartida,
+                               "elNombreL", lugarLlegada)).next().get(0).asInt();
+        } finally {
+            session.close();
+        }
+    }
+
+    public Integer costoRutaMasBarata(String lugarPartida, String lugarLlegada) {
+        Session session = this.driver.session();
+        try {
+            String query = "MATCH (p:Lugar { nombre: {elNombreP} }) " +
+                           "MATCH (l:Lugar { nombre: {elNombreL} }) " +
+                           "MATCH ds=(p)-[:conectadoCon*]->(l) " +
+                           "RETURN reduce(costoTotal=0, r in relationships(ds) | costoTotal+r.costoCamino) AS costoTotal " +
+                           "order by costoTotal limit 1";
+            return session.run(query, Values.parameters("elNombreP", lugarPartida,
+                               "elNombreL", lugarLlegada)).next().get(0).asInt();
         } finally {
             session.close();
         }

@@ -14,7 +14,6 @@ import ar.edu.unq.epers.woe.backend.model.requerimiento.Requerimiento;
 import ar.edu.unq.epers.woe.backend.service.data.ServiciosDB;
 import ar.edu.unq.epers.woe.backend.service.lugar.LugarService;
 import ar.edu.unq.epers.woe.backend.service.raza.ServiciosRaza;
-import org.hibernate.Session;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -87,7 +86,7 @@ public class PersonajeServiceTest {
 		pjii.getAtributo(Fuerza.class).setValor(200f);
 		Runner.runInSession(() -> {
 			this.pjhd.guardar(pjii); return null; });
-		this.lr.mover(this.pj.getNombre(), gim.getNombre());
+		this.lr.moverPermisivo(this.pj.getNombre(), gim.getNombre());
 		ResultadoCombate rc = this.serviceP.combatir(this.pj.getNombre(), pjii.getNombre());
 		assertTrue(rc.getClass().equals(ResultadoCombate.class));
 		assertTrue(rc.getGanador().sosPersonaje());
