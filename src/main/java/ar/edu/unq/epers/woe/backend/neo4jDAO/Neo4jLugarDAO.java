@@ -48,11 +48,17 @@ public class Neo4jLugarDAO {
     public void crearRelacionConectadoCon(String lugarPartida, String lugarLlegada, String tipoCamino) {
         Session session = this.driver.session();
         try {
+            Integer costoCamino = null;
+            switch(tipoCamino) {
+                case "terrestre": costoCamino = 1; break;
+                case "maritimo": costoCamino = 2; break;
+                case "aereo": costoCamino = 5; break;
+            }
             String query = "MATCH (p:Lugar { nombre: {elNombreP} }) " +
                            "MATCH (l:Lugar { nombre: {elNombreL} }) " +
-                           "MERGE (p)-[:conectadoCon {tipoCamino: {tipoCamino}}]->(l)";
+                           "MERGE (p)-[:conectadoCon {tipoCamino: {tipoCamino}, costoCamino: {costoCamino}}]->(l)";
             session.run(query, Values.parameters("elNombreP", lugarPartida,
-                    "elNombreL", lugarLlegada, "tipoCamino", tipoCamino));
+                    "elNombreL", lugarLlegada, "tipoCamino", tipoCamino, "costoCamino", costoCamino));
         } finally {
             session.close();
         }
