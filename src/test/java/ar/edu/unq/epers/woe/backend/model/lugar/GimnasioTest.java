@@ -15,6 +15,7 @@ public class GimnasioTest {
 	
 	@Test
 	public void unGimnasioEsUnGimnasio() {
-		assertTrue(gimnasio.esGimnasio());
+		assertTrue(gimnasio.getClass().equals(Gimnasio.class));
+		assertEquals(gimnasio.getNombre(), "Gimnasio Verde");
 	}
 }

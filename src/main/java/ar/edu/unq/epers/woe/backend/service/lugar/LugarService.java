@@ -27,7 +27,7 @@ public class LugarService {
 	public List<Mision> listarMisiones(String nombrePj){
 		return Runner.runInSession(() -> {
 			Personaje pj = pjhd.recuperar(nombrePj);
-			if(!pj.getLugar().esTaberna()) {
+			if(!pj.getLugar().getClass().equals(Taberna.class)) {
 				throw new RuntimeException("El Personaje no está en una Taberna.");
 			} else {
 				List<Mision> res = new ArrayList<Mision>();
@@ -48,7 +48,7 @@ public class LugarService {
 		Runner.runInSession(() -> {
 		Personaje pj = this.pjhd.recuperar(nombrePj);
 		Mision m = this.imd.recuperar(nombreMis);
-		if(!pj.getLugar().esTaberna()) {
+		if(!pj.getLugar().getClass().equals(Taberna.class)) {
 			throw new RuntimeException("El Personaje no está en una Taberna.");
 		} else if(this.listarMisiones(nombrePj).contains(m)) {
 			pj.aceptarMision(m);
@@ -71,7 +71,7 @@ public class LugarService {
     public List<Item> listarItems(String nombrePj) {
 		return Runner.runInSession(() -> {
 			Personaje pj = pjhd.recuperar(nombrePj);
-			if(!pj.getLugar().esTienda()) {
+			if(!pj.getLugar().getClass().equals(Tienda.class)) {
 				throw new RuntimeException("El Personaje no está en una Tienda.");
 			} else {
 				List<Item> res = new ArrayList<Item>();
@@ -90,7 +90,7 @@ public class LugarService {
 		Runner.runInSession(() -> {
 		Personaje pj = pjhd.recuperar(nombrePj);
 		Item i = ihd.recuperar(idItem);
-		if(!pj.getLugar().esTienda()) {
+		if(!pj.getLugar().getClass().equals(Tienda.class)) {
 			throw new RuntimeException("El Personaje no está en una Tienda.");
 		} else if(pj.getBilletera() < i.getCostoDeCompra()) {
 			throw new RuntimeException("Dinero insuficiente para comprar el item.");
@@ -106,7 +106,7 @@ public class LugarService {
 		Runner.runInSession(() -> {
 			Personaje pj = pjhd.recuperar(nombrePj);
 			Item i = ihd.recuperar(idItem);
-			if (!pj.getLugar().esTienda()) {
+			if (!pj.getLugar().getClass().equals(Tienda.class)) {
 				throw new RuntimeException("El Personaje no está en una Tienda.");
 			} else if(pj.tieneElItem(i)) {
 				pj.vender(i);

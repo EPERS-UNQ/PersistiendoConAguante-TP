@@ -17,6 +17,4 @@ public class Gimnasio extends Lugar  {
 		super(nombreLugar);
 	}
 
-	@Override
-	public boolean esGimnasio() { return true; }
 }

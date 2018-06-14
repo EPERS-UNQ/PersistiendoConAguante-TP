@@ -43,7 +43,4 @@ public class Tienda extends Lugar {
 		pj.sacarItem(i);
 	}
 
-	@Override
-	public boolean esTienda() { return true; }
-
 }

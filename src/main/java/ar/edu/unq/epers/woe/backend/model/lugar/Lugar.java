@@ -21,19 +21,4 @@ public class Lugar {
 		return nombre;
 	}
 
-	public boolean esTienda() {
-		//throw new RuntimeException("No estas en una tienda");
-		return false;
-	}
-
-	public boolean esTaberna() {
-		// devuelve false para todas las subclases de Lugar excepto Taberna
-		return false;
-	}
-
-	public boolean esGimnasio() {
-		// devuelve false para todas las subclases de Lugar excepto Gimnasio
-		return false;
-	}
-
 }

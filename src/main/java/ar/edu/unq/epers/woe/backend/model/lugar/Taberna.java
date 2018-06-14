@@ -43,10 +43,5 @@ public class Taberna extends Lugar {
 		m.setTaberna(this);
 		this.misiones.add(m);
 	}
-	
-	@Override
-	public boolean esTaberna() {
-		return true;
-	}
 
 }
