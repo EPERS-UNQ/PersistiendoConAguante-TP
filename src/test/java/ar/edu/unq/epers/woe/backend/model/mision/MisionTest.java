@@ -72,7 +72,7 @@ public class MisionTest {
                 this.i);
         this.pj.aceptarMision(m);
         this.pj.getMochila().agregarItem(this.i);
-        assertTrue(this.pj.getMisionesCumplidas().contains("tstOI"));
+        assertTrue(m.misionCumplidaPor(this.pj));
     }
 
     @Test
@@ -120,7 +120,7 @@ public class MisionTest {
         this.pj.aceptarMision(m);
         ResultadoCombate res = this.combate.combatir(this.pj, monstruo);
         assertTrue(res.getGanador().equals(this.pj));
-        assertTrue(this.pj.getMisionesCumplidas().contains(m.getNombre()));
+        assertTrue(m.misionCumplidaPor(this.pj));
         assertEquals(this.pj.getExp(), new Integer(m.getRecompensa().getExp() + 10));
         assertTrue(this.pj.getBilletera() == 5f);
         assertFalse(this.pj.getMisionesEnCurso().contains(m));
@@ -134,7 +134,7 @@ public class MisionTest {
         this.pj.aceptarMision(m);
         this.pj.setLugar(gim);
         assertTrue(this.pj.getLugar().equals(gim));
-        assertTrue(this.pj.getMisionesCumplidas().contains(m.getNombre()));
+        assertTrue(m.misionCumplidaPor(this.pj));
         assertEquals(this.pj.getExp(), m.getRecompensa().getExp());
         assertTrue(this.pj.getBilletera() == 5f);
         assertFalse(this.pj.getMisionesEnCurso().contains(m));

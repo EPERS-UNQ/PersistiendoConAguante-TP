@@ -6,7 +6,6 @@ import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import java.util.Set;
 
 @Entity
@@ -40,11 +39,5 @@ public class IrALugar extends Mision {
     public Boolean puedeCompletarMision(Personaje pj) {
         return this.misionAceptadaPor(pj) && (pj.getLugar().getClass() == this.destino.getClass());
     }
-
-    @Override
-    public Boolean esIrALugar() { return true; }
-
-
-
 
 }

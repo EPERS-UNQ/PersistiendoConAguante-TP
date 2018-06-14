@@ -22,9 +22,9 @@ public class Taberna extends Lugar {
 
 	public Taberna(String nombreLugar, Set<Mision> misiones) {
 		super(nombreLugar);
-		this.misiones = misiones;
-		for(Mision m : this.misiones) {
-			m.setTaberna(this);
+		this.misiones = new HashSet<Mision>();
+		for(Mision m : misiones) {
+			this.agregar(m);
 		}
 	}
 

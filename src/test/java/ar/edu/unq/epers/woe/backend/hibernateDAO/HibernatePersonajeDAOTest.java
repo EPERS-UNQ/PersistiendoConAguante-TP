@@ -115,7 +115,7 @@ public class HibernatePersonajeDAOTest {
 					return persDao.recuperar("Pepito");
 				});
 		assertTrue(recuperado.getMisionesAceptadas().contains("tstOI"));
-		assertTrue(recuperado.getMisionesEnCurso().iterator().next().esIrALugar());
+		assertTrue(recuperado.getMisionesEnCurso().iterator().next().getClass().equals(IrALugar.class));
 	}
 
 }

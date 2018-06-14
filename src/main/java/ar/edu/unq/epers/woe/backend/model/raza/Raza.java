@@ -3,15 +3,10 @@ package ar.edu.unq.epers.woe.backend.model.raza;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
 
 import ar.edu.unq.epers.woe.backend.service.raza.ClaseInvalida;
-import ar.edu.unq.epers.woe.backend.service.raza.RazaService;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -20,8 +15,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-
-import org.hibernate.annotations.Formula;
 
 /**
  * Representa una {@link Raza} de un personaje.

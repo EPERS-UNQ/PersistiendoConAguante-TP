@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import ar.edu.unq.epers.woe.backend.model.combate.ResultadoCombate;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
-import ar.edu.unq.epers.woe.backend.service.TestService;
 
 public class HibernateResultadoCombateDAOTest {
 

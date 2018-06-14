@@ -93,8 +93,8 @@ public class LugarServiceTest {
         IrALugar ia0 = (IrALugar) lmis.get(0);
         IrALugar ia1 = (IrALugar) lmis.get(1);
         assertEquals(lmis.size(), 2);
-        assertTrue(lmis.get(0).esIrALugar());
-        assertTrue(lmis.get(1).esIrALugar());
+        assertTrue(lmis.get(0).getClass().equals(IrALugar.class));
+        assertTrue(lmis.get(1).getClass().equals(IrALugar.class));
         assertTrue((ia0.getDestino().getClass() == Taberna.class) || (ia0.getDestino().getClass() == Tienda.class));
         assertTrue((ia1.getDestino().getClass() == Taberna.class) || (ia1.getDestino().getClass() == Tienda.class));
     }
@@ -106,7 +106,7 @@ public class LugarServiceTest {
             return pjhd.recuperar(this.pj.getNombre());
         });
         assertTrue(pjr.getMisionesAceptadas().contains("ia1"));
-        assertTrue(pjr.getMisionesEnCurso().iterator().next().esIrALugar());
+        assertTrue(pjr.getMisionesEnCurso().iterator().next().getClass().equals(IrALugar.class));
     }
 
     @Test

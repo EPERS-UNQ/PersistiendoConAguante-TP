@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import ar.edu.unq.epers.woe.backend.model.personaje.Danho;
 import ar.edu.unq.epers.woe.backend.model.personaje.Vida;
-import ar.edu.unq.epers.woe.backend.model.raza.Raza;
+
 import static org.junit.Assert.*;
 
 import org.junit.Before;

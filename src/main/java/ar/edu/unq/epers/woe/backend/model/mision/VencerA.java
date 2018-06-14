@@ -109,7 +109,4 @@ public class VencerA extends Mision {
         return this.misionAceptadaPor(pj) && (this.victoriasActuales >= this.victoriasReq);
     }
 
-    @Override
-    public Boolean esVencerA() { return true; }
-
 }

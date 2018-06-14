@@ -45,8 +45,8 @@ public class HibernateMisionDAOTest {
             return this.imd.recuperar("ia1"); });
         Mision misionr1 = Runner.runInSession(() -> {
             return this.imd.recuperar("ia2"); });
-        assertTrue(misionr0.esIrALugar());
-        assertTrue(misionr1.esIrALugar());
+        assertTrue(misionr0.getClass().equals(IrALugar.class));
+        assertTrue(misionr1.getClass().equals(IrALugar.class));
         assertEquals(misionr0.getNombre(), "ia1");
         assertEquals(misionr1.getNombre(), "ia2");
     }
