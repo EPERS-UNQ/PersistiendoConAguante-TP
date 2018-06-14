@@ -1,6 +1,7 @@
 package ar.edu.unq.epers.woe.backend.model.combate;
 
 import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.*;
 
 @Entity
@@ -14,9 +15,9 @@ public class ResultadoCombate {
 
 	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	private Luchador perdedor;
-	
-	@Transient //temporarily...
-	private ArrayList<Ataque> detalle;
+
+	@OneToMany(mappedBy="resultadoCombate", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
+	private List<Ataque> detalle;
 	
 	public ResultadoCombate() {
 		ganador = null;
@@ -44,7 +45,9 @@ public class ResultadoCombate {
 		this.detalle= ataques;
 	}
 	
-	public ArrayList<Ataque> getDetalle(){
+	public List<Ataque> getDetalle(){
 		return this.detalle;
 	}
+
+	public void agregarAtaque(Ataque ataque) { this.detalle.add( ataque); ataque.setResultadoCombate(this); }
 }

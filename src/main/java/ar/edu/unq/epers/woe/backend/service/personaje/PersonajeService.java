@@ -1,5 +1,6 @@
 package ar.edu.unq.epers.woe.backend.service.personaje;
 
+import ar.edu.unq.epers.woe.backend.hibernateDAO.HibernateCombateDAO;
 import ar.edu.unq.epers.woe.backend.hibernateDAO.HibernatePersonajeDAO;
 import ar.edu.unq.epers.woe.backend.hibernateDAO.Runner;
 import ar.edu.unq.epers.woe.backend.model.combate.Combate;
@@ -13,6 +14,7 @@ public class PersonajeService {
 
     private HibernatePersonajeDAO pjhd = new HibernatePersonajeDAO();
     private HibernateItemDAO ihd = new HibernateItemDAO();
+    private HibernateCombateDAO icd = new HibernateCombateDAO();
 
     public void equipar(String nombrePj, Integer item) {
             Runner.runInSession(() -> {
@@ -34,7 +36,9 @@ public class PersonajeService {
             if(!pj1.getLugar().getClass().equals(Gimnasio.class) || !pj2.getLugar().getClass().equals(Gimnasio.class)) {
                 throw new RuntimeException("Alguno de los personajes no está en un gimnasio.");
             } else {
-                return new Combate().combatir(pj1, pj2);
+                ResultadoCombate resultadoCombate = new Combate().combatir(pj1, pj2);
+                this.icd.guardar(resultadoCombate);
+                return resultadoCombate;
             }});
     }
 

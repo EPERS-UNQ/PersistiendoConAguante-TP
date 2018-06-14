@@ -15,11 +15,11 @@ public class Combate {
 			while(l1.getVida().getValor()> 0 && l2.getVida().getValor()>0) {
 				l1.atacar(l2);
 				Ataque at1 = new Ataque (l1,l2);
-				resultadoC.getDetalle().add(at1);
+				resultadoC.agregarAtaque(at1);
 				if (l2.getVida().getValor()> 0) {
 					l2.atacar(l1);
 					Ataque at2 = new Ataque (l2,l1);
-					resultadoC.getDetalle().add(at2);
+					resultadoC.agregarAtaque(at2);
 				}
 			}
 
@@ -51,11 +51,5 @@ public class Combate {
 	private boolean sonDosPersonajes(Luchador l1, Luchador l2) {
 		return l1.sosPersonaje() && l2.sosPersonaje();
 	}
-
-
-
-
-	
-
 
 }
