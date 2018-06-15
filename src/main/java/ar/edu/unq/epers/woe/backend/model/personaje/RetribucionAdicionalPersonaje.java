@@ -4,7 +4,7 @@ public class RetribucionAdicionalPersonaje {
 
 	// Se encarga de aumentar atributos segun clase Personaje
 
-	static void incrementarSegunClase(Personaje p) {
+	protected static void incrementarSegunClase(Personaje p) {
 
 		switch (p.getClase().ordinal()) {
 		case 0:
