@@ -21,7 +21,7 @@ public class RetribucionAdicionalPersonajeTest {
 	@Test
 	public void atributosSubenSegunClasePicaro() {
 		p.setClase(Clase.PICARO);
-		retAdicional = new RetribucionAdicionalPersonaje(p);
+		RetribucionAdicionalPersonaje.incrementarSegunClase(p);
 
 		assertTrue( p.getAtributo(Fuerza.class).getValor().equals(1.06f) );		
 	}
@@ -29,8 +29,8 @@ public class RetribucionAdicionalPersonajeTest {
 	@Test
 	public void atributosSubenSegunClasePaladin() {
 		p.setClase(Clase.PALADIN);
-		retAdicional = new RetribucionAdicionalPersonaje(p);
-
+		RetribucionAdicionalPersonaje.incrementarSegunClase(p);
+		
 		assertTrue( p.getAtributo(Vida.class).getValor().equals(1.02f) );		
 		assertTrue( p.getAtributo(Fuerza.class).getValor().equals(1.04f) );
 	}
@@ -39,7 +39,7 @@ public class RetribucionAdicionalPersonajeTest {
 	@Test
 	public void atributosSubenSegunClaseCazador() {
 		p.setClase(Clase.CAZADOR);
-		retAdicional = new RetribucionAdicionalPersonaje(p);
+		RetribucionAdicionalPersonaje.incrementarSegunClase(p);
 
 		assertTrue( p.getAtributo(Vida.class).getValor().equals(1.05f) );		
 
@@ -49,8 +49,8 @@ public class RetribucionAdicionalPersonajeTest {
 	@Test
 	public void atributosSubenSegunClaseMago() {
 		p.setClase(Clase.MAGO);
-		retAdicional = new RetribucionAdicionalPersonaje(p);
-
+		RetribucionAdicionalPersonaje.incrementarSegunClase(p);
+		
 		assertTrue( p.getAtributo(Fuerza.class).getValor().equals(1.02f) );
 		assertTrue( p.getAtributo(Destreza.class).getValor().equals(1.09f) );		
 		assertTrue( p.getAtributo(Vida.class).getValor().equals(1.05f) );		
@@ -59,7 +59,7 @@ public class RetribucionAdicionalPersonajeTest {
 	@Test
 	public void atributosSubenSegunClaseMonje() {
 		p.setClase(Clase.MONJE);
-		retAdicional = new RetribucionAdicionalPersonaje(p);
+		RetribucionAdicionalPersonaje.incrementarSegunClase(p);
 
 		assertTrue( p.getAtributo(Fuerza.class).getValor().equals(1.02f) );
 		assertTrue( p.getAtributo(Destreza.class).getValor().equals(1.09f) );
@@ -68,8 +68,8 @@ public class RetribucionAdicionalPersonajeTest {
 	@Test
 	public void atributosSubenSegunClaseGuerrero() {
 		p.setClase(Clase.GUERRERO);
-		retAdicional = new RetribucionAdicionalPersonaje(p);
-
+		RetribucionAdicionalPersonaje.incrementarSegunClase(p);
+		
 		assertTrue( p.getAtributo(Fuerza.class).getValor().equals(1.04f) );
 		assertTrue( p.getAtributo(Destreza.class).getValor().equals(1.01f) );
 	}
@@ -77,8 +77,8 @@ public class RetribucionAdicionalPersonajeTest {
 	@Test
 	public void atributosSubenSegunClaseCaballero() {
 		p.setClase(Clase.CABALLERO);
-		retAdicional = new RetribucionAdicionalPersonaje(p);
-
+		RetribucionAdicionalPersonaje.incrementarSegunClase(p);
+		
 		assertTrue( p.getAtributo(Fuerza.class).getValor().equals(1.1f) );
 		assertTrue( p.getAtributo(Destreza.class).getValor().equals(1.03f) );
 		assertTrue( p.getAtributo(Vida.class).getValor().equals(1.08f) );
@@ -87,7 +87,7 @@ public class RetribucionAdicionalPersonajeTest {
 	@Test
 	public void atributosSubenSegunClaseSacerdote() {
 		p.setClase(Clase.SACERDOTE);
-		retAdicional = new RetribucionAdicionalPersonaje(p);
+		RetribucionAdicionalPersonaje.incrementarSegunClase(p);
 
 		assertTrue( p.getAtributo(Vida.class).getValor().equals(1.02f) );
 	}
@@ -95,7 +95,7 @@ public class RetribucionAdicionalPersonajeTest {
 	@Test
 	public void atributosSubenSegunClaseDruida() {
 		p.setClase(Clase.DRUIDA);
-		retAdicional = new RetribucionAdicionalPersonaje(p);
+		RetribucionAdicionalPersonaje.incrementarSegunClase(p);
 
 		assertTrue( p.getAtributo(Vida.class).getValor().equals(1.06f) );
 	}
@@ -104,8 +104,8 @@ public class RetribucionAdicionalPersonajeTest {
 	@Test
 	public void atributosSubenSegunClaseBrujo() {
 		p.setClase(Clase.BRUJO);
-		retAdicional = new RetribucionAdicionalPersonaje(p);
-
+		RetribucionAdicionalPersonaje.incrementarSegunClase(p);
+		
 		assertTrue( p.getAtributo(Destreza.class).getValor().equals(1.02f) );
 	}
 }

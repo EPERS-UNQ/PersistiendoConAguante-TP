@@ -1,50 +1,41 @@
 package ar.edu.unq.epers.woe.backend.model.personaje;
 
-import ar.edu.unq.epers.woe.backend.model.raza.Clase;
-
 public class RetribucionAdicionalPersonaje {
 
 	// Se encarga de aumentar atributos segun clase Personaje
 
-	private Personaje p;
+	static void incrementarSegunClase(Personaje p) {
 
-	public RetribucionAdicionalPersonaje(Personaje p) {
-		this.p = p;
-		incrementarSegunClase(this.p.getClase());
-	}
-
-	private void incrementarSegunClase(Clase clase) {
-
-		switch (this.p.getClase().ordinal()) {
+		switch (p.getClase().ordinal()) {
 		case 0:
-			incrementarBrujo();
+			incrementarBrujo(p);
 			break;
 		case 1:
-			incrementarDruida();
+			incrementarDruida(p);
 			break;
 		case 2:
-			incrementarCaballero();
+			incrementarCaballero(p);
 			break;
 		case 3:
-			incrementarSacerdote();
+			incrementarSacerdote(p);
 			break;
 		case 4:
-			incrementarGuerrero();
+			incrementarGuerrero(p);
 			break;
 		case 5:
-			incrementarMonje();
+			incrementarMonje(p);
 			break;
 		case 6:
-			incrementarMago();
+			incrementarMago(p);
 			break;
 		case 7:
-			incrementarCazador();
+			incrementarCazador(p);
 			break;
 		case 8:
-			incrementarPaladin();
+			incrementarPaladin(p);
 			break;
 		case 9:
-			incrementarPicaro();
+			incrementarPicaro(p);
 			break;
 		}
 
@@ -52,50 +43,50 @@ public class RetribucionAdicionalPersonaje {
 
 	// incrementos segun clase
 	
-	private void incrementarPicaro() {
+	private static void incrementarPicaro(Personaje p) {
 		p.getAtributo(Fuerza.class).setValor(p.getAtributo(Fuerza.class).getValor() * 1.06f);
 	}
 
-	private void incrementarPaladin() {
+	private static void incrementarPaladin(Personaje p) {
 		p.getAtributo(Vida.class).setValor(p.getAtributo(Vida.class).getValor() * 1.02f);
 		p.getAtributo(Fuerza.class).setValor(p.getAtributo(Fuerza.class).getValor() * 1.04f);
 	}
 
-	private void incrementarCazador() {
+	private static void incrementarCazador(Personaje p) {
 		p.getAtributo(Vida.class).setValor(p.getAtributo(Vida.class).getValor() * 1.05f);
 	}
 
-	private void incrementarMago() {
+	private static void incrementarMago(Personaje p) {
 		p.getAtributo(Fuerza.class).setValor(p.getAtributo(Fuerza.class).getValor() * 1.02f);
 		p.getAtributo(Destreza.class).setValor(p.getAtributo(Destreza.class).getValor() * 1.09f);
 		p.getAtributo(Vida.class).setValor(p.getAtributo(Vida.class).getValor() * 1.05f);
 	}
 
-	private void incrementarMonje() {
+	private static void incrementarMonje(Personaje p) {
 		p.getAtributo(Fuerza.class).setValor(p.getAtributo(Fuerza.class).getValor() * 1.02f);
 		p.getAtributo(Destreza.class).setValor(p.getAtributo(Destreza.class).getValor() * 1.09f);
 	}
 
-	private void incrementarGuerrero() {
+	private static void incrementarGuerrero(Personaje p) {
 		p.getAtributo(Fuerza.class).setValor(p.getAtributo(Fuerza.class).getValor() * 1.04f);
 		p.getAtributo(Destreza.class).setValor(p.getAtributo(Destreza.class).getValor() * 1.01f);
 	}
 
-	private void incrementarSacerdote() {
+	private static void incrementarSacerdote(Personaje p) {
 		p.getAtributo(Vida.class).setValor(p.getAtributo(Vida.class).getValor() * 1.02f);
 	}
 
-	private void incrementarCaballero() {
+	private static void incrementarCaballero(Personaje p) {
 		p.getAtributo(Fuerza.class).setValor(p.getAtributo(Fuerza.class).getValor() * 1.1f);
 		p.getAtributo(Destreza.class).setValor(p.getAtributo(Destreza.class).getValor() * 1.03f);
 		p.getAtributo(Vida.class).setValor(p.getAtributo(Vida.class).getValor() * 1.08f);
 	}
 
-	private void incrementarDruida() {
+	private static void incrementarDruida(Personaje p) {
 		p.getAtributo(Vida.class).setValor(p.getAtributo(Vida.class).getValor() * 1.06f);
 	}
 
-	private void incrementarBrujo() {
+	private static void incrementarBrujo(Personaje p) {
 		p.getAtributo(Destreza.class).setValor(p.getAtributo(Destreza.class).getValor() * 1.02f);
 	}
 

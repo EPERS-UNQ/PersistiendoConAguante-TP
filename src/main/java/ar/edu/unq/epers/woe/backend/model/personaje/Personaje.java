@@ -216,7 +216,7 @@ public class Personaje extends Luchador {
 	public void subirDeNivelSiPuede() {
 		if(this.expSuficiente()) {
 			this.nivel++;
-			new RetribucionAdicionalPersonaje(this);
+			RetribucionAdicionalPersonaje.incrementarSegunClase(this);
 		}
 	}
 
