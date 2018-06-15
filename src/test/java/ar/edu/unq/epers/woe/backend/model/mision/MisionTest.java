@@ -37,7 +37,7 @@ public class MisionTest {
 
     @Test
     public void personajeEnUnaTabernaPuedeAceptarMision() {
-        this.pj.setLugar(new Taberna("tstTaberna"));
+        this.pj.cambiarDeLugar(new Taberna("tstTaberna"));
         assertTrue(this.mision.puedeAceptarMision(this.pj));
     }
 
@@ -57,7 +57,7 @@ public class MisionTest {
         Mision m = new IrALugar("tstIrALugar", new Recompensa(new ArrayList<Item>(), 10, 0f),
                                 new Taberna("tstTaberna"));
         this.pj.getMisionesAceptadas().add("tstIrALugar");
-        this.pj.setLugar(new Taberna("tstTaberna"));
+        this.pj.cambiarDeLugar(new Taberna("tstTaberna"));
         m.getRecompensa().otorgarRecompensaA(this.pj);
         assertEquals(this.pj.getExp(), new Integer(10));
         assertTrue(m.puedeAceptarMision(this.pj));
@@ -132,7 +132,7 @@ public class MisionTest {
         Gimnasio gim = new Gimnasio("tstGim");
         Mision m = new IrALugar("tstOI", new Recompensa(new ArrayList<Item>(), 10, 5f), gim);
         this.pj.aceptarMision(m);
-        this.pj.setLugar(gim);
+        this.pj.cambiarDeLugar(gim);
         assertTrue(this.pj.getLugar().equals(gim));
         assertTrue(m.misionCumplidaPor(this.pj));
         assertEquals(this.pj.getExp(), m.getRecompensa().getExp());

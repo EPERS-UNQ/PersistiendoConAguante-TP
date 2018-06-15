@@ -107,7 +107,9 @@ public class Personaje extends Luchador {
 		return lugar;
 	}
 
-	public void setLugar(Lugar lugar) {
+	public void setLugar(Lugar lugar) { this.lugar = lugar; }
+
+	public void cambiarDeLugar(Lugar lugar) {
 		this.lugar = lugar;
 		this.cumplirMisionesSiPuede();
 	}

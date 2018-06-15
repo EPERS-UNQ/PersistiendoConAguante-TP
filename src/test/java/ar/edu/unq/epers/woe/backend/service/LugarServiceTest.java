@@ -82,7 +82,7 @@ public class LugarServiceTest {
 
         this.pj = new Personaje(this.r, "tstPJ0", Clase.MAGO);
         this.pj.getMochila().agregarItem(i);
-        this.pj.setLugar(this.tab);
+        this.pj.cambiarDeLugar(this.tab);
         Runner.runInSession(() -> { this.pjhd.guardar(this.pj); return null; });
 
     }
@@ -118,7 +118,7 @@ public class LugarServiceTest {
         this.ls.conectar(t.getNombre(), t1.getNombre(), "terrestre");
         Personaje pjn = new Personaje(this.r, "tstPJ1", Clase.MAGO);
         pjn.agregarABilletera(5);
-        pjn.setLugar(t);
+        pjn.cambiarDeLugar(t);
         Runner.runInSession(() -> { this.pjhd.guardar(pjn); return null; });
         this.ls.mover(pjn.getNombre(), t1.getNombre());
         Personaje pjr = Runner.runInSession(() -> { return this.pjhd.recuperar(pjn.getNombre()); });
@@ -150,7 +150,7 @@ public class LugarServiceTest {
         Runner.runInSession(() -> { this.ild.guardar(t); return null; });
         Personaje pjn = new Personaje(this.r, "tstPJ1", Clase.MAGO);
         pjn.setBilletera(500f);
-        pjn.setLugar(t);
+        pjn.cambiarDeLugar(t);
         Runner.runInSession(() -> { this.pjhd.guardar(pjn); return null; });
         ls.comprarItem("tstPJ1", this.idItem);
         Personaje pjr = Runner.runInSession(() -> {
@@ -203,7 +203,7 @@ public class LugarServiceTest {
         this.ls.conectar(t.getNombre(), t1.getNombre(), tipoCamino);
         Personaje pjn = new Personaje(this.r, "tstPJ1", Clase.MAGO);
         pjn.setBilletera(500f);
-        pjn.setLugar(t);
+        pjn.cambiarDeLugar(t);
         Runner.runInSession(() -> { this.pjhd.guardar(pjn); return null; });
         this.ls.moverMasCorto(pjn.getNombre(), t1.getNombre());
         Personaje pjr = Runner.runInSession(() -> { return this.pjhd.recuperar(pjn.getNombre()); });
@@ -220,7 +220,7 @@ public class LugarServiceTest {
         this.ls.crearUbicacion(t1);
         this.ls.conectar(t.getNombre(), t1.getNombre(), tipoCamino);
         Personaje pjn = new Personaje(this.r, "tstPJ1", Clase.MAGO);
-        pjn.setLugar(t);
+        pjn.cambiarDeLugar(t);
         Runner.runInSession(() -> { this.pjhd.guardar(pjn); return null; });
         thrown.expect(CaminoMuyCostoso.class);
         this.ls.moverMasCorto(pjn.getNombre(), t1.getNombre());
@@ -234,7 +234,7 @@ public class LugarServiceTest {
         this.ls.crearUbicacion(t);
         this.ls.crearUbicacion(t1);
         Personaje pjn = new Personaje(this.r, "tstPJ1", Clase.MAGO);
-        pjn.setLugar(t);
+        pjn.cambiarDeLugar(t);
         Runner.runInSession(() -> { this.pjhd.guardar(pjn); return null; });
         thrown.expect(UbicacionMuyLejana.class);
         this.ls.moverMasCorto(pjn.getNombre(), t1.getNombre());
@@ -251,7 +251,7 @@ public class LugarServiceTest {
         this.ls.conectar(t.getNombre(), t1.getNombre(), tipoCaminoBarato);
         this.ls.conectar(t.getNombre(), t1.getNombre(), tipoCaminoCaro);
         Personaje pjn = new Personaje(this.r, "tstPJ1", Clase.MAGO);
-        pjn.setLugar(t);
+        pjn.cambiarDeLugar(t);
         pjn.agregarABilletera(2);
         Runner.runInSession(() -> { this.pjhd.guardar(pjn); return null; });
         this.ls.mover(pjn.getNombre(), t1.getNombre());

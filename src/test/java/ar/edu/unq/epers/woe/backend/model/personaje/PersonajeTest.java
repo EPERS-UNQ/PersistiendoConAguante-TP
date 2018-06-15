@@ -99,7 +99,7 @@ public class PersonajeTest {
 
     @Test
     public void alIrUnPersonajeAUnLugarYPreguntarleDondeEstaRetornaElLugar() {
-        this.pj.setLugar(new Taberna("Moe's"));
+        this.pj.cambiarDeLugar(new Taberna("Moe's"));
         assertEquals(this.pj.getLugar().getClass(), Taberna.class);
         assertSame("Moe's", this.pj.getLugar().getNombre());
     }
@@ -133,7 +133,7 @@ public class PersonajeTest {
     	
     	Float billeteraPrevia = 100f;
     	pj.setBilletera(billeteraPrevia);
-    	pj.setLugar(tienda);
+    	pj.cambiarDeLugar(tienda);
     	pj.comprar(i);
     	
     	//pj tiene menos plata en billetera
@@ -151,7 +151,7 @@ public class PersonajeTest {
     	pj.agregarItemAInv(i);
     	
     	Float billeteraPrevia = pj.getBilletera();
-    	pj.setLugar(tienda);
+    	pj.cambiarDeLugar(tienda);
     	pj.vender(i);
     	
     	//pj tiene mas plata en billetera
