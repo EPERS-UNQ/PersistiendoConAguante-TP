@@ -22,72 +22,113 @@ public class LeaderBoardServiceTest {
 
 	List<ResultadoCombate> combates;
 	Personaje ganador;
-	Personaje perdedor;
 	Raza razaGanador;
-	Raza razaP;
-	Clase claseGanador = Clase.BRUJO;
-	Clase claseMayoria = Clase.CABALLERO;
-	TestService testServ;
-	LeaderboardService leaderboardS= new LeaderboardService();;
+	Raza razaMayoria;
+	Clase claseGanador;
+	Clase claseMayoria;
+	TestService testServ = new TestService();
+	LeaderboardService leaderboardS = new LeaderboardService();
 	
-	@Before
-	public void setUp(){
-				
-		leaderboardS = new LeaderboardService();
-		testServ = new TestService();
-		
+	public void crearModelo(){
+						
+		// "clase Mayoria" clase con mayor cantidad de combates ganados
+		claseGanador = Clase.BRUJO;
+		claseMayoria = Clase.CABALLERO;
+
 		Set<Clase> clases = new HashSet<Clase>();
-		clases.add(Clase.BRUJO);
-		clases.add(Clase.CABALLERO);
+		clases.add(claseGanador);
+		clases.add(claseMayoria);
+		//Raza del personaje mas combates ganados
 		razaGanador = new Raza("Raza Uno");
 		razaGanador.setClases(clases);
 		testServ.crearEntidad(razaGanador);
 		
-		razaP = new Raza("Raza Dos");
-		razaP.setClases(clases);
-		testServ.crearEntidad(razaP);
+		//Raza de los demas personajes con mayor cantidad total de combates ganados
+		razaMayoria = new Raza("Raza Dos");
+		razaMayoria.setClases(clases);
+		testServ.crearEntidad(razaMayoria);
 		
-		//dos combates ganados
+		//Personaje con dos combates ganados y con mayor danho
 		ganador = new Personaje(razaGanador, "Winner", claseGanador);
 		ganador.setValorDanho(new Danho(500f));
 		testServ.crearEntidad(ganador);
 
-		//solo un combate ganado
-		perdedor = new Personaje(razaP, "Loser", claseMayoria);
-		testServ.crearEntidad(perdedor);
+		Personaje personaje2 = new Personaje(razaMayoria, "Persnaje2", claseMayoria);
+		testServ.crearEntidad(personaje2);
 		
 		ResultadoCombate rc0 = new ResultadoCombate();
-		rc0.setGanador(perdedor); 
+		rc0.setGanador(personaje2); 
 		rc0.setPerdedor(ganador);
 		testServ.crearEntidad(rc0);
 		
 		ResultadoCombate rc1 = new ResultadoCombate();
 		rc1.setGanador(ganador);
-		rc1.setPerdedor(perdedor);
+		rc1.setPerdedor(personaje2);
 		testServ.crearEntidad(rc1);
 		
 		ResultadoCombate rc2 = new ResultadoCombate();
 		rc2.setGanador(ganador);
-		rc2.setPerdedor(perdedor);
+		rc2.setPerdedor(personaje2);
 		testServ.crearEntidad(rc2);
+	}
+
+	public void crearModeloExtendido() {
+		// se extiende para un total de 11 personajes con un combate ganado cada uno
+		Personaje personaje3 = new Personaje(razaMayoria, "Persnj 3", claseMayoria);
+		Personaje personaje4 = new Personaje(razaMayoria, "Persnj 4", claseMayoria);
+		Personaje personaje5 = new Personaje(razaMayoria, "Persnj 5", claseMayoria);
+		Personaje personaje6 = new Personaje(razaMayoria, "Persnj 6", claseMayoria);
+		Personaje personaje7 = new Personaje(razaMayoria, "Persnj 7", claseMayoria);
+		Personaje personaje8 = new Personaje(razaMayoria, "Persnj 8", claseMayoria);
+		Personaje personaje9 = new Personaje(razaMayoria, "Persnj 9", claseMayoria);
+		Personaje personaje10 = new Personaje(razaMayoria, "Persnj 10", claseMayoria);
+		Personaje personaje11 = new Personaje(razaMayoria, "Persnj 11", claseMayoria);
 		
-		// "razaP" raza con mayor cantidad de combates ganados
-		// "clase Mayoria" clase con mayor cantidad de combates ganados
-		Personaje personaje3 = new Personaje(razaP, "Persnj 3", claseMayoria);
-		Personaje personaje4 = new Personaje(razaP, "Persnj 4", claseMayoria);
 		testServ.crearEntidad(personaje3);
 		testServ.crearEntidad(personaje4);
+		testServ.crearEntidad(personaje5);
+		testServ.crearEntidad(personaje6);
+		testServ.crearEntidad(personaje7);
+		testServ.crearEntidad(personaje8);
+		testServ.crearEntidad(personaje9);
+		testServ.crearEntidad(personaje10);
+		testServ.crearEntidad(personaje11);
 		
 		ResultadoCombate rc3 = new ResultadoCombate();
-		rc3.setGanador(personaje3); 
-		rc3.setPerdedor(ganador);
+		rc3.setGanador(personaje3); rc3.setPerdedor(personaje4);
 		testServ.crearEntidad(rc3);
 		
 		ResultadoCombate rc4 = new ResultadoCombate();
-		rc4.setGanador(personaje4);
-		rc4.setPerdedor(ganador);
+		rc4.setGanador(personaje4);	rc4.setPerdedor(personaje5);
 		testServ.crearEntidad(rc4);
 		
+		ResultadoCombate rc5 = new ResultadoCombate();
+		rc5.setGanador(personaje5);	rc5.setPerdedor(personaje6);
+		testServ.crearEntidad(rc5);
+		
+		ResultadoCombate rc6 = new ResultadoCombate();
+		rc6.setGanador(personaje6); rc6.setPerdedor(personaje7);
+		testServ.crearEntidad(rc6);
+		
+		ResultadoCombate rc7 = new ResultadoCombate();
+		rc7.setGanador(personaje7); rc7.setPerdedor(personaje7);
+		testServ.crearEntidad(rc7);
+		
+		ResultadoCombate rc8 = new ResultadoCombate();
+		rc8.setGanador(personaje8); rc8.setPerdedor(personaje9);
+		testServ.crearEntidad(rc8);
+		
+		ResultadoCombate rc9 = new ResultadoCombate();
+		rc9.setGanador(personaje9); rc9.setPerdedor(personaje8);
+		testServ.crearEntidad(rc9);
+		
+		ResultadoCombate rc10 = new ResultadoCombate();
+		rc10.setGanador(personaje10); rc10.setPerdedor(personaje8);
+		testServ.crearEntidad(rc10);
+		
+		ResultadoCombate rc11 = new ResultadoCombate();
+		rc11.setGanador(personaje11); rc11.setPerdedor(personaje8);
+		testServ.crearEntidad(rc11);
 	}
 
 	@After
@@ -97,32 +138,46 @@ public class LeaderBoardServiceTest {
 	
 	
 	@Test
-	public void seObtienenDiezPersonajesConMasBatallasGanadas() {
+	public void seObtienenDosPersonajesConMasBatallasGanadas() {
+		crearModelo(); // en modelo inicial existen solamente dos personajes
 		
-		// para usar este assert habria q reescribir el equals o crear metodo
-		// equivalente
-		// assertTrue( leaderboardS.campeones().get(0), ganador );
+		List<Personaje> dosCampeones = leaderboardS.campeones();
 		
-		assertEquals( leaderboardS.campeones().get(0).getNombre(), "Winner");
+		assertEquals( 2, dosCampeones.size() );
 	}
+
+	
+	@Test
+	public void seObtienenDiezPersonajesConMasBatallasGanadasOrdenadosDesc() {
+		crearModelo();
+		crearModeloExtendido(); // en modelo extendido existen 11 persnajes
+
+		List<Personaje> campeones = leaderboardS.campeones();
+		
+		assertEquals( ganador.getNombre(), campeones.get(0).getNombre());
+		assertEquals( 10, campeones.size() ); 
+	}
+	
 	
 	@Test
 	public void seObtieneElPersonajeConMasDanho() {
-
-		assertEquals(leaderboardS.masFuerte().getNombre(), "Winner"); //
+		crearModelo();
+		assertEquals(ganador.getNombre(), leaderboardS.masFuerte().getNombre());
 	}
 
 	
 	@Test
 	public void seObtieneLaRazaQueGanoMasCombates() {
-		
-		assertEquals( razaP.getNombre(), leaderboardS.razaLider().getNombre() );
+		crearModelo();
+		crearModeloExtendido();
+		assertEquals( razaMayoria.getNombre(), leaderboardS.razaLider().getNombre() );
 	}
 	
 	
 	@Test
 	public void seObtieneClaseQueGanoMasCombates() {
-		
+		crearModelo();
+		crearModeloExtendido();
 		assertEquals( claseMayoria, leaderboardS.claseLider()  );
 	}
 }
