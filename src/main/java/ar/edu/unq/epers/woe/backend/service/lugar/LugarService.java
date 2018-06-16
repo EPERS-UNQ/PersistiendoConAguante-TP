@@ -60,7 +60,7 @@ public class LugarService {
 		Runner.runInSession(() -> {
 		Personaje pj = this.pjhd.recuperar(nombrePj);
 		Lugar lugar = this.ild.recuperar(nombrLugar);
-        pj.setLugar(lugar);
+        pj.cambiarDeLugar(lugar);
         return null; });
     }
 
@@ -155,7 +155,7 @@ public class LugarService {
 			validarRequisitosParaMover(pj, ubicacion, "masCorto");
 				Lugar lr = this.ild.recuperar(ubicacion);
 				pj.gastarBilletera(this.n4ld.costoRutaMasCorta(pj.getLugar().getNombre(), ubicacion));
-				pj.setLugar(lr);
+				pj.cambiarDeLugar(lr);
 		return null; });
 	}
 
@@ -168,7 +168,7 @@ public class LugarService {
 			validarRequisitosParaMover(pj, ubicacion, "masBarato");
 			Lugar lr = this.ild.recuperar(ubicacion);
 			pj.gastarBilletera(this.n4ld.costoRutaMasBarata(pj.getLugar().getNombre(), ubicacion));
-			pj.setLugar(lr);
+			pj.cambiarDeLugar(lr);
 		return null; });
 	}
 }

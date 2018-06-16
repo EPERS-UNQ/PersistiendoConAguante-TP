@@ -54,7 +54,7 @@ public class HibernatePersonajeDAOTest {
 		Lugar t = new Tienda("Tiendita");
 		
 		p.setRaza(r);
-		p.setLugar(t);
+		p.cambiarDeLugar(t);
 		
 		Personaje recuperado =
 		    	Runner.runInSession(() -> {

@@ -81,7 +81,7 @@ public class PersonajeServiceTest {
 		Gimnasio gim = new Gimnasio("tstGim0");
 		Runner.runInSession(() -> { this.ild.guardar(gim); return null; });
 		Personaje pjii = new Personaje(this.r, "tstPJ1", Clase.MAGO);
-		pjii.setLugar(gim);
+		pjii.cambiarDeLugar(gim);
 		pjii.setVida(new Vida(10f));
 		pjii.getAtributo(Fuerza.class).setValor(200f);
 		Runner.runInSession(() -> {
