@@ -6,12 +6,12 @@ podrá ver la actividad que ha ocurrido cerca suyo recientemente..
 
 Para eso se modelarán eventos. Por ahora se han identificado los siguientes eventos:
 
-- Arribo: un personaje se mueve a un lugar. _Se debera guardar los lugares de origen y destino_
-- MisionAceptada: El personaje acepta una mision. _Se debera guardar la mision (No hace falta guardar toda la mision)_
-- MisionCompletada: Cuando un personaje completa una mision. _Igual que la anterior_
-- CompraItem: Cuando un personaje compra un item. _Se debera guardar el item y el precio de compra_
-- VentaItem: Cuando un personaje vende un item. _Se debera guardar el item y el precio de venta_
-- Ganador: Cuando un personaje gana un combate a otro personaje (solamente contra otro personaje, no contra un monstruo). _Se debera guardar el contrincante_
+- **Arribo**: un personaje se mueve a un lugar. _Se debera guardar los lugares de origen y destino_
+- **MisionAceptada**: El personaje acepta una mision. _Se debera guardar la mision (No hace falta guardar toda la mision)_
+- **MisionCompletada**: Cuando un personaje completa una mision. _Igual que la anterior_
+- **CompraItem**: Cuando un personaje compra un item. _Se debera guardar el item y el precio de compra_
+- **VentaItem**: Cuando un personaje vende un item. _Se debera guardar el item y el precio de venta_
+- **Ganador**: Cuando un personaje gana un combate a otro personaje (solamente contra otro personaje, no contra un monstruo). _Se debera guardar el contrincante_
 
 Todos los eventos tienen el personaje, un lugar y una fecha (con hora).
 
