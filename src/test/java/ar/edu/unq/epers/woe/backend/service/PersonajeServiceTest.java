@@ -89,7 +89,9 @@ public class PersonajeServiceTest {
 		this.lr.moverPermisivo(this.pj.getNombre(), gim.getNombre());
 		ResultadoCombate rc = this.serviceP.combatir(this.pj.getNombre(), pjii.getNombre());
 		assertTrue(rc.getClass().equals(ResultadoCombate.class));
+		assertTrue(! rc.getDetalle().isEmpty());
 		assertTrue(rc.getGanador().sosPersonaje());
+		assertTrue(rc.getPerdedor().sosPersonaje());
 	}
 
 	@After
