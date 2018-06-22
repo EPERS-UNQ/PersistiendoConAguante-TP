@@ -15,6 +15,9 @@ public class Neo4jLugarDAO {
 
     public void create(Lugar lugar) {
         Session session = this.driver.session();
+        if(existeLugar(lugar.getNombre())) {
+        	throw new RuntimeException("Ya existe Lugar con ese nombre");
+        }
         try {
             String query = "MERGE (n:Lugar { nombre: {elNombre} }) SET n.nombre = {elNombre}";
             session.run(query, Values.parameters("elNombre", lugar.getNombre()));
