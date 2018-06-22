@@ -56,6 +56,7 @@ public class LugarService {
 		return null; });
     }
 
+    // Método auxiliar para cambiar de lugar de pj en hibernate sin validar condiciones.
     public void moverPermisivo(String nombrePj, String nombrLugar) {
 		Runner.runInSession(() -> {
 		Personaje pj = this.pjhd.recuperar(nombrePj);
@@ -115,6 +116,9 @@ public class LugarService {
 		});
 	}
 
+	/*
+	 * Crea una nueva ubicación (la cual es provista por parametro) tanto en hibernate como en neo4j.
+	 */
 	public void crearUbicacion(Lugar l) {
 		Runner.runInSession(() -> {
 			this.ild.guardar(l);
@@ -123,10 +127,17 @@ public class LugarService {
     	this.n4ld.create(l);
 	}
 
+	/*
+	 * Conecta dos ubicaciones (se asumen preexistentes) por medio de un tipo de camino.
+	 */
 	public void conectar(String ubicacion1, String ubicacion2, String tipoCamino) {
     	this.n4ld.crearRelacionConectadoCon(ubicacion1, ubicacion2, tipoCamino);
 	}
 
+	/*
+	 * Retorna todas las Ubicaciones conectadas directamente a una ubicación provista
+	 * por medio de un tipo de camino especificado.
+	 */
 	public List<Lugar> conectados(String ubicacion, String tipoCamino) {
     	List<Lugar> res = new ArrayList<Lugar>();
     	for(String nombreLugar : this.n4ld.conectadosCon(ubicacion, tipoCamino)) {
@@ -135,6 +146,10 @@ public class LugarService {
 		return res;
 	}
 
+	/*
+	 * Chequea que el personaje tenga dinero suficiente para moverse y los lugares estén conectados.
+	 * De lo contrario lanza excepción correspondiente.
+	 */
 	public void validarRequisitosParaMover(Personaje pj, String ubicacion, String criterio) {
 		if(!this.n4ld.existeCaminoEntre(pj.getLugar().getNombre(), ubicacion)) {
 			throw new UbicacionMuyLejana(pj.getLugar().getNombre(), ubicacion);
@@ -149,6 +164,10 @@ public class LugarService {
 		}
 	}
 
+	/*
+	 * Cambia la ubicación actual del personaje por la especificada por parámetro.
+	 * Toma la ruta más corta entre ambas ubicaciones (no implica que sea la más barata).
+	 */
 	public void moverMasCorto(String personaje, String ubicacion) {
 		Runner.runInSession(() -> {
 			Personaje pj = this.pjhd.recuperar(personaje);
@@ -161,6 +180,7 @@ public class LugarService {
 
 	/*
 	 * Cambia la ubicación actual del personaje por la especificada por parámetro.
+	 * Toma la ruta más barata entre ambas ubicaciones.
 	 */
 	public void mover(String personaje, String ubicacion) {
 		Runner.runInSession(() -> {
