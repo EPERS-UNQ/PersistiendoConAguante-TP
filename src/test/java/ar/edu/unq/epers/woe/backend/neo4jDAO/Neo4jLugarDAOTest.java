@@ -28,6 +28,13 @@ public class Neo4jLugarDAOTest {
         assertTrue(this.n4jl.existeLugar(t.getNombre()));
         assertTrue(this.n4jl.existeLugar(g.getNombre()));
     }
+    
+    @Test(expected = RuntimeException.class)
+    public void alCrearUnLugarQueYaEstaCreadoOcurreExcepcion() {
+        Gimnasio g = new Gimnasio("gim0");
+        this.n4jl.create(g);
+        this.n4jl.create(g);
+    }
 
     @Test
     public void seObtieneNombreDeLugaresConectados() {
