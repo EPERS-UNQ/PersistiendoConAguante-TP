@@ -10,21 +10,28 @@ import org.jongo.MongoCursor;
 
 public class GenericMongoDAO<T> {
 
+    private Jongo jongo;
     private Class<T> entityType;
     protected MongoCollection mongoCollection;
 
     public GenericMongoDAO(Class<T> entityType){
+        this.jongo = MongoConnection.getInstance().getJongo();
         this.entityType = entityType;
         this.mongoCollection = this.getCollectionFor(entityType);
     }
 
     private MongoCollection getCollectionFor(Class<T> entityType) {
-        Jongo jongo = MongoConnection.getInstance().getJongo();
-        return jongo.getCollection(entityType.getSimpleName());
+        return this.jongo.getCollection(entityType.getSimpleName());
     }
 
+    // Elimina sólo la colección para el tipo con el que se instanció el objeto.
     public void deleteAll() {
         this.mongoCollection.drop();
+    }
+
+    // Elimina todo.
+    public void eliminarDatos() {
+        this.jongo.getDatabase().dropDatabase();
     }
 
     public void save(T object) {

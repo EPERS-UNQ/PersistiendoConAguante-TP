@@ -1,38 +1,57 @@
 package ar.edu.unq.epers.woe.backend.model.evento;
 
-import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
-import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
-import java.time.LocalDateTime;
+import org.jongo.marshall.jackson.oid.MongoId;
+import org.jongo.marshall.jackson.oid.MongoObjectId;
+import java.util.Date;
 
 public class Evento {
 
-    private Personaje pj;
-    private Lugar lugar;
-    private LocalDateTime fecha = LocalDateTime.now();
+    @MongoId
+    @MongoObjectId
+    private String idEvento;
+    private String nombrePJ;
+    private String nombreLugar;
+    private Date fecha;
+
+    public Evento() {}
+
+    public Evento(String nombrePJ, String nombreLugar) {
+        this.nombrePJ = nombrePJ;
+        this.nombreLugar = nombreLugar;
+        this.fecha = new Date();
+    }
 
     // Getters y setters
-    public Personaje getPj() {
-        return pj;
+    public String getNombrePJ() {
+        return nombrePJ;
     }
 
-    public void setPj(Personaje pj) {
-        this.pj = pj;
+    public void setNombrePJ(String nombrePJ) {
+        this.nombrePJ = nombrePJ;
     }
 
-    public Lugar getLugar() {
-        return lugar;
+    public String getNombreLugar() {
+        return nombreLugar;
     }
 
-    public void setLugar(Lugar lugar) {
-        this.lugar = lugar;
+    public void setNombreLugar(String nombreLugar) {
+        this.nombreLugar = nombreLugar;
     }
 
-    public LocalDateTime getFecha() {
+    public Date getFecha() {
         return fecha;
     }
 
-    public void setFecha(LocalDateTime fecha) {
+    public void setFecha(Date fecha) {
         this.fecha = fecha;
+    }
+
+    public String getIdEvento() {
+        return idEvento;
+    }
+
+    public void setIdEvento(String idEvento) {
+        this.idEvento = idEvento;
     }
 
 }
