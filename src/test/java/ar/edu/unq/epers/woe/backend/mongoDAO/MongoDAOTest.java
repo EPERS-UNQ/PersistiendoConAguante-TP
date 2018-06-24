@@ -5,7 +5,7 @@ import ar.edu.unq.epers.woe.backend.model.evento.Evento;
 import ar.edu.unq.epers.woe.backend.model.evento.Ganador;
 import org.junit.Test;
 import org.junit.Before;
-import org.junit.Test;
+import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -30,6 +30,18 @@ public class MongoDAOTest {
         assertEquals(eventoGuardado.getIdEvento(), eventoRecuperado.getIdEvento());
         assertEquals(eventoGuardado.getNombrePJ(), eventoRecuperado.getNombrePJ());
         assertEquals(eventoGuardado.getFecha(), eventoRecuperado.getFecha());
+    }
+
+    @Test
+    public void seRecuperaEventosOrdenadosPorFechaDeMasRecienteAMasAntiguo() {
+        Evento eventoGuardadoPrimero = new Evento("tstPJ4", "tstLugar4");
+        mde.save(eventoGuardadoPrimero);
+        Evento eventoGuardadoSegundo = new Evento("tstPJ5", "tstLugar5");
+        mde.save(eventoGuardadoSegundo);
+        List<Evento> le = mde.findOrderByDateDesc("");
+        assertEquals(le.size(), 2);
+        assertEquals(le.get(0).getFecha(), eventoGuardadoSegundo.getFecha());
+        assertEquals(le.get(1).getFecha(), eventoGuardadoPrimero.getFecha());
     }
 
     @Test
