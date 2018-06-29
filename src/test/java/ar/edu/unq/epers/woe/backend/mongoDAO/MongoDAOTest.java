@@ -13,8 +13,6 @@ import static org.junit.Assert.assertTrue;
 public class MongoDAOTest {
 
     private EventoMongoDAO<Evento> mde = new EventoMongoDAO();
-//    private GenericMongoDAO<Arribo> mda = new GenericMongoDAO<>(Arribo.class);
-//    private GenericMongoDAO<Ganador> mdg = new GenericMongoDAO<>(Ganador.class);
 
     @Before
     public void setUp() {
@@ -48,8 +46,8 @@ public class MongoDAOTest {
     public void seGuardaYRecuperaEventoDeArribo() {
         Arribo eventoGuardado = new Arribo("tstPJ1", "tstLugar1", "Tienda",
                        "tstLugar2", "Taberna");
-        mda.save(eventoGuardado);
-        Arribo eventoRecuperado = mda.get(eventoGuardado.getIdEvento());
+        mde.save(eventoGuardado);
+        Arribo eventoRecuperado = (Arribo) mde.get(eventoGuardado.getIdEvento());
         assertEquals(eventoGuardado.getNombreLugar(), eventoRecuperado.getNombreLugar());
         assertEquals(eventoGuardado.getIdEvento(), eventoRecuperado.getIdEvento());
         assertEquals(eventoGuardado.getNombrePJ(), eventoRecuperado.getNombrePJ());
