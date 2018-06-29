@@ -1,5 +1,9 @@
 package ar.edu.unq.epers.woe.backend.model.evento;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+
+
 public class Ganador extends Evento {
 
     private String nombreContrincante;

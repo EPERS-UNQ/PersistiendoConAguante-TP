@@ -8,13 +8,16 @@ import org.jongo.Jongo;
 import org.jongo.MongoCollection;
 import org.jongo.MongoCursor;
 
-public class GenericMongoDAO<T> {
+import ar.edu.unq.epers.woe.backend.model.evento.Evento;
+import ar.edu.unq.epers.woe.backend.model.evento.Ganador;
+
+public class EventoMongoDAO<T> {
 
     private Jongo jongo;
     private Class<T> entityType;
     protected MongoCollection mongoCollection;
 
-    public GenericMongoDAO(Class<T> entityType){
+    public EventoMongoDAO(Class<T> entityType){
         this.jongo = MongoConnection.getInstance().getJongo();
         this.entityType = entityType;
         this.mongoCollection = this.getCollectionFor(entityType);
@@ -42,9 +45,15 @@ public class GenericMongoDAO<T> {
         this.mongoCollection.insert(objects.toArray());
     }
 
-    public T get(String id) {
+    public Evento get(String id) {
         ObjectId objectId = new ObjectId(id);
-        return this.mongoCollection.findOne(objectId).as(this.entityType);
+        Evento e = this.mongoCollection.findOne(objectId).as(Evento.class);
+        Evento rec = e;
+        switch(e.getClaseDeEvento() ) {
+        	case( "Ganador" ):
+        		rec = (Ganador) rec;
+        }
+        return rec;
     }
 
     public List<T> find(String query, Object... parameters) {
