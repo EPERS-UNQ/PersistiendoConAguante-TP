@@ -11,8 +11,6 @@ import org.junit.Before;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class MongoDAOTest {
 
@@ -119,6 +117,24 @@ public class MongoDAOTest {
     	
     	assertEquals(3, listaEventos.size());
     	assertEquals(e2.getFecha(), listaEventos.get(0).getFecha() ); //mas reciente
+    }
+    
+    @Test
+    public void seRecuperaListaDeEventosEnElQueEsteRelacionadoUnPersonaje() {
+    	String nombrePersonaje = "tstPJ";
+    	//hace de ganador
+		Evento e = new Ganador( nombrePersonaje, "tstLugar", "tstPJ2", "tstClase0", "tstClase1", "tstRaza0", "tstRaza1");
+		//hace de perdedor
+		Evento e1 = new Ganador( "tstPJ2", "tstLugar", nombrePersonaje, "tstClase0", "tstClase1", "tstRaza0", "tstRaza1");
+		mde.save(e);
+		mde.save(e1);
+
+		Evento e2 = new MisionAceptada(nombrePersonaje, "tstLugar", "tstMision3");
+		mde.save(e2);
+		
+		List<Evento> listaEventos = mde.getByPersonaje(nombrePersonaje) ;
+		assertEquals( 3, listaEventos.size() );
+		assertEquals(e2.getFecha(), listaEventos.get(0).getFecha() );
     }
 
 }

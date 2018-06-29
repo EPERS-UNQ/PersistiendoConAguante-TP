@@ -94,4 +94,8 @@ public class EventoMongoDAO<T> {
 		return findOrderByDateDesc("{ $or: [{ nombreLugar: { $in: # }}] }", lugares) ;
 	}
 
+	public List<Evento> getByPersonaje(String nombrePj) {
+		return findOrderByDateDesc( "{ $or: [{ nombrePJ: # }, { nombreContrincante: # }] }", nombrePj, nombrePj )  ;
+	}
+
 }
