@@ -3,13 +3,13 @@ package ar.edu.unq.epers.woe.backend.mongoDAO;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.bson.types.ObjectId;
 import org.jongo.Jongo;
 import org.jongo.MongoCollection;
 import org.jongo.MongoCursor;
 
 import ar.edu.unq.epers.woe.backend.model.evento.Evento;
-import ar.edu.unq.epers.woe.backend.model.evento.Ganador;
 
 public class EventoMongoDAO<T> {
 
@@ -51,7 +51,7 @@ public class EventoMongoDAO<T> {
 
     public List<Evento> find(String query, Object... parameters) {
         try {
-            MongoCursor<Evento> all = this.mongoCollection.find(query, parameters).as(Evento.class);
+            MongoCursor<Evento> all = this.mongoCollection. find(query, parameters).as(Evento.class);
 
             List<Evento> result = this.copyToList(all);
             all.close();
@@ -84,5 +84,18 @@ public class EventoMongoDAO<T> {
         iterable.forEach(x -> result.add(x));
         return result;
     }
+
+    
+	public List<Evento> getByLugar(String lugar) {
+		return findOrderByDateDesc("{ nombreLugar: # }", lugar);
+	}
+
+	public List<Evento> getByLugares(List<String> lugares) {
+		return findOrderByDateDesc("{ $or: [{ nombreLugar: { $in: # }}] }", lugares) ;
+	}
+
+	public List<Evento> getByPersonaje(String nombrePj) {
+		return findOrderByDateDesc( "{ $or: [{ nombrePJ: # }, { nombreContrincante: # }] }", nombrePj, nombrePj )  ;
+	}
 
 }
