@@ -1,4 +1,4 @@
-package ar.edu.unq.epers.woe.backend.model.eventos;
+package ar.edu.unq.epers.woe.backend.model.evento;
 
 import ar.edu.unq.epers.woe.backend.model.evento.Evento;
 
