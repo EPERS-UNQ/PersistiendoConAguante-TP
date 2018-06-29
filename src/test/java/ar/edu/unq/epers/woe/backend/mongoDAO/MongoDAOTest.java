@@ -3,8 +3,12 @@ package ar.edu.unq.epers.woe.backend.mongoDAO;
 import ar.edu.unq.epers.woe.backend.model.evento.Arribo;
 import ar.edu.unq.epers.woe.backend.model.evento.Evento;
 import ar.edu.unq.epers.woe.backend.model.evento.Ganador;
+import ar.edu.unq.epers.woe.backend.model.evento.MisionAceptada;
+
 import org.junit.Test;
 import org.junit.Before;
+
+import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -79,6 +83,44 @@ public class MongoDAOTest {
         assertEquals(eventoGuardado.getRazaContrincante(), eventoRecuperado.getRazaContrincante());
         assertEquals(eventoGuardado.getRazaGanador(), eventoRecuperado.getRazaGanador());
     }
-
+    
+    @Test
+    public void recuperarListaDeEventosRelacionadosAUnLugarDeFormaDescPorFecha() {
+    	String lugar = "tstLugar3";
+    	Evento e = new Ganador("tstPJ2", lugar, "tstPJ3",
+                		"tstClase0", "tstClase1", "tstRaza0", "tstRaza1");
+       	Evento e1 = new MisionAceptada("tstPJ2", lugar, "tstMision2");
+     	mde.save(e); mde.save(e1); 
+     	
+     	//Evento mas reciente
+    	Evento e2 = new MisionAceptada("tstPJ2", lugar, "tstMision1");
+    	mde.save(e2);
+    	
+    	List<Evento> listaEventos = mde.getByLugar(lugar);
+    	assertEquals(3, listaEventos.size() );
+    	assertEquals(e2.getFecha(), listaEventos.get(0).getFecha() );
+    }
+    
+    @Test
+    public void recuperarListaDeEventosRelacionadosAVariosLugaresDeFormaOrdenada() {
+    	String lugar = "tstLugar";
+    	String lugar2 = "tstLugar2";
+    	String lugar3 = "tstLugar3";
+    	Evento e = new Ganador("tstPJ2", lugar, "tstPJ3",
+                		"tstClase0", "tstClase1", "tstRaza0", "tstRaza1");
+       	Evento e1 = new MisionAceptada("tstPJ2", lugar2, "tstMision2");
+     	mde.save(e); mde.save(e1); 
+     	
+       	Evento e2 = new MisionAceptada("tstPJ2", lugar3, "tstMision3");
+     	mde.save(e2);
+    	
+     	List<String> lugares = new ArrayList<String>();
+     	lugares.add(lugar3); lugares.add(lugar2); lugares.add(lugar);
+     	
+    	List<Evento> listaEventos = mde.getByLugares(lugares);
+    	
+    	assertEquals(3, listaEventos.size());
+    	assertEquals(e2.getFecha(), listaEventos.get(0).getFecha() ); //mas reciente
+    }
 
 }
