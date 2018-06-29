@@ -12,9 +12,9 @@ import static org.junit.Assert.assertTrue;
 
 public class MongoDAOTest {
 
-    private GenericMongoDAO<Evento> mde = new GenericMongoDAO<>(Evento.class);
-    private GenericMongoDAO<Arribo> mda = new GenericMongoDAO<>(Arribo.class);
-    private GenericMongoDAO<Ganador> mdg = new GenericMongoDAO<>(Ganador.class);
+    private EventoMongoDAO<Evento> mde = new EventoMongoDAO();
+//    private GenericMongoDAO<Arribo> mda = new GenericMongoDAO<>(Arribo.class);
+//    private GenericMongoDAO<Ganador> mdg = new GenericMongoDAO<>(Ganador.class);
 
     @Before
     public void setUp() {
@@ -24,7 +24,7 @@ public class MongoDAOTest {
     @Test
     public void seGuardaYRecuperaEvento() {
         Evento eventoGuardado = new Evento("tstPJ0", "tstLugar0");
-        mde.save(eventoGuardado);
+        mde .save(eventoGuardado);
         Evento eventoRecuperado = mde.get(eventoGuardado.getIdEvento());
         assertEquals(eventoGuardado.getNombreLugar(), eventoRecuperado.getNombreLugar());
         assertEquals(eventoGuardado.getIdEvento(), eventoRecuperado.getIdEvento());
@@ -64,8 +64,11 @@ public class MongoDAOTest {
         Ganador eventoGuardado = new Ganador("tstPJ2", "tstLugar3", "tstPJ3",
                             "tstClase0", "tstClase1", "tstRaza0",
                                 "tstRaza1");
-        mdg.save(eventoGuardado);
-        Ganador eventoRecuperado = mdg.get(eventoGuardado.getIdEvento());
+        mde.save(eventoGuardado);
+        Evento e = mde.get(eventoGuardado.getIdEvento());
+
+        Ganador eventoRecuperado = (Ganador) e;
+        
         assertEquals(eventoGuardado.getNombreLugar(), eventoRecuperado.getNombreLugar());
         assertEquals(eventoGuardado.getIdEvento(), eventoRecuperado.getIdEvento());
         assertEquals(eventoGuardado.getNombrePJ(), eventoRecuperado.getNombrePJ());

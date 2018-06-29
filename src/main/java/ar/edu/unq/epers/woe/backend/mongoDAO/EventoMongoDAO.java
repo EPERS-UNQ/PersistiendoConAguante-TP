@@ -14,17 +14,15 @@ import ar.edu.unq.epers.woe.backend.model.evento.Ganador;
 public class EventoMongoDAO<T> {
 
     private Jongo jongo;
-    private Class<T> entityType;
     protected MongoCollection mongoCollection;
 
-    public EventoMongoDAO(Class<T> entityType){
+    public EventoMongoDAO(){
         this.jongo = MongoConnection.getInstance().getJongo();
-        this.entityType = entityType;
-        this.mongoCollection = this.getCollectionFor(entityType);
+        this.mongoCollection = this.getCollectionFor();
     }
 
-    private MongoCollection getCollectionFor(Class<T> entityType) {
-        return this.jongo.getCollection(entityType.getSimpleName());
+    private MongoCollection getCollectionFor() {
+        return this.jongo.getCollection(Evento.class.getSimpleName());
     }
 
     // Elimina sólo la colección para el tipo con el que se instanció el objeto.
@@ -41,26 +39,21 @@ public class EventoMongoDAO<T> {
         this.mongoCollection.insert(object);
     }
 
-    public void save(List<T> objects) {
+    public void save(List<Evento> objects) {
         this.mongoCollection.insert(objects.toArray());
     }
 
     public Evento get(String id) {
         ObjectId objectId = new ObjectId(id);
         Evento e = this.mongoCollection.findOne(objectId).as(Evento.class);
-        Evento rec = e;
-        switch(e.getClaseDeEvento() ) {
-        	case( "Ganador" ):
-        		rec = (Ganador) rec;
-        }
-        return rec;
+        return e;
     }
 
-    public List<T> find(String query, Object... parameters) {
+    public List<Evento> find(String query, Object... parameters) {
         try {
-            MongoCursor<T> all = this.mongoCollection.find(query, parameters).as(this.entityType);
+            MongoCursor<Evento> all = this.mongoCollection.find(query, parameters).as(Evento.class);
 
-            List<T> result = this.copyToList(all);
+            List<Evento> result = this.copyToList(all);
             all.close();
 
             return result;
@@ -69,12 +62,12 @@ public class EventoMongoDAO<T> {
         }
     }
 
-    public List<T> findOrderByDateDesc(String query, Object... parameters) {
+    public List<Evento> findOrderByDateDesc(String query, Object... parameters) {
         try {
             // sort: 1 for asc and -1 for desc
-            MongoCursor<T> all = this.mongoCollection.find(query, parameters).sort("{ fecha: -1 }").as(this.entityType);
+            MongoCursor<Evento> all = this.mongoCollection.find(query, parameters).sort("{ fecha: -1 }").as(Evento.class);
 
-            List<T> result = this.copyToList(all);
+            List<Evento> result = this.copyToList(all);
             all.close();
 
             return result;
