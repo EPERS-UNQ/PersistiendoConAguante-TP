@@ -3,12 +3,16 @@ package ar.edu.unq.epers.woe.backend.service.lugar;
 import java.util.ArrayList;
 import java.util.List;
 import ar.edu.unq.epers.woe.backend.hibernateDAO.*;
+import ar.edu.unq.epers.woe.backend.model.evento.Arribo;
+import ar.edu.unq.epers.woe.backend.model.evento.CompraItem;
+import ar.edu.unq.epers.woe.backend.model.evento.MisionAceptada;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
 import ar.edu.unq.epers.woe.backend.model.lugar.Taberna;
 import ar.edu.unq.epers.woe.backend.model.lugar.Tienda;
 import ar.edu.unq.epers.woe.backend.model.mision.Mision;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
+import ar.edu.unq.epers.woe.backend.mongoDAO.EventoMongoDAO;
 import ar.edu.unq.epers.woe.backend.neo4jDAO.Neo4jLugarDAO;
 
 public class LugarService {
@@ -19,6 +23,7 @@ public class LugarService {
 	private HibernateMonstruoDAO imod = new HibernateMonstruoDAO();
 	private HibernateLugarDAO ild = new HibernateLugarDAO();
 	private Neo4jLugarDAO n4ld = new Neo4jLugarDAO();
+	private EventoMongoDAO emd = new EventoMongoDAO();
 
     /*
      * Devuelve la lista de misiones disponibles para un jugador.
@@ -51,6 +56,7 @@ public class LugarService {
 		if(!pj.getLugar().getClass().equals(Taberna.class)) {
 			throw new RuntimeException("El Personaje no está en una Taberna.");
 		} else if(this.listarMisiones(nombrePj).contains(m)) {
+			emd.save(new MisionAceptada(pj.getNombre(), pj.getLugar().getNombre(), nombreMis));
 			pj.aceptarMision(m);
 		}
 		return null; });
@@ -97,6 +103,7 @@ public class LugarService {
 			throw new RuntimeException("Dinero insuficiente para comprar el item.");
 		} else {
 			pj.comprar(i);
+			emd.save(new CompraItem(nombrePj, pj.getLugar().getNombre(), i.getNombre(), i.getCostoDeCompra()));
 			return null; }});
     }
 
@@ -111,6 +118,7 @@ public class LugarService {
 				throw new RuntimeException("El Personaje no está en una Tienda.");
 			} else if(pj.tieneElItem(i)) {
 				pj.vender(i);
+				emd.save(new CompraItem(nombrePj, pj.getLugar().getNombre(), i.getNombre(), i.getCostoDeVenta()));
 			}
 			return null;
 		});
@@ -173,6 +181,8 @@ public class LugarService {
 			Personaje pj = this.pjhd.recuperar(personaje);
 			validarRequisitosParaMover(pj, ubicacion, "masCorto");
 				Lugar lr = this.ild.recuperar(ubicacion);
+			    emd.save(new Arribo(pj.getNombre(), pj.getLugar().getNombre(), pj.getLugar().getClass().getName(),
+					                ubicacion, lr.getClass().getName()));
 				pj.gastarBilletera(this.n4ld.costoRutaMasCorta(pj.getLugar().getNombre(), ubicacion));
 				pj.cambiarDeLugar(lr);
 		return null; });
@@ -187,6 +197,8 @@ public class LugarService {
 			Personaje pj = this.pjhd.recuperar(personaje);
 			validarRequisitosParaMover(pj, ubicacion, "masBarato");
 			Lugar lr = this.ild.recuperar(ubicacion);
+			emd.save(new Arribo(pj.getNombre(), pj.getLugar().getNombre(), pj.getLugar().getClass().getName(),
+					ubicacion, lr.getClass().getName()));
 			pj.gastarBilletera(this.n4ld.costoRutaMasBarata(pj.getLugar().getNombre(), ubicacion));
 			pj.cambiarDeLugar(lr);
 		return null; });

@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import ar.edu.unq.epers.woe.backend.hibernateDAO.*;
 import ar.edu.unq.epers.woe.backend.model.combate.ResultadoCombate;
+import ar.edu.unq.epers.woe.backend.model.evento.Ganador;
 import ar.edu.unq.epers.woe.backend.model.lugar.Gimnasio;
 import ar.edu.unq.epers.woe.backend.model.personaje.Atributo;
 import ar.edu.unq.epers.woe.backend.model.personaje.Fuerza;
@@ -11,6 +12,7 @@ import ar.edu.unq.epers.woe.backend.model.personaje.Vida;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import ar.edu.unq.epers.woe.backend.model.requerimiento.Requerimiento;
+import ar.edu.unq.epers.woe.backend.mongoDAO.EventoMongoDAO;
 import ar.edu.unq.epers.woe.backend.service.data.ServiciosDB;
 import ar.edu.unq.epers.woe.backend.service.lugar.LugarService;
 import ar.edu.unq.epers.woe.backend.service.raza.ServiciosRaza;
@@ -37,6 +39,7 @@ public class PersonajeServiceTest {
 	private Raza r;
 	private ServiciosDB dbServ = new ServiciosDB();
 	private int idItem;
+	private EventoMongoDAO emd = new EventoMongoDAO();
 
 	@Before
 	public void crearModelo() {
@@ -90,6 +93,22 @@ public class PersonajeServiceTest {
 		ResultadoCombate rc = this.serviceP.combatir(this.pj.getNombre(), pjii.getNombre());
 		assertTrue(rc.getClass().equals(ResultadoCombate.class));
 		assertTrue(rc.getGanador().sosPersonaje());
+	}
+
+	@Test
+	public void alCombatirDosPersonajesSeGeneraEventoGanador() {
+		Gimnasio gim = new Gimnasio("tstGim0");
+		Runner.runInSession(() -> { this.ild.guardar(gim); return null; });
+		Personaje pjii = new Personaje(this.r, "tstPJ1", Clase.MAGO);
+		pjii.cambiarDeLugar(gim);
+		pjii.setVida(new Vida(10f));
+		pjii.getAtributo(Fuerza.class).setValor(200f);
+		Runner.runInSession(() -> {
+			this.pjhd.guardar(pjii); return null; });
+		this.lr.moverPermisivo(this.pj.getNombre(), gim.getNombre());
+		ResultadoCombate rc = this.serviceP.combatir(this.pj.getNombre(), pjii.getNombre());
+		Ganador g = (Ganador) this.emd.find("").iterator().next();
+		assertEquals(g.getNombrePJ(), pjii.getNombre());
 	}
 
 	@After
