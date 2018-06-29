@@ -60,6 +60,20 @@ public class GenericMongoDAO<T> {
         }
     }
 
+    public List<T> findOrderByDateDesc(String query, Object... parameters) {
+        try {
+            // sort: 1 for asc and -1 for desc
+            MongoCursor<T> all = this.mongoCollection.find(query, parameters).sort("{ fecha: -1 }").as(this.entityType);
+
+            List<T> result = this.copyToList(all);
+            all.close();
+
+            return result;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * Copia el contenido de un iterable en una lista
      */
