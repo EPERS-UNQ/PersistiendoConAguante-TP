@@ -1,12 +1,14 @@
 package ar.edu.unq.epers.woe.backend.service;
 
 import ar.edu.unq.epers.woe.backend.hibernateDAO.*;
+import ar.edu.unq.epers.woe.backend.model.evento.*;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
 import ar.edu.unq.epers.woe.backend.model.lugar.Taberna;
 import ar.edu.unq.epers.woe.backend.model.lugar.Tienda;
 import ar.edu.unq.epers.woe.backend.model.mision.IrALugar;
 import ar.edu.unq.epers.woe.backend.model.mision.Mision;
+import ar.edu.unq.epers.woe.backend.model.mision.ObtenerItem;
 import ar.edu.unq.epers.woe.backend.model.mision.Recompensa;
 import ar.edu.unq.epers.woe.backend.model.personaje.Atributo;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
@@ -14,6 +16,7 @@ import ar.edu.unq.epers.woe.backend.model.personaje.Vida;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import ar.edu.unq.epers.woe.backend.model.requerimiento.Requerimiento;
+import ar.edu.unq.epers.woe.backend.mongoDAO.EventoMongoDAO;
 import ar.edu.unq.epers.woe.backend.neo4jDAO.Neo4jLugarDAO;
 import ar.edu.unq.epers.woe.backend.service.data.ServiciosDB;
 import ar.edu.unq.epers.woe.backend.service.lugar.CaminoMuyCostoso;
@@ -47,12 +50,14 @@ public class LugarServiceTest {
     private int idItem;
     private Taberna tab;
     private Neo4jLugarDAO n4jl = new Neo4jLugarDAO();
+    private EventoMongoDAO emd = new EventoMongoDAO();
 
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void crearModelo() {
+        this.emd.eliminarDatos();
         this.dbServ.eliminarDatos();
         this.dbServ.eliminarDatosNeo4j();
 
@@ -260,4 +265,112 @@ public class LugarServiceTest {
         assertTrue(pjr.getBilletera() == 0f);
     }
 
+    @Test
+    public void alMoversePJSeGeneraEventoArribo() {
+        Taberna t = new Taberna("tab99");
+        Tienda t1 = new Tienda("tie100");
+        String tipoCamino = "terrestre";
+        this.ls.crearUbicacion(t);
+        this.ls.crearUbicacion(t1);
+        this.ls.conectar(t.getNombre(), t1.getNombre(), tipoCamino);
+        Personaje pjn = new Personaje(this.r, "tstPJ1", Clase.MAGO);
+        pjn.setBilletera(500f);
+        pjn.cambiarDeLugar(t);
+        Runner.runInSession(() -> { this.pjhd.guardar(pjn); return null; });
+        this.ls.mover(pjn.getNombre(), t1.getNombre());
+        Arribo arr = (Arribo) this.emd.find("").iterator().next();
+        assertEquals(arr.getClaseLugarOrigen(), Taberna.class.getSimpleName());
+        assertEquals(arr.getNombreLugarDestino(), t1.getNombre());
+        assertEquals(arr.getNombreLugar(), t.getNombre());
+        assertEquals(arr.getClaseLugarDestino(), Tienda.class.getSimpleName());
+        assertEquals(arr.getNombrePJ(), pjn.getNombre());
+        assertEquals(arr.getClaseDeEvento(), Arribo.class.getSimpleName());
+    }
+
+    @Test
+    public void alMoversePJYCompletarMisionSeGeneraEventoArriboYEventoMisionCompletada() {
+        Taberna t = new Taberna("tab99");
+        Tienda t1 = new Tienda("tie100");
+        String tipoCamino = "terrestre";
+        this.ls.crearUbicacion(t);
+        this.ls.crearUbicacion(t1);
+        this.ls.conectar(t.getNombre(), t1.getNombre(), tipoCamino);
+        IrALugar ial = new IrALugar("tstIAL", new Recompensa(), t1);
+        Personaje pjn = new Personaje(this.r, "tstPJ1", Clase.MAGO);
+        pjn.aceptarMision(ial);
+        pjn.setBilletera(500f);
+        pjn.cambiarDeLugar(t);
+        Runner.runInSession(() -> { this.pjhd.guardar(pjn); return null; });
+        this.ls.mover(pjn.getNombre(), t1.getNombre());
+        List<Evento> eventos = this.emd.find("");
+        Arribo arr = (Arribo) eventos.get(0);
+        MisionCompletada misComp = (MisionCompletada) eventos.get(1);
+        assertEquals(arr.getClaseDeEvento(), Arribo.class.getSimpleName());
+        assertEquals(misComp.getClaseDeEvento(), MisionCompletada.class.getSimpleName());
+        assertEquals(misComp.getNombreLugar(), t1.getNombre());
+        assertEquals(misComp.getNombreMision(), ial.getNombre());
+        assertEquals(misComp.getNombrePJ(), pjn.getNombre());
+    }
+
+    @Test
+    public void alVenderItemSeGeneraEventoVentaItem() {
+        this.ls.moverPermisivo(this.pj.getNombre(), "tie1");
+        this.ls.venderItem(this.pj.getNombre(), this.idItem);
+        VentaItem vi = (VentaItem) this.emd.find("").iterator().next();
+        assertEquals(vi.getClaseDeEvento(), VentaItem.class.getSimpleName());
+        assertEquals(vi.getItem(), this.i.getNombre());
+        assertEquals(vi.getNombreLugar(), "tie1");
+        assertEquals(vi.getNombrePJ(), this.pj.getNombre());
+        assertEquals(vi.getPrecio(), this.i.getCostoDeVenta());
+    }
+
+    @Test
+    public void alComprarItemSeGeneraEventoCompraItem() {
+        Tienda t = new Tienda("tie2");
+        HashSet<Item> is = new HashSet<Item>();
+        is.add(this.i);
+        t.setItems(is);
+        Runner.runInSession(() -> { this.ild.guardar(t); return null; });
+        Personaje pjn = new Personaje(this.r, "tstPJ1", Clase.MAGO);
+        pjn.setBilletera(500f);
+        pjn.cambiarDeLugar(t);
+        Runner.runInSession(() -> { this.pjhd.guardar(pjn); return null; });
+        ls.comprarItem("tstPJ1", this.idItem);
+        CompraItem ci = (CompraItem) this.emd.find("").iterator().next();
+        assertEquals(ci.getClaseDeEvento(), CompraItem.class.getSimpleName());
+        assertEquals(ci.getItem(), this.i.getNombre());
+        assertEquals(ci.getNombreLugar(), "tie2");
+        assertEquals(ci.getNombrePJ(), pjn.getNombre());
+        assertEquals(ci.getPrecio(), this.i.getCostoDeCompra());
+    }
+
+    @Test
+    public void alComprarItemYCompletarMisionSeGeneraEventoCompraItemYMisionCompletada() {
+        Tienda t = new Tienda("tie2");
+        HashSet<Item> is = new HashSet<Item>();
+        is.add(this.i);
+        t.setItems(is);
+        Runner.runInSession(() -> {
+            this.ild.guardar(t);
+            return null;
+        });
+        ObtenerItem oti = new ObtenerItem("tstOTI", new Recompensa(), this.i);
+        Personaje pjn = new Personaje(this.r, "tstPJ1", Clase.MAGO);
+        pjn.setBilletera(500f);
+        pjn.cambiarDeLugar(t);
+        pjn.aceptarMision(oti);
+        Runner.runInSession(() -> {
+            this.pjhd.guardar(pjn);
+            return null;
+        });
+        ls.comprarItem("tstPJ1", this.idItem);
+        List<Evento> eventos = this.emd.find("");
+        CompraItem ci = (CompraItem) eventos.get(0);
+        MisionCompletada misComp = (MisionCompletada) eventos.get(1);
+        assertEquals(ci.getClaseDeEvento(), CompraItem.class.getSimpleName());
+        assertEquals(misComp.getClaseDeEvento(), MisionCompletada.class.getSimpleName());
+        assertEquals(misComp.getNombreLugar(), t.getNombre());
+        assertEquals(misComp.getNombreMision(), oti.getNombre());
+        assertEquals(misComp.getNombrePJ(), pjn.getNombre());
+    }
 }

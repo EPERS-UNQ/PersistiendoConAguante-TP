@@ -5,6 +5,8 @@ public class CompraItem extends Evento {
 	private String item;
 	private int precio;
 
+	public CompraItem() {}
+
 	public CompraItem(String nombrePersonaje, String nombreLugar, String idItem, int precio) {
 		super(nombrePersonaje, nombreLugar);
 		this.item = idItem;

@@ -3,10 +3,7 @@ package ar.edu.unq.epers.woe.backend.service.lugar;
 import java.util.ArrayList;
 import java.util.List;
 import ar.edu.unq.epers.woe.backend.hibernateDAO.*;
-import ar.edu.unq.epers.woe.backend.model.evento.Arribo;
-import ar.edu.unq.epers.woe.backend.model.evento.CompraItem;
-import ar.edu.unq.epers.woe.backend.model.evento.MisionAceptada;
-import ar.edu.unq.epers.woe.backend.model.evento.MisionCompletada;
+import ar.edu.unq.epers.woe.backend.model.evento.*;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
 import ar.edu.unq.epers.woe.backend.model.lugar.Taberna;
@@ -123,7 +120,7 @@ public class LugarService {
 				throw new RuntimeException("El Personaje no está en una Tienda.");
 			} else if(pj.tieneElItem(i)) {
 				pj.vender(i);
-				this.emd.save(new CompraItem(nombrePj, pj.getLugar().getNombre(), i.getNombre(), i.getCostoDeVenta()));
+				this.emd.save(new VentaItem(nombrePj, pj.getLugar().getNombre(), i.getNombre(), i.getCostoDeVenta()));
 			}
 			return null;
 		});
@@ -187,8 +184,8 @@ public class LugarService {
 			validarRequisitosParaMover(pj, ubicacion, "masCorto");
 				Lugar lr = this.ild.recuperar(ubicacion);
 			    List<String> mis = this.pjs.misionesCumplidasPor(pj);
-			    this.emd.save(new Arribo(pj.getNombre(), pj.getLugar().getNombre(), pj.getLugar().getClass().getName(),
-					                ubicacion, lr.getClass().getName()));
+			    this.emd.save(new Arribo(pj.getNombre(), pj.getLugar().getNombre(), pj.getLugar().getClass().getSimpleName(),
+					                     ubicacion, lr.getClass().getSimpleName()));
 				pj.gastarBilletera(this.n4ld.costoRutaMasCorta(pj.getLugar().getNombre(), ubicacion));
 				pj.cambiarDeLugar(lr);
 			    this.generarEventoMisCompSiCorresponde(mis, pj);
@@ -205,8 +202,8 @@ public class LugarService {
 			validarRequisitosParaMover(pj, ubicacion, "masBarato");
 			Lugar lr = this.ild.recuperar(ubicacion);
 			List<String> mis = this.pjs.misionesCumplidasPor(pj);
-			this.emd.save(new Arribo(pj.getNombre(), pj.getLugar().getNombre(), pj.getLugar().getClass().getName(),
-					ubicacion, lr.getClass().getName()));
+			this.emd.save(new Arribo(pj.getNombre(), pj.getLugar().getNombre(), pj.getLugar().getClass().getSimpleName(),
+					      ubicacion, lr.getClass().getSimpleName()));
 			pj.gastarBilletera(this.n4ld.costoRutaMasBarata(pj.getLugar().getNombre(), ubicacion));
 			pj.cambiarDeLugar(lr);
 			this.generarEventoMisCompSiCorresponde(mis, pj);
