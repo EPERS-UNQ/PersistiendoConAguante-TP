@@ -13,10 +13,7 @@ import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
 import ar.edu.unq.epers.woe.backend.hibernateDAO.HibernateItemDAO;
 import ar.edu.unq.epers.woe.backend.mongoDAO.EventoMongoDAO;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class PersonajeService {
 
@@ -45,27 +42,32 @@ public class PersonajeService {
             if(!pj1.getLugar().getClass().equals(Gimnasio.class) || !pj2.getLugar().getClass().equals(Gimnasio.class)) {
                 throw new RuntimeException("Alguno de los personajes no está en un gimnasio.");
             } else {
-                Map<String, Set<String>> map = new HashMap<>();
-                map.put(pj1.getNombre(), pj1.getMisionesCumplidas());
-                map.put(pj2.getNombre(), pj2.getMisionesCumplidas());
+                List<String> l1 = new ArrayList<>();
+                l1.add(pj1.getNombre());
+                l1.addAll(pj1.getMisionesCumplidas());
+                List<String> l2 = new ArrayList<>();
+                l2.add(pj2.getNombre());
+                l2.addAll(pj2.getMisionesCumplidas());
                 ResultadoCombate resultadoCombate = new Combate().combatir(pj1, pj2);
                 this.icd.guardar(resultadoCombate);
-                generarEventosSiCorresponde(resultadoCombate, map);
+                generarEventosSiCorresponde(resultadoCombate, l1, l2);
                 return resultadoCombate;
             }});
     }
 
-    private void generarEventosSiCorresponde(ResultadoCombate resultadoCombate, Map<String, Set<String>> map) {
+    private void generarEventosSiCorresponde(ResultadoCombate resultadoCombate, List<String> l1, List<String> l2) {
         Personaje g = (Personaje) resultadoCombate.getGanador();
         Personaje p = (Personaje) resultadoCombate.getPerdedor();
         this.emd.save(new Ganador(g.getNombre(), g.getLugar().getNombre(), p.getNombre(), p.getClase().name(),
                       g.getClase().name(), p.getRaza().getNombre(), g.getRaza().getNombre()));
-        for(String nombre : map.keySet()) {
-            if(nombre.equals(g.getNombre()) && (!map.get(nombre).containsAll(g.getMisionesCumplidas()))) {
-                Set<String> mis = g.getMisionesCumplidas();
-                mis.removeAll(map.get(nombre));
-                this.emd.save(new MisionCompletada(nombre, g.getLugar().getNombre(), mis.iterator().next()));
-            }
+        List<String> mis = new ArrayList<>();
+        mis.addAll(g.getMisionesCumplidas());
+        if(g.getNombre().equals(l1.get(0)) && g.getMisionesCumplidas().size() > (l1.size()-1)) {
+            mis.removeAll(l1);
+            this.emd.save(new MisionCompletada(g.getNombre(), g.getLugar().getNombre(), mis.iterator().next()));
+        } else if(g.getNombre().equals(l2.get(0)) && g.getMisionesCumplidas().size() > (l2.size()-1)) {
+            mis.removeAll(l2);
+            this.emd.save(new MisionCompletada(g.getNombre(), g.getLugar().getNombre(), mis.iterator().next()));
         }
     }
 

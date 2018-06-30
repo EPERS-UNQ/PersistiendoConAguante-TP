@@ -25,7 +25,7 @@ public class Evento {
         this.nombrePJ = nombrePJ;
         this.nombreLugar = nombreLugar;
         this.fecha = new Date();
-        this.setClaseDeEvento(this.getClass().getName());
+        this.setClaseDeEvento(this.getClass().getSimpleName());
     }
 
     // Getters y setters

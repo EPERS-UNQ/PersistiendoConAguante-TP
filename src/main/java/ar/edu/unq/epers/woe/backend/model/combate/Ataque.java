@@ -28,6 +28,8 @@ public class Ataque {
 	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	Vida restoDeVida;
 
+	public Ataque() {}
+
 	public Ataque(Luchador atacante, Luchador atacado) {
 		this.setAtacante(atacante);
 		this.setAtacado(atacado);
