@@ -10,9 +10,15 @@ public class MisionAceptada extends Evento {
 		super(nombrePersonaje, nombreLugar);
 		this.nombreMision = nombreMision;
 	}
+
 	public MisionAceptada() { }
 	
 	public String getNombreMision() {
 		return nombreMision;
 	}
+
+	public void setNombreMision(String nombreMision) {
+		this.nombreMision = nombreMision;
+	}
+
 }

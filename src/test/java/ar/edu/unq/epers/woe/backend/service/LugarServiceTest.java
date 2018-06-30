@@ -373,4 +373,15 @@ public class LugarServiceTest {
         assertEquals(misComp.getNombreMision(), oti.getNombre());
         assertEquals(misComp.getNombrePJ(), pjn.getNombre());
     }
+
+    @Test
+    public void alAceptarMisionSeGeneraEventoMisionAceptada() {
+        this.ls.aceptarMision("tstPJ0", "ia1");
+        MisionAceptada ma = (MisionAceptada) this.emd.find("").iterator().next();
+        assertEquals(ma.getClaseDeEvento(), MisionAceptada.class.getSimpleName());
+        assertEquals(ma.getNombreLugar(), this.pj.getLugar().getNombre());
+        assertEquals(ma.getNombrePJ(), this.pj.getNombre());
+        assertEquals(ma.getNombreMision(), "ia1");
+    }
+
 }
