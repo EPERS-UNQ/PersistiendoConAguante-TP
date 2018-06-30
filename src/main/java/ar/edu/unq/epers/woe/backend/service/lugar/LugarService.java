@@ -6,6 +6,7 @@ import ar.edu.unq.epers.woe.backend.hibernateDAO.*;
 import ar.edu.unq.epers.woe.backend.model.evento.Arribo;
 import ar.edu.unq.epers.woe.backend.model.evento.CompraItem;
 import ar.edu.unq.epers.woe.backend.model.evento.MisionAceptada;
+import ar.edu.unq.epers.woe.backend.model.evento.MisionCompletada;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
 import ar.edu.unq.epers.woe.backend.model.lugar.Taberna;
@@ -14,6 +15,7 @@ import ar.edu.unq.epers.woe.backend.model.mision.Mision;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
 import ar.edu.unq.epers.woe.backend.mongoDAO.EventoMongoDAO;
 import ar.edu.unq.epers.woe.backend.neo4jDAO.Neo4jLugarDAO;
+import ar.edu.unq.epers.woe.backend.service.personaje.PersonajeService;
 
 public class LugarService {
 
@@ -24,6 +26,7 @@ public class LugarService {
 	private HibernateLugarDAO ild = new HibernateLugarDAO();
 	private Neo4jLugarDAO n4ld = new Neo4jLugarDAO();
 	private EventoMongoDAO emd = new EventoMongoDAO();
+	private PersonajeService pjs = new PersonajeService();
 
     /*
      * Devuelve la lista de misiones disponibles para un jugador.
@@ -31,7 +34,7 @@ public class LugarService {
      */
 	public List<Mision> listarMisiones(String nombrePj){
 		return Runner.runInSession(() -> {
-			Personaje pj = pjhd.recuperar(nombrePj);
+			Personaje pj = this.pjhd.recuperar(nombrePj);
 			if(!pj.getLugar().getClass().equals(Taberna.class)) {
 				throw new RuntimeException("El Personaje no está en una Taberna.");
 			} else {
@@ -56,7 +59,7 @@ public class LugarService {
 		if(!pj.getLugar().getClass().equals(Taberna.class)) {
 			throw new RuntimeException("El Personaje no está en una Taberna.");
 		} else if(this.listarMisiones(nombrePj).contains(m)) {
-			emd.save(new MisionAceptada(pj.getNombre(), pj.getLugar().getNombre(), nombreMis));
+			this.emd.save(new MisionAceptada(pj.getNombre(), pj.getLugar().getNombre(), nombreMis));
 			pj.aceptarMision(m);
 		}
 		return null; });
@@ -77,7 +80,7 @@ public class LugarService {
      */
     public List<Item> listarItems(String nombrePj) {
 		return Runner.runInSession(() -> {
-			Personaje pj = pjhd.recuperar(nombrePj);
+			Personaje pj = this.pjhd.recuperar(nombrePj);
 			if(!pj.getLugar().getClass().equals(Tienda.class)) {
 				throw new RuntimeException("El Personaje no está en una Tienda.");
 			} else {
@@ -95,15 +98,17 @@ public class LugarService {
      */
     public void comprarItem(String nombrePj, int idItem) {
 		Runner.runInSession(() -> {
-		Personaje pj = pjhd.recuperar(nombrePj);
-		Item i = ihd.recuperar(idItem);
+		Personaje pj = this.pjhd.recuperar(nombrePj);
+		Item i = this.ihd.recuperar(idItem);
 		if(!pj.getLugar().getClass().equals(Tienda.class)) {
 			throw new RuntimeException("El Personaje no está en una Tienda.");
 		} else if(pj.getBilletera() < i.getCostoDeCompra()) {
 			throw new RuntimeException("Dinero insuficiente para comprar el item.");
 		} else {
+			List<String> mis = this.pjs.misionesCumplidasPor(pj);
 			pj.comprar(i);
-			emd.save(new CompraItem(nombrePj, pj.getLugar().getNombre(), i.getNombre(), i.getCostoDeCompra()));
+			this.emd.save(new CompraItem(nombrePj, pj.getLugar().getNombre(), i.getNombre(), i.getCostoDeCompra()));
+			this.generarEventoMisCompSiCorresponde(mis, pj);
 			return null; }});
     }
 
@@ -112,13 +117,13 @@ public class LugarService {
      */
     public void venderItem(String nombrePj, int idItem) {
 		Runner.runInSession(() -> {
-			Personaje pj = pjhd.recuperar(nombrePj);
-			Item i = ihd.recuperar(idItem);
+			Personaje pj = this.pjhd.recuperar(nombrePj);
+			Item i = this.ihd.recuperar(idItem);
 			if (!pj.getLugar().getClass().equals(Tienda.class)) {
 				throw new RuntimeException("El Personaje no está en una Tienda.");
 			} else if(pj.tieneElItem(i)) {
 				pj.vender(i);
-				emd.save(new CompraItem(nombrePj, pj.getLugar().getNombre(), i.getNombre(), i.getCostoDeVenta()));
+				this.emd.save(new CompraItem(nombrePj, pj.getLugar().getNombre(), i.getNombre(), i.getCostoDeVenta()));
 			}
 			return null;
 		});
@@ -181,10 +186,12 @@ public class LugarService {
 			Personaje pj = this.pjhd.recuperar(personaje);
 			validarRequisitosParaMover(pj, ubicacion, "masCorto");
 				Lugar lr = this.ild.recuperar(ubicacion);
-			    emd.save(new Arribo(pj.getNombre(), pj.getLugar().getNombre(), pj.getLugar().getClass().getName(),
+			    List<String> mis = this.pjs.misionesCumplidasPor(pj);
+			    this.emd.save(new Arribo(pj.getNombre(), pj.getLugar().getNombre(), pj.getLugar().getClass().getName(),
 					                ubicacion, lr.getClass().getName()));
 				pj.gastarBilletera(this.n4ld.costoRutaMasCorta(pj.getLugar().getNombre(), ubicacion));
 				pj.cambiarDeLugar(lr);
+			    this.generarEventoMisCompSiCorresponde(mis, pj);
 		return null; });
 	}
 
@@ -197,10 +204,20 @@ public class LugarService {
 			Personaje pj = this.pjhd.recuperar(personaje);
 			validarRequisitosParaMover(pj, ubicacion, "masBarato");
 			Lugar lr = this.ild.recuperar(ubicacion);
-			emd.save(new Arribo(pj.getNombre(), pj.getLugar().getNombre(), pj.getLugar().getClass().getName(),
+			List<String> mis = this.pjs.misionesCumplidasPor(pj);
+			this.emd.save(new Arribo(pj.getNombre(), pj.getLugar().getNombre(), pj.getLugar().getClass().getName(),
 					ubicacion, lr.getClass().getName()));
 			pj.gastarBilletera(this.n4ld.costoRutaMasBarata(pj.getLugar().getNombre(), ubicacion));
 			pj.cambiarDeLugar(lr);
+			this.generarEventoMisCompSiCorresponde(mis, pj);
 		return null; });
+	}
+
+	private void generarEventoMisCompSiCorresponde(List<String> mis, Personaje pj) {
+		List<String> misComp = new ArrayList<>(pj.getMisionesCumplidas());
+		if(pj.getNombre().equals(mis.get(0)) && pj.getMisionesCumplidas().size() > (mis.size()-1)) {
+			misComp.removeAll(mis);
+			this.emd.save(new MisionCompletada(pj.getNombre(), pj.getLugar().getNombre(), misComp.iterator().next()));
+		}
 	}
 }

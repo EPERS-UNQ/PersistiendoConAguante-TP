@@ -42,12 +42,8 @@ public class PersonajeService {
             if(!pj1.getLugar().getClass().equals(Gimnasio.class) || !pj2.getLugar().getClass().equals(Gimnasio.class)) {
                 throw new RuntimeException("Alguno de los personajes no está en un gimnasio.");
             } else {
-                List<String> l1 = new ArrayList<>();
-                l1.add(pj1.getNombre());
-                l1.addAll(pj1.getMisionesCumplidas());
-                List<String> l2 = new ArrayList<>();
-                l2.add(pj2.getNombre());
-                l2.addAll(pj2.getMisionesCumplidas());
+                List<String> l1 = misionesCumplidasPor(pj1);
+                List<String> l2 = misionesCumplidasPor(pj2);
                 ResultadoCombate resultadoCombate = new Combate().combatir(pj1, pj2);
                 this.icd.guardar(resultadoCombate);
                 generarEventosSiCorresponde(resultadoCombate, l1, l2);
@@ -55,13 +51,19 @@ public class PersonajeService {
             }});
     }
 
+    public List<String> misionesCumplidasPor(Personaje pj) {
+        List<String> res = new ArrayList<>();
+        res.add(pj.getNombre());
+        res.addAll(pj.getMisionesCumplidas());
+        return res;
+    }
+
     private void generarEventosSiCorresponde(ResultadoCombate resultadoCombate, List<String> l1, List<String> l2) {
         Personaje g = (Personaje) resultadoCombate.getGanador();
         Personaje p = (Personaje) resultadoCombate.getPerdedor();
         this.emd.save(new Ganador(g.getNombre(), g.getLugar().getNombre(), p.getNombre(), p.getClase().name(),
                       g.getClase().name(), p.getRaza().getNombre(), g.getRaza().getNombre()));
-        List<String> mis = new ArrayList<>();
-        mis.addAll(g.getMisionesCumplidas());
+        List<String> mis = new ArrayList<>(g.getMisionesCumplidas());
         if(g.getNombre().equals(l1.get(0)) && g.getMisionesCumplidas().size() > (l1.size()-1)) {
             mis.removeAll(l1);
             this.emd.save(new MisionCompletada(g.getNombre(), g.getLugar().getNombre(), mis.iterator().next()));
