@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 
 public class MongoDAOTest {
 
-    private EventoMongoDAO<Evento> mde = new EventoMongoDAO();
+    private EventoMongoDAO mde = new EventoMongoDAO();
 
     @Before
     public void setUp() {

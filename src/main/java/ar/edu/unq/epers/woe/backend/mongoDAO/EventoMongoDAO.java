@@ -11,7 +11,7 @@ import org.jongo.MongoCursor;
 
 import ar.edu.unq.epers.woe.backend.model.evento.Evento;
 
-public class EventoMongoDAO<T> {
+public class EventoMongoDAO {
 
     private Jongo jongo;
     protected MongoCollection mongoCollection;
@@ -35,8 +35,8 @@ public class EventoMongoDAO<T> {
         this.jongo.getDatabase().dropDatabase();
     }
 
-    public void save(T object) {
-        this.mongoCollection.insert(object);
+    public void save(Evento evento) {
+        this.mongoCollection.insert(evento);
     }
 
     public void save(List<Evento> objects) {
