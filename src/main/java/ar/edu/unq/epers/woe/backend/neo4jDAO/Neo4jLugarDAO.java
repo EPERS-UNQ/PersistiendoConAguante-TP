@@ -126,4 +126,21 @@ public class Neo4jLugarDAO {
             session.close();
         }
     }
+
+	public List<String> conectadosCon(String nombreLugar) {
+        Session session = this.driver.session();
+        try {
+            List<String> res = new ArrayList<String>();
+            String query = "MATCH(l:Lugar)-[:conectadoCon]->(lugar) " +
+                           "WHERE l.nombre = {elNombre} " +
+                           "RETURN lugar.nombre";
+            StatementResult result = session.run(query, Values.parameters("elNombre", nombreLugar) );
+            for(Record r : result.list()) {
+                res.add(r.get(0).asString());
+            }
+            return res;
+        } finally {
+            session.close();
+        }
+	}
 }

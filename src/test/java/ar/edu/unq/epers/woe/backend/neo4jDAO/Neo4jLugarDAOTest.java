@@ -9,6 +9,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 public class Neo4jLugarDAOTest {
 
     private Neo4jLugarDAO n4jl = new Neo4jLugarDAO();
@@ -104,5 +106,27 @@ public class Neo4jLugarDAOTest {
         this.n4jl.crearRelacionConectadoCon(t1.getNombre(), t2.getNombre(), tipoCaminoCaro);
         assertEquals(this.n4jl.costoRutaMasBarata(t1.getNombre(), t2.getNombre()), (Integer) 1);
     }
-
+    
+    @Test
+    public void seObtieneNombreDeLugaresConectadosConUnLugarPorCualquierCamino() {
+        Tienda t = new Tienda("tie1");
+        Tienda t1 = new Tienda("tie2");
+        Gimnasio g = new Gimnasio("gim1");
+        Gimnasio g1 = new Gimnasio("gim2");
+        String tipoCamino = "terrestre";
+        String tipoCamino1 = "maritimo";
+        this.n4jl.create(t);
+        this.n4jl.create(t1);
+        this.n4jl.create(g);
+        this.n4jl.create(g1);
+        // 't' se relaciona con 't1', 'g', y 'g1'
+        this.n4jl.crearRelacionConectadoCon(t.getNombre(), t1.getNombre(), tipoCamino);
+        this.n4jl.crearRelacionConectadoCon(t.getNombre(), g.getNombre(), tipoCamino);
+        this.n4jl.crearRelacionConectadoCon(t.getNombre(), g1.getNombre(), tipoCamino1);
+        List<String> lugaresConectados = n4jl.conectadosCon(t.getNombre());
+		assertEquals( 3, lugaresConectados.size() );
+		assertTrue( lugaresConectados.contains(t1.getNombre()) );
+		assertTrue( lugaresConectados.contains(g.getNombre()) );
+		assertTrue( lugaresConectados.contains(g1.getNombre()) );
+	}
 }

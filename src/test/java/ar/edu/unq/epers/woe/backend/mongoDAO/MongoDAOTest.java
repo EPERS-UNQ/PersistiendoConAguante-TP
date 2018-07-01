@@ -110,7 +110,7 @@ public class MongoDAOTest {
        	Evento e1 = new MisionAceptada("tstPJ2", lugar2, "tstMision2");
      	mde.save(e); mde.save(e1); 
      	
-       	Evento e2 = new MisionAceptada("tstPJ2", lugar3, "tstMision3");
+       	Evento e2 = new Arribo( "tstPj2", lugar2, "tClaseLOrg", "tLugarDest", "tClaseLDest");;
      	mde.save(e2);
     	
      	List<String> lugares = new ArrayList<String>();
