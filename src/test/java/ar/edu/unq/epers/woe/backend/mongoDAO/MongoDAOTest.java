@@ -1,9 +1,12 @@
 package ar.edu.unq.epers.woe.backend.mongoDAO;
 
 import ar.edu.unq.epers.woe.backend.model.evento.Arribo;
+import ar.edu.unq.epers.woe.backend.model.evento.CompraItem;
 import ar.edu.unq.epers.woe.backend.model.evento.Evento;
 import ar.edu.unq.epers.woe.backend.model.evento.Ganador;
 import ar.edu.unq.epers.woe.backend.model.evento.MisionAceptada;
+import ar.edu.unq.epers.woe.backend.model.evento.MisionCompletada;
+import ar.edu.unq.epers.woe.backend.model.evento.VentaItem;
 
 import org.junit.Test;
 import org.junit.Before;
@@ -122,19 +125,22 @@ public class MongoDAOTest {
     @Test
     public void seRecuperaListaDeEventosEnElQueEsteRelacionadoUnPersonaje() {
     	String nombrePersonaje = "tstPJ";
+    	
     	//hace de ganador
-		Evento e = new Ganador( nombrePersonaje, "tstLugar", "tstPJ2", "tstClase0", "tstClase1", "tstRaza0", "tstRaza1");
+		Evento e1 = new Ganador( nombrePersonaje, "tstLugar", "tstPJ2", "tstClase0", "tstClase1", "tstRaza0", "tstRaza1");
 		//hace de perdedor
-		Evento e1 = new Ganador( "tstPJ2", "tstLugar", nombrePersonaje, "tstClase0", "tstClase1", "tstRaza0", "tstRaza1");
-		mde.save(e);
-		mde.save(e1);
+		Evento e2 = new Ganador( "tstPJ2", "tstLugar", nombrePersonaje, "tstClase0", "tstClase1", "tstRaza0", "tstRaza1");
+		mde.save(e1); mde.save(e2);
 
-		Evento e2 = new MisionAceptada(nombrePersonaje, "tstLugar", "tstMision3");
-		mde.save(e2);
+		Evento e3 = new MisionAceptada(nombrePersonaje, "tstLugar", "tstMision3");
+		Evento e4 = new MisionCompletada(nombrePersonaje, "tstLugar", "tstMision3");
+		Evento e5 = new CompraItem(nombrePersonaje, "tstLugar", "tstItem", 0);
+		Evento e6 = new VentaItem(nombrePersonaje, "tstLugar", "tstItem", 0);
+		mde.save(e3); mde.save(e4); mde.save(e5); mde.save(e6);
 		
 		List<Evento> listaEventos = mde.getByPersonaje(nombrePersonaje) ;
-		assertEquals( 3, listaEventos.size() );
-		assertEquals(e2.getFecha(), listaEventos.get(0).getFecha() );
+		assertEquals( 6, listaEventos.size() );
+		assertEquals(e6.getFecha(), listaEventos.get(0).getFecha() );
     }
 
 }
