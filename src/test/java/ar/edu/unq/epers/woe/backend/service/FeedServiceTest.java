@@ -57,6 +57,16 @@ public class FeedServiceTest {
 	}
 	
 	@Test
+	public void deUnPersonajeSinNingunEventoSeObtieneUnaListaVacia() {
+		Personaje p = new Personaje(null, "testP1", null);
+		
+		Evento eNonRelated = new CompraItem( "tstPjX", "testLugar", "testItem", 0);
+		eventoDao.save(eNonRelated);
+		
+		assertTrue( feedServ.feedPersonaje( p.getNombre() ).isEmpty() );
+	}
+	
+	@Test
 	public void seRecuperanSeisEventosRelacionadosAUnLugarYASusConexiones() {
 		
 		Lugar lugar = new Tienda("testLugar");
@@ -90,6 +100,19 @@ public class FeedServiceTest {
 		assertEquals( 6, eventos.size() );
 		assertEquals( e6.getFecha(), eventos.get(0).getFecha() );//mas reciente
 		assertEquals( e5.getFecha(), eventos.get(1).getFecha() );//segundo mas reciente
+	}
+	
+	@Test
+	public void deUnLugarSinNingunEventoSeObtieneUnaListaVacia() {
+		Lugar lugar = new Tienda("testLugar");
+		Neo4jLugarDAO lugarDao = new Neo4jLugarDAO(); 
+		lugarDao.eliminarDatos(); //clean Neo4J
+		lugarDao.create(lugar);
+		
+		Evento eNonRelated = new CompraItem( "tstPj", "testLugarX", "testItem", 0);
+		eventoDao.save(eNonRelated);
+		
+		assertTrue( feedServ.feedLugar(lugar.getNombre()) .isEmpty() );
 	}
 
 }
