@@ -2,6 +2,7 @@ package ar.edu.unq.epers.woe.backend.service;
 
 import static org.junit.Assert.*;
 
+import ar.edu.unq.epers.woe.backend.redisDAO.RedisDAO;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +29,7 @@ public class LeaderBoardServiceTest {
 	Clase claseMayoria;
 	TestService testServ = new TestService();
 	LeaderboardService leaderboardS = new LeaderboardService();
+	RedisDAO rd = new RedisDAO();
 	
 	public void crearModelo(){
 						
@@ -73,6 +75,7 @@ public class LeaderBoardServiceTest {
 	}
 
 	public void crearModeloExtendido() {
+
 		// se extiende para un total de 11 personajes con un combate ganado cada uno
 		Personaje personaje3 = new Personaje(razaMayoria, "Persnj 3", claseMayoria);
 		Personaje personaje4 = new Personaje(razaMayoria, "Persnj 4", claseMayoria);
@@ -133,6 +136,7 @@ public class LeaderBoardServiceTest {
 
 	@After
 	public void cleanup() {
+		this.rd.clear();
 		SessionFactoryProvider.destroy();
 	}
 	

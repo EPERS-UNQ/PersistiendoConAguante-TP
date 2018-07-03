@@ -12,6 +12,7 @@ import ar.edu.unq.epers.woe.backend.model.mision.Mision;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
 import ar.edu.unq.epers.woe.backend.mongoDAO.EventoMongoDAO;
 import ar.edu.unq.epers.woe.backend.neo4jDAO.Neo4jLugarDAO;
+import ar.edu.unq.epers.woe.backend.service.cache.CacheGenerator;
 import ar.edu.unq.epers.woe.backend.service.personaje.PersonajeService;
 
 public class LugarService {
@@ -24,6 +25,7 @@ public class LugarService {
 	private Neo4jLugarDAO n4ld = new Neo4jLugarDAO();
 	private EventoMongoDAO emd = new EventoMongoDAO();
 	private PersonajeService pjs = new PersonajeService();
+	private CacheGenerator cg = new CacheGenerator();
 
     /*
      * Devuelve la lista de misiones disponibles para un jugador.
@@ -106,6 +108,7 @@ public class LugarService {
 			pj.comprar(i);
 			this.emd.save(new CompraItem(nombrePj, pj.getLugar().getNombre(), i.getNombre(), i.getCostoDeCompra()));
 			this.generarEventoMisCompSiCorresponde(mis, pj);
+			this.cg.setCacheMasFuerte(pj.getNombre());
 			return null; }});
     }
 
@@ -189,6 +192,7 @@ public class LugarService {
 				pj.gastarBilletera(this.n4ld.costoRutaMasCorta(pj.getLugar().getNombre(), ubicacion));
 				pj.cambiarDeLugar(lr);
 			    this.generarEventoMisCompSiCorresponde(mis, pj);
+			    this.cg.setCacheMasFuerte(pj.getNombre());
 		return null; });
 	}
 
@@ -207,6 +211,7 @@ public class LugarService {
 			pj.gastarBilletera(this.n4ld.costoRutaMasBarata(pj.getLugar().getNombre(), ubicacion));
 			pj.cambiarDeLugar(lr);
 			this.generarEventoMisCompSiCorresponde(mis, pj);
+			this.cg.setCacheMasFuerte(pj.getNombre());
 		return null; });
 	}
 

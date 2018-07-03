@@ -12,6 +12,7 @@ import ar.edu.unq.epers.woe.backend.model.lugar.Gimnasio;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
 import ar.edu.unq.epers.woe.backend.hibernateDAO.HibernateItemDAO;
 import ar.edu.unq.epers.woe.backend.mongoDAO.EventoMongoDAO;
+import ar.edu.unq.epers.woe.backend.service.cache.CacheGenerator;
 
 import java.util.*;
 
@@ -21,24 +22,26 @@ public class PersonajeService {
     private HibernateItemDAO ihd = new HibernateItemDAO();
     private HibernateCombateDAO icd = new HibernateCombateDAO();
     private EventoMongoDAO emd = new EventoMongoDAO();
+    private CacheGenerator cg = new CacheGenerator();
 
     public void equipar(String nombrePj, Integer item) {
             Runner.runInSession(() -> {
-                Item i = ihd.recuperar(item);
-                Personaje pj = pjhd.recuperar(nombrePj);
+                Item i = this.ihd.recuperar(item);
+                Personaje pj = this.pjhd.recuperar(nombrePj);
                 if(i.getRequerimiento().cumpleRequerimiento(pj) && pj.getMochila().getItems().contains(i)
                         && i.getClases().contains(pj.getClase())) {
                     i.setMochila(null);
                     pj.getInventario().setItemEnUnaUbicacion(i, pj);
                     pj.getMochila().getItems().remove(i);
+                    this.cg.setCacheMasFuerte(pj.getNombre());
                 }
             return null; });
     }
 
     public ResultadoCombate combatir(String nombrePj1, String nombrePj2) {
         return Runner.runInSession(() -> {
-            Personaje pj1 = pjhd.recuperar(nombrePj1);
-            Personaje pj2 = pjhd.recuperar(nombrePj2);
+            Personaje pj1 = this.pjhd.recuperar(nombrePj1);
+            Personaje pj2 = this.pjhd.recuperar(nombrePj2);
             if(!pj1.getLugar().getClass().equals(Gimnasio.class) || !pj2.getLugar().getClass().equals(Gimnasio.class)) {
                 throw new RuntimeException("Alguno de los personajes no está en un gimnasio.");
             } else {
@@ -47,6 +50,8 @@ public class PersonajeService {
                 ResultadoCombate resultadoCombate = new Combate().combatir(pj1, pj2);
                 this.icd.guardar(resultadoCombate);
                 generarEventosSiCorresponde(resultadoCombate, l1, l2);
+                this.cg.setCacheMasFuerte(pj1.getNombre());
+                this.cg.setCacheMasFuerte(pj2.getNombre());
                 return resultadoCombate;
             }});
     }

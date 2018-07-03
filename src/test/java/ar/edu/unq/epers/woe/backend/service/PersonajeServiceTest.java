@@ -18,6 +18,7 @@ import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import ar.edu.unq.epers.woe.backend.model.requerimiento.Requerimiento;
 import ar.edu.unq.epers.woe.backend.mongoDAO.EventoMongoDAO;
+import ar.edu.unq.epers.woe.backend.redisDAO.RedisDAO;
 import ar.edu.unq.epers.woe.backend.service.data.ServiciosDB;
 import ar.edu.unq.epers.woe.backend.service.lugar.LugarService;
 import ar.edu.unq.epers.woe.backend.service.raza.ServiciosRaza;
@@ -47,11 +48,14 @@ public class PersonajeServiceTest {
 	private ServiciosDB dbServ = new ServiciosDB();
 	private int idItem;
 	private EventoMongoDAO emd = new EventoMongoDAO();
+	private RedisDAO rd = new RedisDAO();
 
 	@Before
 	public void crearModelo() {
 		this.emd.eliminarDatos();
 		SessionFactoryProvider.destroy();
+		this.rd.clear();
+
 		Set<Clase> cls = new HashSet<>();
 		cls.add(Clase.MAGO);
 		Set<Atributo> ats = new HashSet<>();
