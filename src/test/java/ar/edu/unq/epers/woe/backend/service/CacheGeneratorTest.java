@@ -1,16 +1,12 @@
 package ar.edu.unq.epers.woe.backend.service;
 
-import ar.edu.unq.epers.woe.backend.hibernateDAO.HibernateItemDAO;
-import ar.edu.unq.epers.woe.backend.hibernateDAO.HibernateLugarDAO;
-import ar.edu.unq.epers.woe.backend.hibernateDAO.HibernatePersonajeDAO;
-import ar.edu.unq.epers.woe.backend.hibernateDAO.Runner;
+import ar.edu.unq.epers.woe.backend.hibernateDAO.*;
 import ar.edu.unq.epers.woe.backend.model.combate.ResultadoCombate;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.lugar.Gimnasio;
 import ar.edu.unq.epers.woe.backend.model.lugar.Taberna;
 import ar.edu.unq.epers.woe.backend.model.lugar.Tienda;
-import ar.edu.unq.epers.woe.backend.model.mision.IrALugar;
-import ar.edu.unq.epers.woe.backend.model.mision.Recompensa;
+import ar.edu.unq.epers.woe.backend.model.mision.*;
 import ar.edu.unq.epers.woe.backend.model.personaje.*;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
@@ -49,6 +45,7 @@ public class CacheGeneratorTest {
     private HibernateLugarDAO ild = new HibernateLugarDAO();
     private LugarService lr = new LugarService();
     private LugarService lsv = new LugarService();
+    private HibernateMisionDAO imd = new HibernateMisionDAO();
 
     @Before
     public void setUp() {
@@ -120,7 +117,7 @@ public class CacheGeneratorTest {
     }
 
     @Test
-    public void siCambiaMasFuerteLuegoDeSubirDeNivelAlCompletarMisionSeRecuperaElUltimoPj() {
+    public void siCambiaMasFuerteLuegoDeSubirDeNivelAlCompletarMisionIrALugarSeRecuperaElUltimoPj() {
         this.cg.setCacheMasFuerte(this.pj.getNombre());
         Taberna t = new Taberna("tab99");
         Tienda t1 = new Tienda("tie100");
@@ -136,6 +133,48 @@ public class CacheGeneratorTest {
         Runner.runInSession(() -> { this.pjhd.guardar(pjn); return null; });
         this.lsv.mover(pjn.getNombre(), t1.getNombre());
         assertEquals(pjn.getNombre(), this.cg.getMasFuerte().getNombre());
+    }
+
+    @Test
+    public void siCambiaMasFuerteLuegoDeSubirDeNivelAlCompletarMisionObtenerItemSeRecuperaElUltimoPj() {
+        this.cg.setCacheMasFuerte(this.pj.getNombre());
+        ObtenerItem oi = new ObtenerItem("tstOI", new Recompensa(new ArrayList<Item>(), 110, 0f), this.i);
+        Tienda t = new Tienda("tie2");
+        HashSet<Item> is = new HashSet<Item>();
+        is.add(this.i);
+        t.setItems(is);
+        Runner.runInSession(() -> { this.ild.guardar(t); return null; });
+        Personaje pjn = new Personaje(this.r, "tstPJ1", Clase.MAGO);
+        pjn.aceptarMision(oi);
+        pjn.setBilletera(500f);
+        pjn.cambiarDeLugar(t);
+        Runner.runInSession(() -> { this.pjhd.guardar(pjn); return null; });
+        this.lsv.comprarItem("tstPJ1", this.idItem);
+        assertEquals(pjn.getNombre(), this.cg.getMasFuerte().getNombre());
+    }
+
+    @Test
+    public void siCambiaMasFuerteLuegoDeSubirDeNivelAlCompletarMisionVencerASeRecuperaElUltimoPj() {
+        this.cg.setCacheMasFuerte(this.pj.getNombre());
+        Gimnasio gim = new Gimnasio("tstGim0");
+        Mision mis = new VencerA("tstMision", new Recompensa(new ArrayList<Item>(), 110, 0f), this.pj, 1);
+        Runner.runInSession(() -> {
+            this.ild.guardar(gim);
+            this.imd.guardar(mis);
+            return null;
+        });
+        Personaje pjii = new Personaje(this.r, "tstPJ1", Clase.MAGO);
+        pjii.cambiarDeLugar(gim);
+        pjii.setVida(new Vida(10f));
+        pjii.getAtributo(Fuerza.class).setValor(200f);
+        pjii.aceptarMision(mis);
+        Runner.runInSession(() -> {
+            this.pjhd.guardar(pjii);
+            return null;
+        });
+        this.lr.moverPermisivo(this.pj.getNombre(), gim.getNombre());
+        ResultadoCombate rc = this.serviceP.combatir(this.pj.getNombre(), pjii.getNombre());
+        assertEquals(pjii.getNombre(), this.cg.getMasFuerte().getNombre());
     }
 
 }
