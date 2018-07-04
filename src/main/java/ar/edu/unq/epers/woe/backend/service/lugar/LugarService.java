@@ -163,14 +163,14 @@ public class LugarService {
 	 * Chequea que el personaje tenga dinero suficiente para moverse y los lugares estén conectados.
 	 * De lo contrario lanza excepción correspondiente.
 	 */
-	public void validarRequisitosParaMover(Personaje pj, String ubicacion, String criterio) {
+	public void validarRequisitosParaMover(Personaje pj, String ubicacion, int criterio) {
 		if(!this.n4ld.existeCaminoEntre(pj.getLugar().getNombre(), ubicacion)) {
 			throw new UbicacionMuyLejana(pj.getLugar().getNombre(), ubicacion);
 		}
     	Integer costoViaje = null;
     	switch(criterio) {
-			case "masCorto": costoViaje = this.n4ld.costoRutaMasCorta(pj.getLugar().getNombre(), ubicacion); break;
-			case "masBarato": costoViaje = this.n4ld.costoRutaMasBarata(pj.getLugar().getNombre(), ubicacion); break;
+			case 0: costoViaje = this.n4ld.costoRutaMasCorta(pj.getLugar().getNombre(), ubicacion); break;
+			case 1: costoViaje = this.n4ld.costoRutaMasBarata(pj.getLugar().getNombre(), ubicacion); break;
 		}
 		if(costoViaje > pj.getBilletera()) {
 			throw new CaminoMuyCostoso(costoViaje, pj.getBilletera());
@@ -184,7 +184,7 @@ public class LugarService {
 	public void moverMasCorto(String personaje, String ubicacion) {
 		Runner.runInSession(() -> {
 			Personaje pj = this.pjhd.recuperar(personaje);
-			validarRequisitosParaMover(pj, ubicacion, "masCorto");
+			validarRequisitosParaMover(pj, ubicacion, CriterioMovimiento.masCorto.ordinal());
 				Lugar lr = this.ild.recuperar(ubicacion);
 			    List<String> mis = this.pjs.misionesCumplidasPor(pj);
 			    this.emd.save(new Arribo(pj.getNombre(), pj.getLugar().getNombre(), pj.getLugar().getClass().getSimpleName(),
@@ -203,7 +203,7 @@ public class LugarService {
 	public void mover(String personaje, String ubicacion) {
 		Runner.runInSession(() -> {
 			Personaje pj = this.pjhd.recuperar(personaje);
-			validarRequisitosParaMover(pj, ubicacion, "masBarato");
+			validarRequisitosParaMover(pj, ubicacion, CriterioMovimiento.masBarato.ordinal());
 			Lugar lr = this.ild.recuperar(ubicacion);
 			List<String> mis = this.pjs.misionesCumplidasPor(pj);
 			this.emd.save(new Arribo(pj.getNombre(), pj.getLugar().getNombre(), pj.getLugar().getClass().getSimpleName(),
