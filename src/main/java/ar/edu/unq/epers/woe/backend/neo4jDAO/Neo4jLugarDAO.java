@@ -8,9 +8,19 @@ import java.util.List;
 public class Neo4jLugarDAO {
 
     private Driver driver;
+    private String labelNombre;
+    private String labelRelacion;
+    private String labelTipoCamino;
+    private String labelCostoCamino;
+    private String labelTipoNodo;
 
     public Neo4jLugarDAO() {
         this.driver = GraphDatabase.driver( "bolt://localhost:7687", AuthTokens.basic( "neo4j", "qwerty" ) );
+        this.labelNombre = "nombre";
+        this.labelRelacion = "conectadoCon";
+        this.labelTipoCamino = "tipoCamino";
+        this.labelCostoCamino = "costoCamino";
+        this.labelTipoNodo = "Lugar";
     }
 
     public void create(Lugar lugar) {
@@ -19,7 +29,8 @@ public class Neo4jLugarDAO {
         	throw new RuntimeException("Ya existe Lugar con ese nombre");
         }
         try {
-            String query = "MERGE (n:Lugar { nombre: {elNombre} }) SET n.nombre = {elNombre}";
+            String query = "MERGE (n:%s { nombre: {elNombre} }) SET n.%s = {elNombre}";
+            query = String.format(query, this.labelTipoNodo, this.labelNombre);
             session.run(query, Values.parameters("elNombre", lugar.getNombre()));
         } finally {
             session.close();
@@ -29,8 +40,9 @@ public class Neo4jLugarDAO {
     public Boolean existeLugar(String nombreLugar) {
         Session session = this.driver.session();
         try {
-            String query = "MATCH (l:Lugar { nombre: {elNombre} }) " +
+            String query = "MATCH (l:%s { %s: {elNombre} }) " +
                            "RETURN l";
+            query = String.format(query, this.labelTipoNodo, this.labelNombre);
             StatementResult result = session.run(query, Values.parameters("elNombre", nombreLugar));
             return result.list().size() == 1;
         } finally {
@@ -41,8 +53,9 @@ public class Neo4jLugarDAO {
     public Boolean existeCaminoEntre(String lugarPartida, String lugarLlegada) {
         Session session = this.driver.session();
         try {
-            String query = "MATCH(l:Lugar {nombre: {elNombreP}})-[:conectadoCon*]->(d:Lugar {nombre: {elNombreL}}) " +
+            String query = "MATCH(l:%s {%s: {elNombreP}})-[:%s*]->(d:%s {%s: {elNombreL}}) " +
                            "RETURN d";
+            query = String.format(query, this.labelTipoNodo, this.labelNombre, this.labelRelacion, this.labelTipoNodo, this.labelNombre);
             StatementResult result = session.run(query, Values.parameters("elNombreP", lugarPartida,
                                                  "elNombreL", lugarLlegada));
             return result.list().size() >= 1;
@@ -70,9 +83,11 @@ public class Neo4jLugarDAO {
                 case "maritimo": costoCamino = 2; break;
                 case "aereo": costoCamino = 5; break;
             }
-            String query = "MATCH (p:Lugar { nombre: {elNombreP} }) " +
-                           "MATCH (l:Lugar { nombre: {elNombreL} }) " +
-                           "MERGE (p)-[:conectadoCon {tipoCamino: {tipoCamino}, costoCamino: {costoCamino}}]->(l)";
+            String query = "MATCH (p:%s { %s: {elNombreP} }) " +
+                           "MATCH (l:%s { %s: {elNombreL} }) " +
+                           "MERGE (p)-[:%s {%s: {tipoCamino}, %s: {costoCamino}}]->(l)";
+            query = String.format(query, this.labelTipoNodo, this.labelNombre, this.labelTipoNodo, this.labelNombre,
+                                  this.labelRelacion, this.labelTipoCamino, this.labelCostoCamino);
             session.run(query, Values.parameters("elNombreP", lugarPartida,
                     "elNombreL", lugarLlegada, "tipoCamino", tipoCamino, "costoCamino", costoCamino));
         } finally {
@@ -84,9 +99,10 @@ public class Neo4jLugarDAO {
         Session session = this.driver.session();
         try {
             List<String> res = new ArrayList<String>();
-            String query = "MATCH(l:Lugar)-[r:conectadoCon]->(lugar) " +
-                           "WHERE l.nombre = {elNombre} and r.tipoCamino = {tipoCamino} " +
-                           "RETURN lugar.nombre";
+            String query = "MATCH(l:%s)-[r:%s]->(lugar) " +
+                           "WHERE l.%s = {elNombre} and r.%s = {tipoCamino} " +
+                           "RETURN lugar.%s";
+            query = String.format(query, this.labelTipoNodo, this.labelRelacion, this.labelNombre,  this.labelTipoCamino, this.labelNombre);
             StatementResult result = session.run(query, Values.parameters("elNombre", nombreLugar,
                                                  "tipoCamino", tipoCamino));
             for(Record r : result.list()) {
@@ -101,10 +117,12 @@ public class Neo4jLugarDAO {
     public Integer costoRutaMasCorta(String lugarPartida, String lugarLlegada) {
         Session session = this.driver.session();
         try {
-            String query = "MATCH (p:Lugar { nombre: {elNombreP} }) " +
-                           "MATCH (l:Lugar { nombre: {elNombreL} }) " +
-                           "MATCH ds=shortestPath((p)-[:conectadoCon*]->(l)) " +
-                           "RETURN reduce(costoTotal=0, rels in relationships(ds) |  costoTotal+rels.costoCamino)";
+            String query = "MATCH (p:%s { %s: {elNombreP} }) " +
+                           "MATCH (l:%s { %s: {elNombreL} }) " +
+                           "MATCH ds=shortestPath((p)-[:%s*]->(l)) " +
+                           "RETURN reduce(costoTotal=0, rels in relationships(ds) |  costoTotal+rels.%s)";
+            query = String.format(query, this.labelTipoNodo, this.labelNombre,  this.labelTipoNodo, this.labelNombre,
+                                  this.labelRelacion, this.labelCostoCamino);
             return session.run(query, Values.parameters("elNombreP", lugarPartida,
                                "elNombreL", lugarLlegada)).next().get(0).asInt();
         } finally {
@@ -115,11 +133,13 @@ public class Neo4jLugarDAO {
     public Integer costoRutaMasBarata(String lugarPartida, String lugarLlegada) {
         Session session = this.driver.session();
         try {
-            String query = "MATCH (p:Lugar { nombre: {elNombreP} }) " +
-                           "MATCH (l:Lugar { nombre: {elNombreL} }) " +
-                           "MATCH ds=(p)-[:conectadoCon*]->(l) " +
-                           "RETURN reduce(costoTotal=0, r in relationships(ds) | costoTotal+r.costoCamino) AS costoTotal " +
+            String query = "MATCH (p:%s { %s: {elNombreP} }) " +
+                           "MATCH (l:%s { %s: {elNombreL} }) " +
+                           "MATCH ds=(p)-[:%s*]->(l) " +
+                           "RETURN reduce(costoTotal=0, r in relationships(ds) | costoTotal+r.%s) AS costoTotal " +
                            "order by costoTotal limit 1";
+            query = String.format(query, this.labelTipoNodo, this.labelNombre,  this.labelTipoNodo, this.labelNombre,
+                                  this.labelRelacion, this.labelCostoCamino);
             return session.run(query, Values.parameters("elNombreP", lugarPartida,
                                "elNombreL", lugarLlegada)).next().get(0).asInt();
         } finally {
@@ -131,9 +151,10 @@ public class Neo4jLugarDAO {
         Session session = this.driver.session();
         try {
             List<String> res = new ArrayList<String>();
-            String query = "MATCH(l:Lugar)-[:conectadoCon]->(lugar) " +
-                           "WHERE l.nombre = {elNombre} " +
-                           "RETURN lugar.nombre";
+            String query = "MATCH(l:%s)-[:%s]->(lugar) " +
+                           "WHERE l.%s = {elNombre} " +
+                           "RETURN lugar.%s";
+            query = String.format(query, this.labelTipoNodo, this.labelRelacion, this.labelNombre, this.labelNombre);
             StatementResult result = session.run(query, Values.parameters("elNombre", nombreLugar) );
             for(Record r : result.list()) {
                 res.add(r.get(0).asString());
