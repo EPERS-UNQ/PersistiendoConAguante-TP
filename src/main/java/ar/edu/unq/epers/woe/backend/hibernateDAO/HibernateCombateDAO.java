@@ -34,14 +34,14 @@ public class HibernateCombateDAO {
 		Session s = Runner.getCurrentSession();
 		String hql = "select d.personaje " 
 				+ "from Danho d " 
-				+ "where d.valor= :maximo ";
+				+ "where d.valor= :maximo order by d desc";
 		Query query = s.createQuery(hql);
 
 		Query<Float> queryMaxDanho = s.createQuery("select max(d.valor) from Danho d", Float.class);
 		Float maxValor = queryMaxDanho.getSingleResult();
 
 		query.setParameter("maximo", maxValor);
-
+		query.setMaxResults(1);
 		return (Personaje) query.getSingleResult();
 	}
 	
