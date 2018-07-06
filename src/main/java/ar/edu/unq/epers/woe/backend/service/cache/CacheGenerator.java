@@ -6,6 +6,7 @@ import java.util.List;
 import ar.edu.unq.epers.woe.backend.hibernateDAO.HibernatePersonajeDAO;
 import ar.edu.unq.epers.woe.backend.hibernateDAO.Runner;
 import ar.edu.unq.epers.woe.backend.model.evento.Evento;
+import ar.edu.unq.epers.woe.backend.model.personaje.Danho;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
 import ar.edu.unq.epers.woe.backend.mongoDAO.EventoMongoDAO;
 import ar.edu.unq.epers.woe.backend.redisDAO.RedisDAO;
@@ -29,12 +30,7 @@ public class CacheGenerator {
     }
 
     public void setCacheMasFuerte(String nombrePJ) {
-        Personaje pj = Runner.runInSession(() -> { return pjhd.recuperar(nombrePJ); });
-        if(this.getMasFuerte() == null) {
-            this.rd.put(this.claveMasFuerte, pj.getNombre());
-        } else if(pj.getDanhoTotal().getValor() > this.getMasFuerte().getDanhoTotal().getValor()) {
-            this.rd.put(this.claveMasFuerte, pj.getNombre());
-        }
+        this.rd.put(this.claveMasFuerte, nombrePJ);
     }
     
     public void setCacheEventosDeLugar(String nombreL, List<Evento> eventos) {
@@ -55,5 +51,11 @@ public class CacheGenerator {
 	public boolean existenEventosDe(String nombreP) {
 		return rd.existsKey(claveEventosDeLugar+nombreP);
 	}
+
+	public void invalidarCacheSiCambioDanho(Danho danhoAnterio, Danho danhoActual) {
+        if(!danhoAnterio.getValor().equals(danhoActual.getValor())) {
+            this.rd.remove(this.claveMasFuerte);
+        }
+    }
 
 }

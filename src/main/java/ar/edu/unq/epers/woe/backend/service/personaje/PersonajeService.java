@@ -9,6 +9,7 @@ import ar.edu.unq.epers.woe.backend.model.evento.Ganador;
 import ar.edu.unq.epers.woe.backend.model.evento.MisionCompletada;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.lugar.Gimnasio;
+import ar.edu.unq.epers.woe.backend.model.personaje.Danho;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
 import ar.edu.unq.epers.woe.backend.hibernateDAO.HibernateItemDAO;
 import ar.edu.unq.epers.woe.backend.mongoDAO.EventoMongoDAO;
@@ -30,10 +31,11 @@ public class PersonajeService {
                 Personaje pj = this.pjhd.recuperar(nombrePj);
                 if(i.getRequerimiento().cumpleRequerimiento(pj) && pj.getMochila().getItems().contains(i)
                         && i.getClases().contains(pj.getClase())) {
+                    Danho danhoAnterior = pj.getDanhoTotal();
                     i.setMochila(null);
                     pj.getInventario().setItemEnUnaUbicacion(i, pj);
                     pj.getMochila().getItems().remove(i);
-                    this.cg.setCacheMasFuerte(pj.getNombre());
+                    this.cg.invalidarCacheSiCambioDanho(danhoAnterior, pj.getDanhoTotal());
                 }
             return null; });
     }
@@ -47,11 +49,13 @@ public class PersonajeService {
             } else {
                 List<String> l1 = misionesCumplidasPor(pj1);
                 List<String> l2 = misionesCumplidasPor(pj2);
+                Danho danhoAnterior1 = pj1.getDanhoTotal();
+                Danho danhoAnterior2 = pj2.getDanhoTotal();
                 ResultadoCombate resultadoCombate = new Combate().combatir(pj1, pj2);
                 this.icd.guardar(resultadoCombate);
                 generarEventosSiCorresponde(resultadoCombate, l1, l2);
-                this.cg.setCacheMasFuerte(pj1.getNombre());
-                this.cg.setCacheMasFuerte(pj2.getNombre());
+                this.cg.invalidarCacheSiCambioDanho(danhoAnterior1, pj1.getDanhoTotal());
+                this.cg.invalidarCacheSiCambioDanho(danhoAnterior2, pj2.getDanhoTotal());
                 return resultadoCombate;
             }});
     }

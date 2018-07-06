@@ -94,14 +94,14 @@ public class CacheGeneratorTest {
     }
 
     @Test
-    public void siCambiaMasFuerteLuegoDeEquiparItemSeRecuperaElUltimoPj() {
+    public void siCambiaMasFuerteLuegoDeEquiparItemSeInvalidaCache() {
         Personaje pjii = new Personaje(this.r, "tstPJ1", Clase.MAGO);
         pjii.getAtributo(Fuerza.class).setValor(20f);
         Runner.runInSession(() -> {
             this.pjhd.guardar(pjii); return null; });
         this.cg.setCacheMasFuerte(pjii.getNombre());
         this.serviceP.equipar(this.pj.getNombre(), this.idItem);
-        assertEquals(this.pj.getNombre(), this.cg.getMasFuerte().getNombre());
+        assertNull(this.cg.getMasFuerte());
     }
 
     @Test
@@ -117,7 +117,7 @@ public class CacheGeneratorTest {
             this.pjhd.guardar(pjii); return null; });
         this.lr.moverPermisivo(this.pj.getNombre(), gim.getNombre());
         ResultadoCombate rc = this.serviceP.combatir(this.pj.getNombre(), pjii.getNombre());
-        assertEquals(pjii.getNombre(), this.cg.getMasFuerte().getNombre());
+        assertNull(this.cg.getMasFuerte());
     }
 
     @Test
