@@ -2,6 +2,8 @@ package ar.edu.unq.epers.woe.backend.service;
 
 import ar.edu.unq.epers.woe.backend.hibernateDAO.*;
 import ar.edu.unq.epers.woe.backend.model.combate.ResultadoCombate;
+import ar.edu.unq.epers.woe.backend.model.evento.CompraItem;
+import ar.edu.unq.epers.woe.backend.model.evento.Evento;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.lugar.Gimnasio;
 import ar.edu.unq.epers.woe.backend.model.lugar.Taberna;
@@ -24,7 +26,9 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public class CacheGeneratorTest {
 
@@ -175,6 +179,24 @@ public class CacheGeneratorTest {
         this.lr.moverPermisivo(this.pj.getNombre(), gim.getNombre());
         ResultadoCombate rc = this.serviceP.combatir(this.pj.getNombre(), pjii.getNombre());
         assertEquals(pjii.getNombre(), this.cg.getMasFuerte().getNombre());
+    }
+    
+    @Test
+    public void seGuardanYRecuperanUnaListaDeEventos() {
+    	
+    	String nombreP = "tstPersonaje";
+		Evento e1 = new CompraItem(nombreP, "tstLugar", "tstIt", 0);
+    	Evento e2 = new CompraItem(nombreP, "tstLugar", "tstIt2", 0);
+    	emd.save(e1); emd.save(e2);
+    	
+    	List<String> eventosId = new ArrayList<String>() ;
+    	emd.getByPersonaje(nombreP).forEach( e -> eventosId.add(e.getIdEvento()) );
+
+    	cg.setCacheEventosDePersonaje(nombreP, eventosId);
+    	
+    	List<Evento> recuperados = cg.getEventosDePersonaje(nombreP);
+    	assertEquals( 2, recuperados.size() );
+
     }
 
 }

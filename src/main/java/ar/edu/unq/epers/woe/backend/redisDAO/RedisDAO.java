@@ -25,5 +25,9 @@ public class RedisDAO {
     public int size() {
         return this.jedis.keys("*").size();
     }
+    
+    public boolean existsKey(String key) {
+    	return jedis.exists(key);
+    }
 
 }
