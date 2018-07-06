@@ -17,6 +17,7 @@ import ar.edu.unq.epers.woe.backend.mongoDAO.EventoMongoDAO;
 import ar.edu.unq.epers.woe.backend.redisDAO.RedisDAO;
 import ar.edu.unq.epers.woe.backend.service.cache.CacheGenerator;
 import ar.edu.unq.epers.woe.backend.service.data.ServiciosDB;
+import ar.edu.unq.epers.woe.backend.service.feed.FeedService;
 import ar.edu.unq.epers.woe.backend.service.leaderboard.LeaderboardService;
 import ar.edu.unq.epers.woe.backend.service.lugar.LugarService;
 import ar.edu.unq.epers.woe.backend.service.personaje.PersonajeService;
@@ -50,6 +51,7 @@ public class CacheGeneratorTest {
     private LugarService lr = new LugarService();
     private LugarService lsv = new LugarService();
     private HibernateMisionDAO imd = new HibernateMisionDAO();
+	private FeedService fServ = new FeedService();
 
     @Before
     public void setUp() {
@@ -196,6 +198,22 @@ public class CacheGeneratorTest {
     	List<Evento> eventosRec = cg.getEventosDeLugar(nombreP);
     	assertEquals( 2, eventosRec.size() );
 
+    }
+    
+    @Test
+    public void seInvalidaLoCacheadoDeUnLugar() {
+    	String nombreL = "tstLugar";
+		Evento e1 = new CompraItem("tstPersonaje", nombreL, "tstIt", 0);
+    	Evento e2 = new CompraItem("tstPersonaje", nombreL, "tstIt2", 0);
+    	emd.save(e1); emd.save(e2);
+    	
+    	List<Evento> eventos = new ArrayList<Evento>();
+    	eventos.add(e1); eventos.add(e2);
+    	
+    	cg.setCacheEventosDeLugar(nombreL, eventos);
+    	cg.invalidarClaveLugar(nombreL);
+    	
+    	assertNull( cg.getEventosDeLugar(nombreL) );
     }
 
 }

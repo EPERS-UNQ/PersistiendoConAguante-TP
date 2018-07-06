@@ -59,6 +59,7 @@ public class LugarService {
 			throw new RuntimeException("El Personaje no está en una Taberna.");
 		} else if(this.listarMisiones(nombrePj).contains(m)) {
 			this.emd.save(new MisionAceptada(pj.getNombre(), pj.getLugar().getNombre(), nombreMis));
+			this.cg.invalidarClaveLugar(pj.getLugar().getNombre());
 			pj.aceptarMision(m);
 		}
 		return null; });
@@ -109,6 +110,7 @@ public class LugarService {
 			this.emd.save(new CompraItem(nombrePj, pj.getLugar().getNombre(), i.getNombre(), i.getCostoDeCompra()));
 			this.generarEventoMisCompSiCorresponde(mis, pj);
 			this.cg.setCacheMasFuerte(pj.getNombre());
+			this.cg.invalidarClaveLugar(pj.getLugar().getNombre());
 			return null; }});
     }
 
@@ -124,6 +126,7 @@ public class LugarService {
 			} else if(pj.tieneElItem(i)) {
 				pj.vender(i);
 				this.emd.save(new VentaItem(nombrePj, pj.getLugar().getNombre(), i.getNombre(), i.getCostoDeVenta()));
+				this.cg.invalidarClaveLugar(pj.getLugar().getNombre());
 			}
 			return null;
 		});
@@ -187,9 +190,10 @@ public class LugarService {
 			validarRequisitosParaMover(pj, ubicacion, CriterioMovimiento.masCorto.ordinal());
 				Lugar lr = this.ild.recuperar(ubicacion);
 			    List<String> mis = this.pjs.misionesCumplidasPor(pj);
+			    this.cg.invalidarClaveLugar(pj.getLugar().getNombre());
 			    this.emd.save(new Arribo(pj.getNombre(), pj.getLugar().getNombre(), pj.getLugar().getClass().getSimpleName(),
 					                     ubicacion, lr.getClass().getSimpleName()));
-				pj.gastarBilletera(this.n4ld.costoRutaMasCorta(pj.getLugar().getNombre(), ubicacion));
+			    pj.gastarBilletera(this.n4ld.costoRutaMasCorta(pj.getLugar().getNombre(), ubicacion));
 				pj.cambiarDeLugar(lr);
 			    this.generarEventoMisCompSiCorresponde(mis, pj);
 			    this.cg.setCacheMasFuerte(pj.getNombre());
@@ -206,6 +210,7 @@ public class LugarService {
 			validarRequisitosParaMover(pj, ubicacion, CriterioMovimiento.masBarato.ordinal());
 			Lugar lr = this.ild.recuperar(ubicacion);
 			List<String> mis = this.pjs.misionesCumplidasPor(pj);
+			this.cg.invalidarClaveLugar(pj.getLugar().getNombre());
 			this.emd.save(new Arribo(pj.getNombre(), pj.getLugar().getNombre(), pj.getLugar().getClass().getSimpleName(),
 					      ubicacion, lr.getClass().getSimpleName()));
 			pj.gastarBilletera(this.n4ld.costoRutaMasBarata(pj.getLugar().getNombre(), ubicacion));
@@ -220,6 +225,7 @@ public class LugarService {
 		if(pj.getNombre().equals(mis.get(0)) && pj.getMisionesCumplidas().size() > (mis.size()-1)) {
 			misComp.removeAll(mis);
 			this.emd.save(new MisionCompletada(pj.getNombre(), pj.getLugar().getNombre(), misComp.iterator().next()));
+			this.cg.invalidarClaveLugar(pj.getLugar().getNombre());
 		}
 	}
 }

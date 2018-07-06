@@ -73,13 +73,15 @@ public class PersonajeService {
         this.emd.save(new Ganador(g.getNombre(), g.getLugar().getNombre(), p.getNombre(), p.getClase().name(),
                       g.getClase().name(), p.getRaza().getNombre(), g.getRaza().getNombre()));
         List<String> mis = new ArrayList<>(g.getMisionesCumplidas());
-        MisionCompletada eventoMisionC = new MisionCompletada(g.getNombre(), g.getLugar().getNombre(), mis.iterator().next());
+        
 		if(g.getNombre().equals(l1.get(0)) && g.getMisionesCumplidas().size() > (l1.size()-1)) {
             mis.removeAll(l1);
-            this.emd.save(eventoMisionC);
+            this.emd.save(new MisionCompletada(g.getNombre(), g.getLugar().getNombre(), mis.iterator().next()));
+            this.cg.invalidarClaveLugar(g.getLugar().getNombre());
         } else if(g.getNombre().equals(l2.get(0)) && g.getMisionesCumplidas().size() > (l2.size()-1)) {
             mis.removeAll(l2);
-            this.emd.save(eventoMisionC);
+            this.emd.save(new MisionCompletada(g.getNombre(), g.getLugar().getNombre(), mis.iterator().next()));
+            this.cg.invalidarClaveLugar(g.getLugar().getNombre());
         }
     }
 
