@@ -1,6 +1,6 @@
 package ar.edu.unq.epers.woe.backend.service.cache;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 import ar.edu.unq.epers.woe.backend.hibernateDAO.HibernatePersonajeDAO;
@@ -16,7 +16,7 @@ public class CacheGenerator {
     private HibernatePersonajeDAO pjhd = new HibernatePersonajeDAO();
 	private EventoMongoDAO edao = new EventoMongoDAO();
     private String claveMasFuerte = "masFuerte";
-    private String claveEventosDePj = "eventosDe ";
+    private String claveEventosDeLugar = "eventosDe ";
 
     // Retorna null si la clave aún no ha sido seteada en Redis.
     public Personaje getMasFuerte() {
@@ -37,31 +37,23 @@ public class CacheGenerator {
         }
     }
     
-    public void setCacheEventosDePersonaje(String nombreP, List<Evento> eventos) {
-
-    	List<String> eventosId = new ArrayList<String>() ;
-    	eventos.forEach( e -> eventosId.add(e.getIdEvento()) );
-    	
-    	String clave = claveEventosDePj+nombreP;
-    	String valor = String.join(",", eventosId);
-    	rd.put(clave, valor);
+    public void setCacheEventosDeLugar(String nombreL, List<Evento> eventos) {
+       	String clave = claveEventosDeLugar+nombreL;
+    	rd.putList(clave, eventos);
     }
 
     // Retorna null si la clave aún no ha sido seteada en Redis.
-	public List<Evento> getEventosDePersonaje(String nombreP) {
+	public List<Evento> getEventosDeLugar(String nombreL) {
 		List<Evento> eventos = null;		
-        if( existenEventosDe(nombreP) ) {
-        	eventos = new ArrayList<Evento>();
-        	String clave = claveEventosDePj+nombreP;
-        	for( String id : rd.get(clave).split(",")) {
-        		eventos.add( edao.get(id) );
-        	}
+        if( existenEventosDe(nombreL) ) {
+        	String clave = claveEventosDeLugar+nombreL;
+        	return rd.getList(clave);
         }
 		return eventos;
 	}
 
 	public boolean existenEventosDe(String nombreP) {
-		return rd.existsKey(claveEventosDePj+nombreP);
+		return rd.existsKey(claveEventosDeLugar+nombreP);
 	}
 
 }

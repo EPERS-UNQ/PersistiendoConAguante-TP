@@ -191,9 +191,9 @@ public class CacheGeneratorTest {
     	
     	List<Evento> eventos = emd.getByPersonaje(nombreP);
 
-    	cg.setCacheEventosDePersonaje(nombreP, eventos);
+    	cg.setCacheEventosDeLugar(nombreP, eventos);
     	
-    	List<Evento> eventosRec = cg.getEventosDePersonaje(nombreP);
+    	List<Evento> eventosRec = cg.getEventosDeLugar(nombreP);
     	assertEquals( 2, eventosRec.size() );
 
     }
