@@ -9,6 +9,7 @@ import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
 import ar.edu.unq.epers.woe.backend.model.lugar.Taberna;
 import ar.edu.unq.epers.woe.backend.model.lugar.Tienda;
 import ar.edu.unq.epers.woe.backend.model.mision.Mision;
+import ar.edu.unq.epers.woe.backend.model.personaje.Danho;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
 import ar.edu.unq.epers.woe.backend.mongoDAO.EventoMongoDAO;
 import ar.edu.unq.epers.woe.backend.neo4jDAO.Neo4jLugarDAO;
@@ -106,11 +107,11 @@ public class LugarService {
 			throw new RuntimeException("Dinero insuficiente para comprar el item.");
 		} else {
 			List<String> mis = this.pjs.misionesCumplidasPor(pj);
+			Danho danhoAnterior = pj.getDanhoTotal();
 			pj.comprar(i);
 			this.emd.save(new CompraItem(nombrePj, pj.getLugar().getNombre(), i.getNombre(), i.getCostoDeCompra()));
 			this.generarEventoMisCompSiCorresponde(mis, pj);
-			this.cg.setCacheMasFuerte(pj.getNombre());
-			this.cg.invalidarClaveLugar(pj.getLugar().getNombre());
+			this.cg.invalidarCacheSiCambioDanho(danhoAnterior, pj.getDanhoTotal());
 			return null; }});
     }
 
@@ -188,6 +189,7 @@ public class LugarService {
 		Runner.runInSession(() -> {
 			Personaje pj = this.pjhd.recuperar(personaje);
 			validarRequisitosParaMover(pj, ubicacion, CriterioMovimiento.masCorto.ordinal());
+			    Danho danhoAnterior = pj.getDanhoTotal();
 				Lugar lr = this.ild.recuperar(ubicacion);
 			    List<String> mis = this.pjs.misionesCumplidasPor(pj);
 			    this.cg.invalidarClaveLugar(pj.getLugar().getNombre());
@@ -196,7 +198,7 @@ public class LugarService {
 			    pj.gastarBilletera(this.n4ld.costoRutaMasCorta(pj.getLugar().getNombre(), ubicacion));
 				pj.cambiarDeLugar(lr);
 			    this.generarEventoMisCompSiCorresponde(mis, pj);
-			    this.cg.setCacheMasFuerte(pj.getNombre());
+			    this.cg.invalidarCacheSiCambioDanho(danhoAnterior, pj.getDanhoTotal());
 		return null; });
 	}
 
@@ -210,13 +212,14 @@ public class LugarService {
 			validarRequisitosParaMover(pj, ubicacion, CriterioMovimiento.masBarato.ordinal());
 			Lugar lr = this.ild.recuperar(ubicacion);
 			List<String> mis = this.pjs.misionesCumplidasPor(pj);
+			Danho danhoAnterior = pj.getDanhoTotal();
 			this.cg.invalidarClaveLugar(pj.getLugar().getNombre());
 			this.emd.save(new Arribo(pj.getNombre(), pj.getLugar().getNombre(), pj.getLugar().getClass().getSimpleName(),
 					      ubicacion, lr.getClass().getSimpleName()));
 			pj.gastarBilletera(this.n4ld.costoRutaMasBarata(pj.getLugar().getNombre(), ubicacion));
 			pj.cambiarDeLugar(lr);
 			this.generarEventoMisCompSiCorresponde(mis, pj);
-			this.cg.setCacheMasFuerte(pj.getNombre());
+			this.cg.invalidarCacheSiCambioDanho(danhoAnterior, pj.getDanhoTotal());
 		return null; });
 	}
 
