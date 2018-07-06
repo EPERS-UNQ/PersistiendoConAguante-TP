@@ -189,13 +189,12 @@ public class CacheGeneratorTest {
     	Evento e2 = new CompraItem(nombreP, "tstLugar", "tstIt2", 0);
     	emd.save(e1); emd.save(e2);
     	
-    	List<String> eventosId = new ArrayList<String>() ;
-    	emd.getByPersonaje(nombreP).forEach( e -> eventosId.add(e.getIdEvento()) );
+    	List<Evento> eventos = emd.getByPersonaje(nombreP);
 
-    	cg.setCacheEventosDePersonaje(nombreP, eventosId);
+    	cg.setCacheEventosDePersonaje(nombreP, eventos);
     	
-    	List<Evento> recuperados = cg.getEventosDePersonaje(nombreP);
-    	assertEquals( 2, recuperados.size() );
+    	List<Evento> eventosRec = cg.getEventosDePersonaje(nombreP);
+    	assertEquals( 2, eventosRec.size() );
 
     }
 

@@ -37,7 +37,11 @@ public class CacheGenerator {
         }
     }
     
-    public void setCacheEventosDePersonaje(String nombreP, List<String> eventosId) {
+    public void setCacheEventosDePersonaje(String nombreP, List<Evento> eventos) {
+
+    	List<String> eventosId = new ArrayList<String>() ;
+    	eventos.forEach( e -> eventosId.add(e.getIdEvento()) );
+    	
     	String clave = claveEventosDePj+nombreP;
     	String valor = String.join(",", eventosId);
     	rd.put(clave, valor);
@@ -45,15 +49,19 @@ public class CacheGenerator {
 
     // Retorna null si la clave aún no ha sido seteada en Redis.
 	public List<Evento> getEventosDePersonaje(String nombreP) {
-		List<Evento> eventos = null;
-		String clave = claveEventosDePj+nombreP;
-        if( rd.existsKey(clave) ) {
+		List<Evento> eventos = null;		
+        if( existenEventosDe(nombreP) ) {
         	eventos = new ArrayList<Evento>();
+        	String clave = claveEventosDePj+nombreP;
         	for( String id : rd.get(clave).split(",")) {
         		eventos.add( edao.get(id) );
         	}
         }
 		return eventos;
+	}
+
+	public boolean existenEventosDe(String nombreP) {
+		return rd.existsKey(claveEventosDePj+nombreP);
 	}
 
 }
