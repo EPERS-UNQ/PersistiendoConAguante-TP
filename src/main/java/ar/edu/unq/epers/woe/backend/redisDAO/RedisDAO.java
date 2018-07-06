@@ -43,4 +43,6 @@ public class RedisDAO {
     	return jedis.exists(key);
     }
 
+    public void remove(String clave) { this.jedis.del(clave); }
+
 }
