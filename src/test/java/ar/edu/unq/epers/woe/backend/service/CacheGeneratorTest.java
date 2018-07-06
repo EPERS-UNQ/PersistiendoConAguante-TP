@@ -94,22 +94,22 @@ public class CacheGeneratorTest {
         Runner.runInSession(() -> {
             this.pjhd.guardar(pjii); return null; });
         this.cg.setCacheMasFuerte(pjii.getNombre());
-        assertEquals(pjii.getNombre(), this.cg.getMasFuerte().getNombre());
+        assertEquals(pjii.getNombre(), this.ls.masFuerte().getNombre());
     }
 
     @Test
-    public void siCambiaMasFuerteLuegoDeEquiparItemSeRecuperaElUltimoPj() {
+    public void siCambiaMasFuerteLuegoDeEquiparItemSeInvalidaCache() {
         Personaje pjii = new Personaje(this.r, "tstPJ1", Clase.MAGO);
         pjii.getAtributo(Fuerza.class).setValor(20f);
         Runner.runInSession(() -> {
             this.pjhd.guardar(pjii); return null; });
         this.cg.setCacheMasFuerte(pjii.getNombre());
         this.serviceP.equipar(this.pj.getNombre(), this.idItem);
-        assertEquals(this.pj.getNombre(), this.cg.getMasFuerte().getNombre());
+        assertNull(this.cg.getMasFuerte());
     }
 
     @Test
-    public void siCambiaMasFuerteLuegoDeSubirDeNivelAlCombatirSeRecuperaElUltimoPj() {
+    public void siCambiaMasFuerteLuegoDeSubirDeNivelAlCombatirSeInvalidaCache() {
         this.cg.setCacheMasFuerte(this.pj.getNombre());
         Gimnasio gim = new Gimnasio("tstGim0");
         Runner.runInSession(() -> { this.ild.guardar(gim); return null; });
@@ -121,11 +121,11 @@ public class CacheGeneratorTest {
             this.pjhd.guardar(pjii); return null; });
         this.lr.moverPermisivo(this.pj.getNombre(), gim.getNombre());
         ResultadoCombate rc = this.serviceP.combatir(this.pj.getNombre(), pjii.getNombre());
-        assertEquals(pjii.getNombre(), this.cg.getMasFuerte().getNombre());
+        assertNull(this.cg.getMasFuerte());
     }
 
     @Test
-    public void siCambiaMasFuerteLuegoDeSubirDeNivelAlCompletarMisionIrALugarSeRecuperaElUltimoPj() {
+    public void siCambiaMasFuerteLuegoDeSubirDeNivelAlCompletarMisionIrALugarSeInvalidaCache() {
         this.cg.setCacheMasFuerte(this.pj.getNombre());
         Taberna t = new Taberna("tab99");
         Tienda t1 = new Tienda("tie100");
@@ -140,11 +140,11 @@ public class CacheGeneratorTest {
         pjn.cambiarDeLugar(t);
         Runner.runInSession(() -> { this.pjhd.guardar(pjn); return null; });
         this.lsv.mover(pjn.getNombre(), t1.getNombre());
-        assertEquals(pjn.getNombre(), this.cg.getMasFuerte().getNombre());
+        assertNull(this.cg.getMasFuerte());
     }
 
     @Test
-    public void siCambiaMasFuerteLuegoDeSubirDeNivelAlCompletarMisionObtenerItemSeRecuperaElUltimoPj() {
+    public void siCambiaMasFuerteLuegoDeSubirDeNivelAlCompletarMisionObtenerItemSeInvalidaCache() {
         this.cg.setCacheMasFuerte(this.pj.getNombre());
         ObtenerItem oi = new ObtenerItem("tstOI", new Recompensa(new ArrayList<Item>(), 110, 0f), this.i);
         Tienda t = new Tienda("tie2");
@@ -158,11 +158,11 @@ public class CacheGeneratorTest {
         pjn.cambiarDeLugar(t);
         Runner.runInSession(() -> { this.pjhd.guardar(pjn); return null; });
         this.lsv.comprarItem("tstPJ1", this.idItem);
-        assertEquals(pjn.getNombre(), this.cg.getMasFuerte().getNombre());
+        assertNull(this.cg.getMasFuerte());
     }
 
     @Test
-    public void siCambiaMasFuerteLuegoDeSubirDeNivelAlCompletarMisionVencerASeRecuperaElUltimoPj() {
+    public void siCambiaMasFuerteLuegoDeSubirDeNivelAlCompletarMisionVencerASeInvalidaCache() {
         this.cg.setCacheMasFuerte(this.pj.getNombre());
         Gimnasio gim = new Gimnasio("tstGim0");
         Mision mis = new VencerA("tstMision", new Recompensa(new ArrayList<Item>(), 110, 0f), this.pj, 1);
@@ -182,7 +182,7 @@ public class CacheGeneratorTest {
         });
         this.lr.moverPermisivo(this.pj.getNombre(), gim.getNombre());
         ResultadoCombate rc = this.serviceP.combatir(this.pj.getNombre(), pjii.getNombre());
-        assertEquals(pjii.getNombre(), this.cg.getMasFuerte().getNombre());
+        assertNull(this.cg.getMasFuerte());
     }
     
     @Test
