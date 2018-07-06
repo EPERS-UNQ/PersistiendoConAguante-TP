@@ -55,5 +55,10 @@ public class CacheGenerator {
 	public boolean existenEventosDe(String nombreP) {
 		return rd.existsKey(claveEventosDeLugar+nombreP);
 	}
+	
+	public void invalidarClaveLugar( String nombreLugar ) {
+		String clave = claveEventosDeLugar+nombreLugar;
+		rd.remove(clave);
+	}
 
 }
