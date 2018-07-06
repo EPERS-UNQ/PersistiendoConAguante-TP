@@ -6,6 +6,7 @@ import ar.edu.unq.epers.woe.backend.model.evento.CompraItem;
 import ar.edu.unq.epers.woe.backend.model.evento.Evento;
 import ar.edu.unq.epers.woe.backend.model.item.Item;
 import ar.edu.unq.epers.woe.backend.model.lugar.Gimnasio;
+import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
 import ar.edu.unq.epers.woe.backend.model.lugar.Taberna;
 import ar.edu.unq.epers.woe.backend.model.lugar.Tienda;
 import ar.edu.unq.epers.woe.backend.model.mision.*;
@@ -73,6 +74,7 @@ public class CacheGeneratorTest {
         this.r.setClases(cls);
         sr.crearRaza(this.r);
         this.pj = new Personaje(this.r, "tstPJ0", Clase.MAGO);
+        this.pj.setBilletera(1000f);
         this.pj.getMochila().agregarItem(i);
         Runner.runInSession(() -> {
             this.pjhd.guardar(this.pj); return null; });
@@ -215,5 +217,38 @@ public class CacheGeneratorTest {
     	
     	assertNull( cg.getEventosDeLugar(nombreL) );
     }
+    
+    @Test
+    public void conCacheVaciaUnFeedServiceObtieneEventosDeUnLugar() {
+    	String nombreL = "tstLugar";
+    	
+    	FeedService feedS = new FeedService();    	
+    	assertNull( cg.getEventosDeLugar(nombreL) );
+    	
+		Evento e1 = new CompraItem("tstPersonaje", nombreL, "tstIt", 0);
+    	Evento e2 = new CompraItem("tstPersonaje", nombreL, "tstIt2", 0);
+    	emd.save(e1); emd.save(e2);
+    	feedS.feedLugar(nombreL); //se cachea
+    	
+    	assertEquals( 2, cg.getEventosDeLugar(nombreL).size() );
+    }
 
+    @Test
+    public void siSeCreaUnNuevoEventoSeInvalidaLoGuardadoDeEseLugar() {
+    	String nombreP = "tstp";
+    	String nombreL = "testL";
+    	Personaje p = new Personaje(null, nombreP, null);
+    	Lugar l = new Tienda(nombreL);
+    	lsv.crearUbicacion(l); 
+    	p.setLugar(l); p.setBilletera(1000f);
+    	Runner.runInSession(()->{ pjhd.guardar(p); return null;});
+    	lsv.comprarItem(nombreP, idItem);
+    	
+    	FeedService feedS = new FeedService();    	
+    	assertNull( cg.getEventosDeLugar(nombreL) );
+    	
+    	feedS.feedLugar(nombreL);
+    	assertEquals( 1, cg.getEventosDeLugar(nombreL).size() );
+    }
+    
 }
