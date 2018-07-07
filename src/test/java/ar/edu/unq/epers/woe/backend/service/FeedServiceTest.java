@@ -19,17 +19,22 @@ import ar.edu.unq.epers.woe.backend.model.lugar.Tienda;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
 import ar.edu.unq.epers.woe.backend.mongoDAO.EventoMongoDAO;
 import ar.edu.unq.epers.woe.backend.neo4jDAO.Neo4jLugarDAO;
+import ar.edu.unq.epers.woe.backend.redisDAO.RedisDAO;
+import ar.edu.unq.epers.woe.backend.service.cache.CacheGenerator;
 import ar.edu.unq.epers.woe.backend.service.feed.FeedService;
 
 public class FeedServiceTest {
 
 	FeedService feedServ;
 	EventoMongoDAO eventoDao;
+	Neo4jLugarDAO lugarDao;
 
 	@Before
 	public void setUp(){
 		feedServ = new FeedService();
 		eventoDao = new EventoMongoDAO(); eventoDao.eliminarDatos();
+		lugarDao = new Neo4jLugarDAO(); lugarDao.eliminarDatos(); //clean Neo4J
+		RedisDAO redisD = new RedisDAO(); redisD.clear();
 	}
 
 	@Test
@@ -73,8 +78,6 @@ public class FeedServiceTest {
 		Lugar lugar2 = new Tienda("testLugar2");
 		Lugar lugar3 = new Tienda("testLugar3");
 		
-		Neo4jLugarDAO lugarDao = new Neo4jLugarDAO(); 
-		lugarDao.eliminarDatos(); //clean Neo4J
 		lugarDao.create(lugar); lugarDao.create(lugar2); lugarDao.create(lugar3);
 		String tipoCamino = "terrestre";
 		lugarDao.crearRelacionConectadoCon(lugar.getNombre(), lugar2.getNombre(), tipoCamino );
@@ -105,8 +108,6 @@ public class FeedServiceTest {
 	@Test
 	public void deUnLugarSinNingunEventoSeObtieneUnaListaVacia() {
 		Lugar lugar = new Tienda("testLugar");
-		Neo4jLugarDAO lugarDao = new Neo4jLugarDAO(); 
-		lugarDao.eliminarDatos(); //clean Neo4J
 		lugarDao.create(lugar);
 		
 		Evento eNonRelated = new CompraItem( "tstPj", "testLugarX", "testItem", 0);
