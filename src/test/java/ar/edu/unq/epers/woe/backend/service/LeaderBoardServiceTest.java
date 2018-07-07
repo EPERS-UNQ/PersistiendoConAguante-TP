@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import ar.edu.unq.epers.woe.backend.redisDAO.RedisDAO;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -12,11 +13,15 @@ import java.util.Set;
 
 import ar.edu.unq.epers.woe.backend.hibernateDAO.SessionFactoryProvider;
 import ar.edu.unq.epers.woe.backend.model.combate.ResultadoCombate;
+import ar.edu.unq.epers.woe.backend.model.lugar.Lugar;
+import ar.edu.unq.epers.woe.backend.model.lugar.Taberna;
 import ar.edu.unq.epers.woe.backend.model.personaje.Danho;
 import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
 import ar.edu.unq.epers.woe.backend.model.raza.Clase;
 import ar.edu.unq.epers.woe.backend.model.raza.Raza;
+import ar.edu.unq.epers.woe.backend.neo4jDAO.Neo4jLugarDAO;
 import ar.edu.unq.epers.woe.backend.service.leaderboard.LeaderboardService;
+import ar.edu.unq.epers.woe.backend.service.lugar.LugarService;
 
 public class LeaderBoardServiceTest {
 
@@ -26,12 +31,17 @@ public class LeaderBoardServiceTest {
 	Raza razaMayoria;
 	Clase claseGanador;
 	Clase claseMayoria;
+	Lugar t;
 	TestService testServ = new TestService();
 	LeaderboardService leaderboardS = new LeaderboardService();
 	RedisDAO rd = new RedisDAO();
+	Neo4jLugarDAO neod = new Neo4jLugarDAO();
 	
 	public void crearModelo(){
-						
+		
+		t = new Taberna("testT1");
+		new LugarService().crearUbicacion(t);
+		
 		// "clase Mayoria" clase con mayor cantidad de combates ganados
 		claseGanador = Clase.BRUJO;
 		claseMayoria = Clase.CABALLERO;
@@ -51,10 +61,11 @@ public class LeaderBoardServiceTest {
 		
 		//Personaje con dos combates ganados y con mayor danho
 		ganador = new Personaje(razaGanador, "Winner", claseGanador);
-		ganador.setValorDanho(new Danho(500f));
+		ganador.setValorDanho(new Danho(500f)); ganador.setLugar(t);
 		testServ.crearEntidad(ganador);
 
 		Personaje personaje2 = new Personaje(razaMayoria, "Persnaje2", claseMayoria);
+		personaje2.setLugar(t);
 		testServ.crearEntidad(personaje2);
 		
 		ResultadoCombate rc0 = new ResultadoCombate();
@@ -77,14 +88,23 @@ public class LeaderBoardServiceTest {
 
 		// se extiende para un total de 11 personajes con un combate ganado cada uno
 		Personaje personaje3 = new Personaje(razaMayoria, "Persnj 3", claseMayoria);
+		personaje3.setLugar(t);
 		Personaje personaje4 = new Personaje(razaMayoria, "Persnj 4", claseMayoria);
+		personaje4.setLugar(t);
 		Personaje personaje5 = new Personaje(razaMayoria, "Persnj 5", claseMayoria);
+		personaje5.setLugar(t);
 		Personaje personaje6 = new Personaje(razaMayoria, "Persnj 6", claseMayoria);
+		personaje6.setLugar(t);
 		Personaje personaje7 = new Personaje(razaMayoria, "Persnj 7", claseMayoria);
+		personaje7.setLugar(t);
 		Personaje personaje8 = new Personaje(razaMayoria, "Persnj 8", claseMayoria);
+		personaje8.setLugar(t);
 		Personaje personaje9 = new Personaje(razaMayoria, "Persnj 9", claseMayoria);
+		personaje9.setLugar(t);
 		Personaje personaje10 = new Personaje(razaMayoria, "Persnj 10", claseMayoria);
+		personaje10.setLugar(t);
 		Personaje personaje11 = new Personaje(razaMayoria, "Persnj 11", claseMayoria);
+		personaje11.setLugar(t);
 		
 		testServ.crearEntidad(personaje3);
 		testServ.crearEntidad(personaje4);
@@ -133,9 +153,10 @@ public class LeaderBoardServiceTest {
 		testServ.crearEntidad(rc11);
 	}
 
-	@After
+	@Before
 	public void cleanup() {
 		this.rd.clear();
+		this.neod.eliminarDatos();
 		SessionFactoryProvider.destroy();
 	}
 	
