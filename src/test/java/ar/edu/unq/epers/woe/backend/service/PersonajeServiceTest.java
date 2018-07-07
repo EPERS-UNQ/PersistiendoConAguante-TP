@@ -19,7 +19,6 @@ import ar.edu.unq.epers.woe.backend.model.raza.Raza;
 import ar.edu.unq.epers.woe.backend.model.requerimiento.Requerimiento;
 import ar.edu.unq.epers.woe.backend.mongoDAO.EventoMongoDAO;
 import ar.edu.unq.epers.woe.backend.redisDAO.RedisDAO;
-import ar.edu.unq.epers.woe.backend.service.data.ServiciosDB;
 import ar.edu.unq.epers.woe.backend.service.lugar.LugarService;
 import ar.edu.unq.epers.woe.backend.service.raza.ServiciosRaza;
 import org.junit.After;
@@ -36,7 +35,6 @@ public class PersonajeServiceTest {
 
 	private PersonajeService serviceP = new PersonajeService();
 	private HibernatePersonajeDAO pjhd = new HibernatePersonajeDAO();
-	private HibernateRazaDAO rhd = new HibernateRazaDAO();
 	private HibernateItemDAO ihd = new HibernateItemDAO();
 	private HibernateLugarDAO ild = new HibernateLugarDAO();
 	private HibernateMisionDAO imd = new HibernateMisionDAO();
@@ -45,7 +43,6 @@ public class PersonajeServiceTest {
 	private Personaje pj;
 	private Item i;
 	private Raza r;
-	private ServiciosDB dbServ = new ServiciosDB();
 	private int idItem;
 	private EventoMongoDAO emd = new EventoMongoDAO();
 	private RedisDAO rd = new RedisDAO();

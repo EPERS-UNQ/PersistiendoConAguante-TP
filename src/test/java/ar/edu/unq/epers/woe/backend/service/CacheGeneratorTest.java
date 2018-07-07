@@ -42,13 +42,11 @@ public class CacheGeneratorTest {
     private HibernatePersonajeDAO pjhd = new HibernatePersonajeDAO();
     private Personaje pj;
     private LeaderboardService ls = new LeaderboardService();
-    private PersonajeService pjs = new PersonajeService();
     private Item i;
     private int idItem;
     private HibernateItemDAO ihd = new HibernateItemDAO();
     private PersonajeService serviceP = new PersonajeService();
     private HibernateLugarDAO ild = new HibernateLugarDAO();
-    private LugarService lr = new LugarService();
     private LugarService lsv = new LugarService();
     private HibernateMisionDAO imd = new HibernateMisionDAO();
 	private FeedService fServ = new FeedService();
@@ -121,7 +119,7 @@ public class CacheGeneratorTest {
         pjii.setVida(new Vida(10f));
         Runner.runInSession(() -> {
             this.pjhd.guardar(pjii); return null; });
-        this.lr.moverPermisivo(this.pj.getNombre(), gim.getNombre());
+        this.lsv.moverPermisivo(this.pj.getNombre(), gim.getNombre());
         ResultadoCombate rc = this.serviceP.combatir(this.pj.getNombre(), pjii.getNombre());
         assertNull(this.cg.getMasFuerte());
     }
@@ -182,7 +180,7 @@ public class CacheGeneratorTest {
             this.pjhd.guardar(pjii);
             return null;
         });
-        this.lr.moverPermisivo(this.pj.getNombre(), gim.getNombre());
+        this.lsv.moverPermisivo(this.pj.getNombre(), gim.getNombre());
         ResultadoCombate rc = this.serviceP.combatir(this.pj.getNombre(), pjii.getNombre());
         assertNull(this.cg.getMasFuerte());
     }

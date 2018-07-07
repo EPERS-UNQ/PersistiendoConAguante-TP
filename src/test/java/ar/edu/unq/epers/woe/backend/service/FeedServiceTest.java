@@ -20,7 +20,6 @@ import ar.edu.unq.epers.woe.backend.model.personaje.Personaje;
 import ar.edu.unq.epers.woe.backend.mongoDAO.EventoMongoDAO;
 import ar.edu.unq.epers.woe.backend.neo4jDAO.Neo4jLugarDAO;
 import ar.edu.unq.epers.woe.backend.redisDAO.RedisDAO;
-import ar.edu.unq.epers.woe.backend.service.cache.CacheGenerator;
 import ar.edu.unq.epers.woe.backend.service.feed.FeedService;
 
 public class FeedServiceTest {

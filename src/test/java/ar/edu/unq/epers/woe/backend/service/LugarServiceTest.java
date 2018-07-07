@@ -22,7 +22,6 @@ import ar.edu.unq.epers.woe.backend.service.data.ServiciosDB;
 import ar.edu.unq.epers.woe.backend.service.lugar.CaminoMuyCostoso;
 import ar.edu.unq.epers.woe.backend.service.lugar.LugarService;
 import ar.edu.unq.epers.woe.backend.service.lugar.UbicacionMuyLejana;
-import ar.edu.unq.epers.woe.backend.service.personaje.PersonajeService;
 import ar.edu.unq.epers.woe.backend.service.raza.ServiciosRaza;
 import org.junit.Before;
 import org.junit.Rule;
@@ -37,11 +36,8 @@ public class LugarServiceTest {
 
     private Personaje pj;
     private LugarService ls = new LugarService();
-    private PersonajeService serviceP = new PersonajeService();
     private HibernatePersonajeDAO pjhd = new HibernatePersonajeDAO();
-    private HibernateRazaDAO rhd = new HibernateRazaDAO();
     private HibernateItemDAO ihd = new HibernateItemDAO();
-    private HibernateMisionDAO imd = new HibernateMisionDAO();
     private HibernateLugarDAO ild = new HibernateLugarDAO();
     private ServiciosRaza sr = new ServiciosRaza();
     private Item i;
