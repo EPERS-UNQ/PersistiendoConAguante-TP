@@ -35,6 +35,7 @@ public class PersonajeService {
                     i.setMochila(null);
                     pj.getInventario().setItemEnUnaUbicacion(i, pj);
                     pj.getMochila().getItems().remove(i);
+                    cg.invalidarClaveLugar(pj.getLugar().getNombre());
                     this.cg.invalidarCacheSiCambioDanho(danhoAnterior, pj.getDanhoTotal());
                 }
             return null; });
@@ -54,6 +55,7 @@ public class PersonajeService {
                 ResultadoCombate resultadoCombate = new Combate().combatir(pj1, pj2);
                 this.icd.guardar(resultadoCombate);
                 generarEventosSiCorresponde(resultadoCombate, l1, l2);
+                cg.invalidarClaveLugar(pj1.getLugar().getNombre());
                 this.cg.invalidarCacheSiCambioDanho(danhoAnterior1, pj1.getDanhoTotal());
                 this.cg.invalidarCacheSiCambioDanho(danhoAnterior2, pj2.getDanhoTotal());
                 return resultadoCombate;

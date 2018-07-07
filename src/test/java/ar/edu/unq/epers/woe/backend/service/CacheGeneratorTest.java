@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Stream;
 
 public class CacheGeneratorTest {
 
@@ -73,8 +72,9 @@ public class CacheGeneratorTest {
         this.r = new Raza("r1");
         this.r.setClases(cls);
         sr.crearRaza(this.r);
+        Lugar l = new Tienda("tstLugar0"); lsv.crearUbicacion(l);
         this.pj = new Personaje(this.r, "tstPJ0", Clase.MAGO);
-        this.pj.setBilletera(1000f);
+        this.pj.setLugar(l);
         this.pj.getMochila().agregarItem(i);
         Runner.runInSession(() -> {
             this.pjhd.guardar(this.pj); return null; });
@@ -100,6 +100,8 @@ public class CacheGeneratorTest {
     @Test
     public void siCambiaMasFuerteLuegoDeEquiparItemSeInvalidaCache() {
         Personaje pjii = new Personaje(this.r, "tstPJ1", Clase.MAGO);
+        Tienda lugar = new Tienda("tstT"); lsv.crearUbicacion(lugar);
+		pjii.setLugar( lugar );
         pjii.getAtributo(Fuerza.class).setValor(20f);
         Runner.runInSession(() -> {
             this.pjhd.guardar(pjii); return null; });
@@ -234,21 +236,93 @@ public class CacheGeneratorTest {
     }
 
     @Test
-    public void siSeCreaUnNuevoEventoSeInvalidaLoGuardadoDeEseLugar() {
+    public void siSeCreaUnNuevoEventoVenderItemSeInvalidaLoGuardadoDeEseLugar() {
     	String nombreP = "tstp";
     	String nombreL = "testL";
-    	Personaje p = new Personaje(null, nombreP, null);
-    	Lugar l = new Tienda(nombreL);
-    	lsv.crearUbicacion(l); 
+    	Lugar l = new Tienda(nombreL); lsv.crearUbicacion(l); 
+    	Personaje p = new Personaje(null, nombreP, null); 
     	p.setLugar(l); p.setBilletera(1000f);
     	Runner.runInSession(()->{ pjhd.guardar(p); return null;});
-    	lsv.comprarItem(nombreP, idItem);
     	
-    	FeedService feedS = new FeedService();    	
+    	lsv.comprarItem(nombreP, idItem); // evento CompraItem
+    	
+    	fServ.feedLugar(nombreL);
+    	assertEquals( 1, cg.getEventosDeLugar(nombreL).size() );    	
+    	
+    	lsv.venderItem(nombreP, idItem); // evento VentaItem
+    	assertNull( cg.getEventosDeLugar(nombreL) );
+    }
+    
+    @Test
+    public void eventoArriboInvalidaCacheGuardada() {
+       	String nombreP = "tstp";
+        Taberna t1 = new Taberna("testTab1");
+        Tienda t2 = new Tienda("testT2");
+        lsv.crearUbicacion(t1); lsv.crearUbicacion(t2);
+        lsv.conectar(t1.getNombre(), t2.getNombre(), "terrestre");
+    	
+    	Personaje p = new Personaje(null, nombreP, null);
+    	p.setLugar(t1); p.setBilletera(1000f);
+    	Runner.runInSession(()->{ 
+    		pjhd.guardar(p); return null;});
+
+    	fServ.feedLugar(t1.getNombre()); // no hay eventos pero se guarda en cache
+    	assertTrue( cg.getEventosDeLugar(t1.getNombre()).isEmpty() );
+    	
+    	lsv.mover(nombreP, t2.getNombre()); // nuevo evento invalida cache
+    	assertNull( cg.getEventosDeLugar(t1.getNombre()) );
+    	
+    	fServ.feedLugar(t1.getNombre()); // nuevo llamado guarda en cache
+    	assertFalse( cg.getEventosDeLugar(t1.getNombre()).isEmpty() );
+    }
+    
+    @Test
+    public void unEventoMisionCompletadaInvalidaCacheGuardadaPreviamente() {
+    	
+       	String nombreP = "tstp";
+        Taberna t1 = new Taberna("testTab1");
+        Tienda t2 = new Tienda("testT2");
+        String nombreMis = "tstMision1";
+		IrALugar m = new IrALugar(nombreMis, new Recompensa(), t2);
+        lsv.crearUbicacion(t1); lsv.crearUbicacion(t2);
+        lsv.conectar(t1.getNombre(), t2.getNombre(), "terrestre");
+		t1.agregar( m );
+    	
+    	Personaje p = new Personaje(null, nombreP, null);
+    	p.setLugar(t1); p.setBilletera(1000f);
+    	Runner.runInSession(()->{ 
+    		pjhd.guardar(p); imd.guardar(m); return null;});
+
+    	lsv.aceptarMision(nombreP, nombreMis);
+    	fServ.feedLugar(t1.getNombre()); // guarda en cache evento misionAceptada
+    	assertEquals( 1, cg.getEventosDeLugar(t1.getNombre()).size() );
+    	
+    	// nuevo evento MisionCompletada invalida cache
+    	lsv.mover(nombreP, t2.getNombre());
+    	assertNull( cg.getEventosDeLugar(t1.getNombre()) );
+
+    }
+    
+    @Test
+    public void AlCombatirSeCreaEventoGanadorYSiSePideFeedServiceSeGuardaEventoEnCache() {
+    	String nombreL = "testGim";
+    	Lugar gim = new Gimnasio(nombreL); lsv.crearUbicacion(gim); 
+    	Personaje p = new Personaje(r, "testP1", Clase.MAGO); p.setLugar(gim); 
+    	Personaje p2 = new Personaje(r, "testP2", Clase.MAGO); p2.setLugar(gim);
+    	Runner.runInSession(()->{ 
+    		pjhd.guardar(p); pjhd.guardar(p2); return null;});
+    	
+    	serviceP.combatir(p.getNombre(), p2.getNombre());
+    	fServ.feedLugar(nombreL); // guarda eventos en cache
+    	assertEquals( 1, cg.getEventosDeLugar(nombreL).size() );
+    	
+    	//evento nuevo invalida cache
+    	serviceP.combatir(p.getNombre(), p2.getNombre());
     	assertNull( cg.getEventosDeLugar(nombreL) );
     	
-    	feedS.feedLugar(nombreL);
-    	assertEquals( 1, cg.getEventosDeLugar(nombreL).size() );
+    	//nuevo llamado guarda en cache
+    	fServ.feedLugar(nombreL);
+    	assertEquals( 2, cg.getEventosDeLugar(nombreL).size() );
     }
     
 }
