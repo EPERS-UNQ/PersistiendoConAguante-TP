@@ -8,6 +8,7 @@ import ar.edu.unq.epers.woe.backend.model.evento.Evento;
 import ar.edu.unq.epers.woe.backend.model.evento.Ganador;
 import ar.edu.unq.epers.woe.backend.model.evento.MisionCompletada;
 import ar.edu.unq.epers.woe.backend.model.lugar.Gimnasio;
+import ar.edu.unq.epers.woe.backend.model.lugar.Taberna;
 import ar.edu.unq.epers.woe.backend.model.mision.Mision;
 import ar.edu.unq.epers.woe.backend.model.mision.Recompensa;
 import ar.edu.unq.epers.woe.backend.model.mision.VencerA;
@@ -46,12 +47,16 @@ public class PersonajeServiceTest {
 	private int idItem;
 	private EventoMongoDAO emd = new EventoMongoDAO();
 	private RedisDAO rd = new RedisDAO();
+	private Taberna tab;
 
 	@Before
 	public void crearModelo() {
 		this.emd.eliminarDatos();
 		SessionFactoryProvider.destroy();
 		this.rd.clear();
+
+		this.tab = new Taberna("tab1");
+		Runner.runInSession(() -> { this.ild.guardar(this.tab); return null; });
 
 		Set<Clase> cls = new HashSet<>();
 		cls.add(Clase.MAGO);
@@ -65,6 +70,7 @@ public class PersonajeServiceTest {
 		this.r.setClases(cls);
 		sr.crearRaza(this.r);
 		this.pj = new Personaje(this.r, "tstPJ0", Clase.MAGO);
+		this.pj.setLugar(this.tab);
 		this.pj.getMochila().agregarItem(i);
 		Runner.runInSession(() -> {
 			this.pjhd.guardar(this.pj); return null; });
